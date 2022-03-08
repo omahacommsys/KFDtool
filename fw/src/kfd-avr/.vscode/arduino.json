@@ -1,0 +1,6 @@
+{
+    "sketch": "kfd-avr.ino",
+    "board": "arduino:avr:uno",
+    "port": "COM12",
+    "output": "build"
+}
