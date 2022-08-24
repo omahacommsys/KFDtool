@@ -6,7 +6,7 @@ Compliant with P25 standards (TIA-102.AACD-A)
 
 Purchase Hardware: [online store](https://kfdtool.com/store)
 
-Download Software: [latest release](https://github.com/KFDtool/KFDtool/releases)
+Download Software: [latest release](https://kfdtool.com/download)
 
 Release Notifications: [subscribe](https://kfdtool.com/newsletter)
 
@@ -118,24 +118,21 @@ Documentation
 * [Developer Notes](doc/DEV_NOTES.md)
 * [Security Considerations](doc/SECURITY_CONSIDERATIONS.md)
 
-Contributors
-------------
+Community Forks
+---------------
 
-* [Daniel Dugger](https://github.com/duggerd)
-* [Matt Ames](https://github.com/mattames)
+The following projects are community created forks of the KFDtool project.
+
+* [KFDShield](https://github.com/omahacommsys/KFDTool)
 
 License / Legal
 ---------------
 
 KFDtool software, firmware, and hardware is distributed under the MIT License (see [LICENSE.txt](LICENSE.txt)).
 
-KFDtool is a trademark of Florida Computer and Networking, Inc.
+KFDtool is a trademark of KFDtool, LLC
 
 All product names, trademarks, registered trademarks, logos, and brands are property of their respective owners. All company, product, and service names used are for identification purposes only. Use of these names, trademarks, logos, and brands does not imply endorsement.
-
-Note about hardware:
-
-I request that no one else manufactures identical or compatible units **and sells them to others while I am still doing so** - I have put quite a bit of my own money into developing this hardware. I am totally fine with someone making a unit for themselves or a couple of extras to give to their friends, just that they don't charge for them. Proceeds from hardware sales enables me to further develop the software.
 
 Included open-source components:
 
