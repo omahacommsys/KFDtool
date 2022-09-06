@@ -12,8 +12,16 @@
 #define ESC 0x63
 #define ESC_PLACEHOLDER 0x64
 
+uint8_t rxIndex;
+uint8_t rxStartFlag;
+uint8_t rxEscapeFlag;
+
 void spConnect(void)
 {
+    rxIndex = 0;
+    rxStartFlag = 0;
+    rxEscapeFlag = 0;
+
     USB_setup(TRUE, TRUE);
 }
 
@@ -32,54 +40,86 @@ void spDisconnect(void)
     USB_disable(); // Disable USB module, disable PLL
 }
 
-uint16_t spRxData(uint8_t* outData)
+uint16_t spRxData(uint8_t *rxBuffer)
 {
-    // TODO implement ring buffer, currently expecting all data to come in one transfer
-
+    uint8_t inData[1];
     uint16_t inDataCount;
-    uint8_t inData[128];
 
-    inDataCount = cdcReceiveDataInBuffer(inData, sizeof(inData), CDC0_INTFNUM);
-
-    // don't process partial frames
-    if (inDataCount < 3 || inData[0] != SOM_EOM || inData[inDataCount - 1] != SOM_EOM)
+    while (1)
     {
-        return 0;
-    }
+        inDataCount = cdcReceiveDataInBuffer(inData, sizeof(inData), CDC0_INTFNUM);
 
-    uint16_t inIndex;
-    uint16_t outIndex;
-    outIndex = 0;
-
-    for (inIndex = 1; inIndex < inDataCount - 1; inIndex++) // skip SOM and EOM
-    {
-        if (inData[inIndex] == ESC)
+        // no data to read
+        if (inDataCount < 1)
         {
-            inIndex++;
+            return 0;
+        }
 
-            if (inData[inIndex] == SOM_EOM_PLACEHOLDER)
+        // reset if buffer overrun
+        if (rxIndex == sizeof(rxBuffer))
+        {
+            rxIndex = 0;
+            rxStartFlag = 0;
+            rxEscapeFlag = 0;
+
+            return 0;
+        }
+
+        // got SOM/EOM
+        if (inData[0] == SOM_EOM)
+        {
+            // not started, set start flag, clear other flags
+            if (rxStartFlag == 0)
             {
-                outData[outIndex] = SOM_EOM;
+                rxIndex = 0;
+                rxStartFlag = 1;
+                rxEscapeFlag = 0;
+
+                return 0;
             }
-            else if (inData[inIndex] == ESC_PLACEHOLDER)
+            // started, clear start flag and return message length
+            else
             {
-                outData[outIndex] = ESC;
+                rxStartFlag = 0;
+
+                return rxIndex;
             }
         }
+
+        // not started, do not continue
+        if (rxStartFlag == 0)
+        {
+            return 0;
+        }
+
+        // escape byte
+        if (rxEscapeFlag)
+        {
+            if (inData[0] == SOM_EOM_PLACEHOLDER)
+            {
+                rxBuffer[rxIndex++] = SOM_EOM;
+            }
+            else if (inData[0] == ESC_PLACEHOLDER)
+            {
+                rxBuffer[rxIndex++] = ESC;
+            }
+
+            rxEscapeFlag = 0;
+        }
+        // escape byte, set flag for next byte to be escaped
+        else if (inData[0] == ESC)
+        {
+            rxEscapeFlag = 1;
+        }
+        // normal byte, save as is
         else
         {
-            outData[outIndex] = inData[inIndex];
+            rxBuffer[rxIndex++] = inData[0];
         }
-
-        outIndex++;
     }
-
-    return outIndex;
 }
 
-uint16_t spFrameData(const uint8_t* inData,
-                     uint16_t inLength,
-                     uint8_t* outData)
+uint16_t spFrameData(const uint8_t *inData, uint16_t inLength, uint8_t *outData)
 {
     uint16_t escCharsNeeded = 0;
     uint16_t i;
@@ -127,8 +167,7 @@ uint16_t spFrameData(const uint8_t* inData,
     return totalCharsNeeded;
 }
 
-void spTxDataBack(const uint8_t* inData,
-                            uint16_t inLength)
+void spTxDataBack(const uint8_t *inData, uint16_t inLength)
 {
     uint16_t outLength;
     uint8_t outData[128];
@@ -138,8 +177,7 @@ void spTxDataBack(const uint8_t* inData,
     cdcSendDataInBackground(outData, outLength, CDC0_INTFNUM, 1000);
 }
 
-void spTxDataWait(const uint8_t* inData,
-                            uint16_t inLength)
+void spTxDataWait(const uint8_t *inData, uint16_t inLength)
 {
     uint16_t outLength;
     uint8_t outData[128];
