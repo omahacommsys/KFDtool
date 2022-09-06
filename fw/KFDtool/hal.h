@@ -1,5 +1,5 @@
 // KFDtool
-// Copyright 2019 Daniel Dugger
+// Copyright 2019-2022 KFDtool, LLC
 
 #ifndef HAL_H_
 #define HAL_H_

@@ -1,5 +1,5 @@
 // KFDtool
-// Copyright 2019 Daniel Dugger
+// Copyright 2019-2022 KFDtool, LLC
 
 #ifndef TWIPROTOCOL_H_
 #define TWIPROTOCOL_H_

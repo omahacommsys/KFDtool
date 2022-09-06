@@ -1,5 +1,5 @@
 // KFDtool
-// Copyright 2019 Daniel Dugger
+// Copyright 2019-2022 KFDtool, LLC
 
 #include "USB_config/descriptors.h"
 #include "USB_API/USB_Common/usb.h"

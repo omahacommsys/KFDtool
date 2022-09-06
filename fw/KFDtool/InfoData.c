@@ -1,5 +1,5 @@
 // KFDtool
-// Copyright 2019 Daniel Dugger
+// Copyright 2019-2022 KFDtool, LLC
 
 #include "driverlib.h"
 #include "InfoData.h"

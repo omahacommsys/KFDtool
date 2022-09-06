@@ -1,5 +1,5 @@
 // KFDtool
-// Copyright 2019 Daniel Dugger
+// Copyright 2019-2022 KFDtool, LLC
 
 // MSP430 Driver Library Version 2.91.11.01 2019-02-20
 // MSP430 USB Stack Version ???

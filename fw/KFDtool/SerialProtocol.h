@@ -1,5 +1,5 @@
 // KFDtool
-// Copyright 2019 Daniel Dugger
+// Copyright 2019-2022 KFDtool, LLC
 
 #ifndef SERIALPROTOCOL_H_
 #define SERIALPROTOCOL_H_
