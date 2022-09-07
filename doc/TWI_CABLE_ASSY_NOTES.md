@@ -78,6 +78,10 @@ Harris 9 Pin Portable Accessory Connector
 
 ![pinout](pic/harris_9_pin_port_accy.png)
 
+View:
+
+* Female jack contacts from mating face (radio side)
+
 3.5mm TRS Connector
 -------------------
 
@@ -85,7 +89,7 @@ Harris 9 Pin Portable Accessory Connector
 
 View:
 
-* Female jack contacts from mating face (radio side)
+* Male plug contacts
 
 AC100A
 ------
