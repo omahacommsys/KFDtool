@@ -78,31 +78,36 @@ Harris 9 Pin Portable Accessory Connector
 
 ![pinout](pic/harris_9_pin_port_accy.png)
 
+3.5mm TRS Connector
+-------------------
+
+![pinout](pic/3-5_mm_trs.png)
+
 View:
 
 * Female jack contacts from mating face (radio side)
 
-AC100
------
+AC100A
+------
 
 * 6 pin male plug Hirose to 6 pin male plug Hirose cable
 * Wired straight through (pin 1 to pin 1, pin 2 to pin 2, etc)
 * Pins 1, 5, and 6 are electrically connected in the cable assembly, however are not connected inside the KFDtool adapter
 
-AC101
------
+AC101A
+------
 
 * 6 pin male plug Hirose pigtail
 * Pins 1, 5, and 6 are electrically connected in the cable assembly, however are not connected inside the KFDtool adapter
 
-AC102
------
+AC102A
+------
 
 * 6 pin female jack Hirose pigtail
 * Pins 1, 5, and 6 are electrically connected in the cable assembly, however are not connected inside the KFDtool adapter
 
-AC103
------
+AC103A
+------
 
 * 6 pin female jack Hirose to 5 pin male plug Amp
 * Equivalent to Motorola TKN8210 cable
@@ -115,8 +120,8 @@ Pinout:
 * Amp Pin 4 - Hirose Pin 4
 * Amp Pin 5 - Hirose Pin 4
 
-AC104
------
+AC104B
+------
 
 * 6 pin female jack Hirose to 8 pin male plug 8P8C
 * Equivalent to Kenwood KPG-115 cable
@@ -128,8 +133,8 @@ Pinout:
 * 8P8C Pin 5 - (Cathode) Schottky Diode (Anode) - Hirose Pin 2
 * 8P8C Pin 6 - Hirose Pin 4
 
-AC106
------
+AC106A
+------
 
 * 6 pin female jack Hirose to male Kenwood portable accessory connector
 * Equivalent to Kenwood KPG-93 cable
@@ -142,8 +147,8 @@ Pinout:
 * Accessory Pin 12 - (Cathode) Schottky Diode (Anode) - Hirose Pin 2
 * Accessory Pin 13 - Hirose Pin 2
 
-AC107
------
+AC107A
+------
 
 * 6 pin female jack Hirose to male Motorola XTS4000 accessory connector
 * Equivalent to Motorola CKN6886/0182297T15 cable
@@ -153,9 +158,10 @@ Pinout:
 * Accessory Pin 1 - Hirose Pin 4
 * Accessory Pin 8 - Hirose Pin 4
 * Accessory Pin 9 - Hirose Pin 2
+* Accessory Pin 13 - Remove
 
-AC108
------
+AC108A
+------
 
 * 6 pin female jack Hirose to male 15 pin DSUB plug (2 row)
 * Equivalent to Aeroflex/IFR cable 51190/6041-4201-200
@@ -168,8 +174,8 @@ Pinout:
 * DB15 pin 8 - 2k Resistor - Hirose Pin 2
 * DB15 pin 13 - Hirose Pin 2
 
-AC109
------
+AC109A
+------
 
 * 6 pin female jack Hirose to male Harris 9 pin portable accessory connector
 * Equivalent to Harris 12082-0400-A1 cable
@@ -180,3 +186,14 @@ Pinout:
 * Accessory Pin 5 - Hirose Pin 4
 * Accessory Pin 6 - Hirose Pin 2
 * Accessory Pin 9 - Hirose Pin 4
+
+AC110A
+------
+
+* 6 pin female jack Hirose to male 3.5mm TRS plug
+
+Pinout:
+
+* TRS Tip - Hirose Pin 2
+* TRS Ring - Hirose Pin 3
+* TRS Sleeve - Hirose Pin 4
