@@ -398,8 +398,17 @@ namespace KFDtool.P25.ManualRekey
                 while (more)
                 {
                     InventoryCommandListActiveKeys commandKmmBody = new InventoryCommandListActiveKeys();
+
                     commandKmmBody.InventoryMarker = marker;
-                    commandKmmBody.MaxKeysRequested = 78;
+
+                    if (WithPreamble)
+                    {
+                        commandKmmBody.MaxKeysRequested = 75; // for DLI, to match KVL4000 1.3.5000.243 behavior
+                    }
+                    else
+                    {
+                        commandKmmBody.MaxKeysRequested = 78; // for TWI, per TIA 102.AACD-A 3.9.2.11
+                    }
 
                     KmmBody responseKmmBody = TxRxKmm(commandKmmBody);
 
