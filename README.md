@@ -176,7 +176,7 @@ Documentation
 Contributors
 ------------
 
-* [Daniel Dugger](https://github.com/duggerd)
+* [Ellie Dugger](https://github.com/duggerd)
 * [Matt Ames](https://github.com/mattames)
 
 License / Legal
