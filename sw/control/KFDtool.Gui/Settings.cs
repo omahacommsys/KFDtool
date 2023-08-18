@@ -53,7 +53,7 @@ namespace KFDtool.Gui
             SelectedDevice.DliIpDevice.Port = 49644;
             SelectedDevice.DliIpDevice.Variant = DliIpDevice.VariantOptions.Motorola;
 
-            SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdtool;
+            SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
         }
     }
 }

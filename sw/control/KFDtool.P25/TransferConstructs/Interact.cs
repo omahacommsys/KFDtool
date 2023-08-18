@@ -10,7 +10,7 @@ namespace KFDtool.P25.TransferConstructs
     {
         public static string ReadAdapterProtocolVersion(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.ReadAdapterProtocolVersion(device);
             }
@@ -22,7 +22,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static string ReadFirmwareVersion(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.ReadFirmwareVersion(device);
             }
@@ -34,7 +34,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static string ReadUniqueId(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.ReadUniqueId(device);
             }
@@ -46,7 +46,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static string ReadModel(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.ReadModel(device);
             }
@@ -58,7 +58,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static string ReadHardwareRevision(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.ReadHardwareRevision(device);
             }
@@ -70,7 +70,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static string ReadSerialNumber(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.ReadSerialNumber(device);
             }
@@ -82,7 +82,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static void EnterBslMode(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 InteractTwiKfdtool.EnterBslMode(device);
             }
@@ -94,7 +94,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static string SelfTest(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.SelfTest(device);
             }
@@ -106,7 +106,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static void CheckTargetMrConnection(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 InteractTwiKfdtool.CheckTargetMrConnection(device);
             }
@@ -122,7 +122,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static void Keyload(BaseDevice device, List<CmdKeyItem> keys, CmdKeyItem kek = null)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 InteractTwiKfdtool.Keyload(device, keys, kek);
             }
@@ -138,7 +138,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static void EraseKey(BaseDevice device, List<CmdKeyItem> keys)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 InteractTwiKfdtool.EraseKey(device, keys);
             }
@@ -154,7 +154,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static void EraseAllKeys(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 InteractTwiKfdtool.EraseAllKeys(device);
             }
@@ -170,7 +170,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static List<RspKeyInfo> ViewKeyInfo(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.ViewKeyInfo(device);
             }
@@ -186,7 +186,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static RspRsiInfo LoadConfig(BaseDevice device, int kmfRsi, int mnp)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.LoadConfig(device, kmfRsi, mnp);
             }
@@ -202,7 +202,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static RspRsiInfo ChangeRsi(BaseDevice device, int rsiOld, int rsiNew, int mnp)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.ChangeRsi(device, rsiOld, rsiNew, mnp);
             }
@@ -218,7 +218,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static List<RspRsiInfo> ViewRsiItems(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.ViewRsiItems(device);
             }
@@ -234,7 +234,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static int ViewMnp(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.ViewMnp(device);
             }
@@ -250,7 +250,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static int ViewKmfRsi(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.ViewKmfRsi(device);
             }
@@ -266,7 +266,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static List<RspKeysetInfo> ViewKeysetTaggingInfo(BaseDevice device)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.ViewKeysetTaggingInfo(device);
             }
@@ -282,7 +282,7 @@ namespace KFDtool.P25.TransferConstructs
 
         public static RspChangeoverInfo ActivateKeyset(BaseDevice device, int keysetSuperseded, int keysetActivated)
         {
-            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 return InteractTwiKfdtool.ActivateKeyset(device, keysetSuperseded, keysetActivated);
             }

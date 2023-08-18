@@ -26,7 +26,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -71,7 +71,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -116,7 +116,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -169,7 +169,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -229,7 +229,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -280,7 +280,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -329,7 +329,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -370,7 +370,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -439,7 +439,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -479,7 +479,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -520,7 +520,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -561,7 +561,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -604,7 +604,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -649,7 +649,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -694,7 +694,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -739,7 +739,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -784,7 +784,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -829,7 +829,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -874,7 +874,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 
@@ -919,7 +919,7 @@ namespace KFDtool.P25.TransferConstructs
 
             try
             {
-                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort);
+                ap = new AdapterProtocol(device.TwiKfdtoolDevice.ComPort, device.KfdDeviceType);
 
                 ap.Open();
 

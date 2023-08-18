@@ -519,7 +519,17 @@ namespace KFDtool.Gui
             {
                 DeviceMenu.Items.Clear();
 
-                Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdtool;
+                Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
+                Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.Kfdtool;
+
+                StartAppDet();
+            }
+            else if (mi.Name == "TypeTwiKfdshield")
+            {
+                DeviceMenu.Items.Clear();
+
+                Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
+                Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.Kfdshield;
 
                 StartAppDet();
             }
@@ -680,7 +690,7 @@ namespace KFDtool.Gui
 
                 Version apVersion = new Version(apVerStr);
 
-                if (apVersion.Major != 2)
+                if (apVersion.Major > 2)    // TODO: handle this better
                 {
                     MessageBox.Show(string.Format("Adapter protocol version not compatible ({0})", apVerStr), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
