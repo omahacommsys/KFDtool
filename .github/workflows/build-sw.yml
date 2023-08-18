@@ -1,0 +1,68 @@
+name: build sw
+
+on:
+  push:
+    # Only run this workflow when a new tag is pushed
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.0.2
+      
+    - name: Build Solution
+      run: msbuild sw/control/KFDtool.sln /p:Configuration=Release
+      
+    - name: Zip Artifacts
+      run: |
+        Compress-Archive -Path sw/control/KFDtool.Gui/bin/Release/* -DestinationPath ${{ github.workspace }}/artifacts.zip
+      shell: powershell
+    
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: artifacts
+        path: artifacts.zip
+        
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+      
+    - name: Download Artifacts
+      uses: actions/download-artifact@v2
+      with:
+        name: artifacts
+        path: artifacts
+      
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: Description of the release
+        draft: false
+        prerelease: false
+        
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: artifacts/artifacts.zip
+        asset_name: artifacts.zip
+        asset_content_type: application/zip
