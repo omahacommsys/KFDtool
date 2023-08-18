@@ -18,7 +18,7 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
 
     - name: Restore NuGet Packages
-      run: nuget restore KFDtool.sln
+      run: nuget restore sw/control/KFDtool.sln
       
     - name: Build Solution
       run: msbuild sw/control/KFDtool.sln /p:Configuration=Release
