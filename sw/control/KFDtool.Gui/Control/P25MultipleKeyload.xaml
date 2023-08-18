@@ -21,6 +21,8 @@
         <Button Content="Add &gt;" HorizontalAlignment="Left" Margin="544,163,0,0" VerticalAlignment="Top" Width="75" Click="Groups_Add_Click"/>
         <Button Content="&lt; Remove" HorizontalAlignment="Left" Margin="544,195,0,0" VerticalAlignment="Top" Width="75" Click="Groups_Remove_Click"/>
         <ListBox Name="lbGroupsSelected" DisplayMemberPath="Value" HorizontalAlignment="Left" Height="275" Margin="624,54,0,0" VerticalAlignment="Top" Width="140"/>
-        <Button Content="Load" HorizontalAlignment="Left" Margin="355,345,0,0" VerticalAlignment="Top" Width="75" Click="Load_Click"/>
+        <ComboBox Name="dropKeksAvailable" DisplayMemberPath="Value" HorizontalAlignment="Left" Margin="20,345,0,0" VerticalAlignment="Top" Width="175"/>
+        <Button Content="Load" HorizontalAlignment="Left" Margin="310,345,0,0" VerticalAlignment="Top" Width="75" Click="Load_Click"/>
+        <Button Content="Elite Export" HorizontalAlignment="Left" Margin="400,345,0,0" VerticalAlignment="Top" Width="75" Click="Export_Click"/>
     </Grid>
 </UserControl>

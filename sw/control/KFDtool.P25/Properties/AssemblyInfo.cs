@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KFDtool")]
-[assembly: AssemblyCopyright("Copyright 2019-2020 Daniel Dugger")]
+[assembly: AssemblyCopyright("Copyright 2019-2020 Ellie Dugger\nCopyright 2023 Natalie Moore")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

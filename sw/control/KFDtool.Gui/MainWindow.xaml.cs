@@ -729,7 +729,7 @@ namespace KFDtool.Gui
 #if DEBUG
             MessageBox.Show(
                 string.Format(
-                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Daniel Dugger{0}{0}Version: {1} DEBUG",
+                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Ellie Dugger{0}{0}Copyright 2021-2023 Natalie Moore{0}{0}Version: {1} DEBUG{0}{0}",
                     Environment.NewLine,
                     Settings.AssemblyInformationalVersion
                 ),
@@ -739,7 +739,7 @@ namespace KFDtool.Gui
 #else
             MessageBox.Show(
                 string.Format(
-                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Daniel Dugger{0}{0}Copyright 2021 Natalie 'Nat' Moore{0}{0}Version: {1}",
+                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Ellie Dugger{0}{0}Copyright 2021-2023 Natalie Moore{0}{0}Version: {1}{0}{0}",
                     Environment.NewLine,
                     Settings.AssemblyInformationalVersion
                 ),

@@ -120,11 +120,11 @@ namespace KFDtool.P25.TransferConstructs
             }
         }
 
-        public static void Keyload(BaseDevice device, List<CmdKeyItem> keys)
+        public static void Keyload(BaseDevice device, List<CmdKeyItem> keys, CmdKeyItem kek = null)
         {
             if (device.DeviceType == BaseDevice.DeviceTypeOptions.TwiKfdtool)
             {
-                InteractTwiKfdtool.Keyload(device, keys);
+                InteractTwiKfdtool.Keyload(device, keys, kek);
             }
             else if (device.DeviceType == BaseDevice.DeviceTypeOptions.DliIp)
             {

@@ -1,8 +1,10 @@
-﻿using KFDtool.P25.Constant;
+﻿using KFDtool.Elite;
+using KFDtool.P25.Constant;
 using KFDtool.P25.Generator;
 using KFDtool.P25.TransferConstructs;
 using KFDtool.P25.Validator;
 using KFDtool.Shared;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -18,6 +20,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Threading;
+using System.IO;
+using static System.Net.Mime.MediaTypeNames;
+using KFDtool.Gui.Dialog;
 
 namespace KFDtool.Gui.Control
 {
@@ -487,6 +493,149 @@ namespace KFDtool.Gui.Control
             }
 
             MessageBox.Show("Key Loaded Successfully", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void Export_Button_Click(object sender, RoutedEventArgs e)
+        {
+            int keysetId = 0;
+            int sln = 0;
+            int keyId = 0;
+            int algId = 0;
+            List<byte> key = new List<byte>();
+
+            bool useActiveKeyset = cbActiveKeyset.IsChecked == true;
+
+            if (useActiveKeyset)
+            {
+                keysetId = 1; // to pass validation, will not get used
+            }
+            else
+            {
+                try
+                {
+                    keysetId = Convert.ToInt32(txtKeysetIdHex.Text, 16);
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Error Parsing Keyset ID", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+            }
+
+            try
+            {
+                sln = Convert.ToInt32(txtSlnHex.Text, 16);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error Parsing SLN", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                keyId = Convert.ToInt32(txtKeyIdHex.Text, 16);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error Parsing Key ID", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                algId = Convert.ToInt32(txtAlgoHex.Text, 16);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error Parsing Algorithm ID", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                key = Utility.ByteStringToByteList(GetKey());
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Error Parsing Key", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            Tuple<ValidateResult, string> validateResult = FieldValidator.KeyloadValidate(keysetId, sln, IsKek, keyId, algId, key);
+
+            if (validateResult.Item1 == ValidateResult.Warning)
+            {
+                if (MessageBox.Show(string.Format("{1}{0}{0}Continue?", Environment.NewLine, validateResult.Item2), "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                {
+                    return;
+                }
+            }
+            else if (validateResult.Item1 == ValidateResult.Error)
+            {
+                MessageBox.Show(validateResult.Item2, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            List<KeyEntry> keys = new List<KeyEntry>();
+
+            KeyEntry keyItem = new KeyEntry();
+
+            keyItem.ksetId = keysetId;
+            keyItem.ckrId = sln;
+            keyItem.keyId = keyId;
+            keyItem.algId = algId;
+            keyItem.KeyName = $"KEY {keyId}";
+            keyItem.keyData = GetKey();
+
+            keys.Add(keyItem);
+
+            try
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Encrypted 7-Zip File (*.7z)|*.7z";
+                saveFileDialog.Title = "Save KeyFile";
+                saveFileDialog.ShowDialog();
+
+                string xmlOut = KeyfileInteract.SerializeKeys(keys);
+
+                string sevenZipFileName = saveFileDialog.FileName;
+                string xmlFileName = saveFileDialog.FileName + ".xml";
+                ContainerSetPassword containerSetPassword = new ContainerSetPassword();
+                //containerSetPassword.Owner =; // for centering in parent window
+                containerSetPassword.ShowDialog();
+
+                if (containerSetPassword.PasswordSet)
+                {
+                    File.WriteAllText(xmlFileName, xmlOut);
+
+                    KeyfileInteract.GenerateKeyfile(xmlFileName, sevenZipFileName, containerSetPassword.PasswordText);
+                    // Ignore warning, this is intentional
+#pragma warning disable 4014
+                    cleanupKeyFile(xmlFileName);
+#pragma warning restore 4014
+                }
+                else
+                {
+                    throw new Exception("Password not set.");
+                }
+                    
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Error -- {0}", ex.Message), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            MessageBox.Show("Key Exported Successfully", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private static async Task cleanupKeyFile(string xmlFileName)
+        {
+            await Task.Delay(5000);
+            // clean up after ourselves
+            File.Delete(xmlFileName);
         }
     }
 }

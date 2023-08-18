@@ -469,7 +469,7 @@ namespace KFDtool.P25.TransferConstructs
             }
         }
 
-        public static void Keyload(BaseDevice device, List<CmdKeyItem> keys)
+        public static void Keyload(BaseDevice device, List<CmdKeyItem> keys, CmdKeyItem kek = null)
         {
             if (device.TwiKfdtoolDevice.ComPort == string.Empty)
             {
@@ -487,7 +487,7 @@ namespace KFDtool.P25.TransferConstructs
 
                 ManualRekeyApplication mra = new ManualRekeyApplication(ap);
 
-                mra.Keyload(keys);
+                mra.Keyload(keys, kek);
             }
             catch (Exception)
             {
