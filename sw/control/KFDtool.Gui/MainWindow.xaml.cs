@@ -29,10 +29,52 @@ namespace KFDtool.Gui
 
             UpdateContainerText();
 
+            Settings.LoadSettings();
+
             InitAppDet();
 
-            // on load select the KFDtool type
-            SwitchType(TypeTwiKfdtool);
+            // on load select the type from settings
+            switch (Settings.SelectedDevice.DeviceType)
+            {
+                case BaseDevice.DeviceTypeOptions.DliIp:
+                    {
+                        SwitchType(TypeDliIp);
+                        break;
+                    }
+
+                case BaseDevice.DeviceTypeOptions.TwiKfdDevice:
+                default:
+                    {
+                        // Select the appropriate device type based on loaded settings
+                        switch (Settings.SelectedDevice.KfdDeviceType)
+                        {
+                            case TwiKfdDevice.Kfdshield:
+                                {
+                                    SwitchType(TypeTwiKfdshield);
+                                    break;
+                                }
+                            case TwiKfdDevice.Kfdtool:
+                                {
+                                    SwitchType(TypeTwiKfdtool);
+                                    break;
+                                }
+                            default:
+                                {
+                                    SwitchType(TypeTwiKfdtool);
+                                    break;
+                                }
+                        }
+                        // Select proper com port from loaded settings
+                        foreach(MenuItem port in DeviceMenu.Items)
+                        {
+                            if (port.Name == Settings.SelectedDevice.TwiKfdtoolDevice.ComPort)
+                            {
+                                SelectDevice(port);
+                            }
+                        }
+                        break;
+                    }
+            }
 
             // on load select the P25 Keyload function
             SwitchScreen("NavigateP25Keyload", true);
@@ -560,6 +602,9 @@ namespace KFDtool.Gui
                 Settings.SelectedDevice.DliIpDevice.Port.ToString(),
                 Settings.SelectedDevice.DliIpDevice.Variant.ToString()
             );
+
+            // Save config
+            Settings.SaveSettings();
         }
 
         private void Type_MenuItem_Click(object sender, RoutedEventArgs e)
@@ -567,6 +612,9 @@ namespace KFDtool.Gui
             MenuItem mi = sender as MenuItem;
 
             SwitchType(mi);
+
+            // Save config
+            Settings.SaveSettings();
         }
 
         private void DliIpEdit_MenuItem_Click(object sender, RoutedEventArgs e)
@@ -638,6 +686,8 @@ namespace KFDtool.Gui
 
                     DeviceMenu.Items.Add(item);
 
+                    // Removed auto-select on startup to get rid of the annoying timeout error
+                    /*
                     // there was a change in the device list, but the device that was previously selected is still connected
                     if (port == Settings.SelectedDevice.TwiKfdtoolDevice.ComPort)
                     {
@@ -651,7 +701,7 @@ namespace KFDtool.Gui
                     {
                         SelectDevice(item);
                         first = false;
-                    }
+                    }*/
                 }
             });
         }
@@ -677,6 +727,9 @@ namespace KFDtool.Gui
                 Settings.SelectedDevice.TwiKfdtoolDevice.ComPort = mi.Name;
 
                 string apVerStr = string.Empty;
+
+                // Save new selection
+                Settings.SaveSettings();
 
                 try
                 {

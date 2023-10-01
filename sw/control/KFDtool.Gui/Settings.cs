@@ -2,6 +2,7 @@
 using KFDtool.P25.TransferConstructs;
 using System.Diagnostics;
 using System.Reflection;
+using System;
 
 namespace KFDtool.Gui
 {
@@ -45,15 +46,31 @@ namespace KFDtool.Gui
             SelectedDevice = new BaseDevice();
 
             SelectedDevice.TwiKfdtoolDevice = new TwiKfdtoolDevice();
-            SelectedDevice.TwiKfdtoolDevice.ComPort = string.Empty;
-
             SelectedDevice.DliIpDevice = new DliIpDevice();
             SelectedDevice.DliIpDevice.Protocol = DliIpDevice.ProtocolOptions.UDP;
-            SelectedDevice.DliIpDevice.Hostname = "192.168.128.1";
-            SelectedDevice.DliIpDevice.Port = 49644;
-            SelectedDevice.DliIpDevice.Variant = DliIpDevice.VariantOptions.Motorola;
 
-            SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
+            LoadSettings();
+        }
+
+        public static void SaveSettings()
+        {
+            Properties.Settings.Default.TwiComPort = SelectedDevice.TwiKfdtoolDevice.ComPort;
+            Properties.Settings.Default.DliHostname = SelectedDevice.DliIpDevice.Hostname;
+            Properties.Settings.Default.DliPort = SelectedDevice.DliIpDevice.Port;
+            Properties.Settings.Default.DliVariant = SelectedDevice.DliIpDevice.Variant.ToString();
+            Properties.Settings.Default.DeviceType = SelectedDevice.DeviceType.ToString();
+            Properties.Settings.Default.KfdDeviceType = SelectedDevice.KfdDeviceType.ToString();
+            Properties.Settings.Default.Save();
+        }
+
+        public static void LoadSettings()
+        {
+            SelectedDevice.TwiKfdtoolDevice.ComPort = Properties.Settings.Default.TwiComPort;
+            SelectedDevice.DliIpDevice.Hostname = Properties.Settings.Default.DliHostname;
+            SelectedDevice.DliIpDevice.Port = Properties.Settings.Default.DliPort;
+            SelectedDevice.DliIpDevice.Variant = (DliIpDevice.VariantOptions)Enum.Parse(typeof(DliIpDevice.VariantOptions), Properties.Settings.Default.DliVariant);
+            SelectedDevice.DeviceType = (BaseDevice.DeviceTypeOptions)Enum.Parse(typeof(BaseDevice.DeviceTypeOptions), Properties.Settings.Default.DeviceType);
+            SelectedDevice.KfdDeviceType = (Adapter.Device.TwiKfdDevice)Enum.Parse(typeof(Adapter.Device.TwiKfdDevice), Properties.Settings.Default.KfdDeviceType);
         }
     }
 }
