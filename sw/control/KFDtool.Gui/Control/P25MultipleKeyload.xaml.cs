@@ -146,10 +146,12 @@ namespace KFDtool.Gui.Control
         {
             if (lbKeysAvailable.SelectedItem != null)
             {
-                int key = ((KeyValuePair<int, string>)lbKeysAvailable.SelectedItem).Key;
-
-                Keys.Add(key);
-
+                foreach(var item in lbKeysAvailable.SelectedItems)
+                {
+                    int key = ((KeyValuePair<int, string>)item).Key;
+                    Keys.Add(key);
+                }
+ 
                 UpdateKeysColumns();
             }
         }
@@ -158,10 +160,12 @@ namespace KFDtool.Gui.Control
         {
             if (lbKeysSelected.SelectedItem != null)
             {
-                int key = ((KeyValuePair<int, string>)lbKeysSelected.SelectedItem).Key;
-
-                Keys.Remove(key);
-
+                foreach(var item in lbKeysSelected.SelectedItems)
+                {
+                    int key = ((KeyValuePair<int, string>)item).Key;
+                    Keys.Remove(key);
+                }
+                
                 UpdateKeysColumns();
             }
         }
@@ -170,9 +174,11 @@ namespace KFDtool.Gui.Control
         {
             if (lbGroupsAvailable.SelectedItem != null)
             {
-                int key = ((KeyValuePair<int, string>)lbGroupsAvailable.SelectedItem).Key;
-
-                Groups.Add(key);
+                foreach (var item in lbGroupsAvailable.SelectedItems)
+                {
+                    int key = ((KeyValuePair<int, string>)item).Key;
+                    Groups.Add(key);
+                }
 
                 UpdateGroupsColumns();
             }
@@ -182,10 +188,12 @@ namespace KFDtool.Gui.Control
         {
             if (lbGroupsSelected.SelectedItem != null)
             {
-                int key = ((KeyValuePair<int, string>)lbGroupsSelected.SelectedItem).Key;
-
-                Groups.Remove(key);
-
+                foreach (var item in lbGroupsSelected.SelectedItems)
+                {
+                    int key = ((KeyValuePair<int, string>)item).Key;
+                    Groups.Remove(key);
+                }
+                
                 UpdateGroupsColumns();
             }
         }
