@@ -28,8 +28,16 @@ namespace KFDtool.Gui
             InitializeComponent();
 
             UpdateContainerText();
-
-            Settings.LoadSettings();
+            try
+            {
+                Settings.LoadSettings();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Saved settings invalid, resetting to default", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Settings.InitSettings();
+                Settings.LoadSettings();
+            }
 
             InitAppDet();
 

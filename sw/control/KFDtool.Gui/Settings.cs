@@ -49,7 +49,18 @@ namespace KFDtool.Gui
             SelectedDevice.DliIpDevice = new DliIpDevice();
             SelectedDevice.DliIpDevice.Protocol = DliIpDevice.ProtocolOptions.UDP;
 
-            LoadSettings();
+            //LoadSettings();
+        }
+
+        public static void InitSettings()
+        {
+            Properties.Settings.Default.TwiComPort = "";
+            Properties.Settings.Default.DliHostname = "192.168.128.1";
+            Properties.Settings.Default.DliPort = 0;
+            Properties.Settings.Default.DliVariant = "Standard";
+            Properties.Settings.Default.DeviceType = "TwiKfdDevice";
+            Properties.Settings.Default.KfdDeviceType = "Kfdshield";
+            Properties.Settings.Default.Save();
         }
 
         public static void SaveSettings()
