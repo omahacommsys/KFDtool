@@ -7,7 +7,7 @@
 #include "UID.h"
 
 uint16_t cmdCount;
-uint8_t cmdData[128];
+uint8_t cmdData[512];
 uint16_t rxReady;
 uint8_t rxTemp;
 
