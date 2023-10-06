@@ -11,6 +11,7 @@ uint16_t twiReceiveByte(uint8_t *c);
 
 void twiSendKeySig(void);
 
+void twiSendPhyBytes(uint8_t* byteToSend, uint16_t count);
 void twiSendPhyByte(uint8_t byteToSend);
 
 void Port_1(void);

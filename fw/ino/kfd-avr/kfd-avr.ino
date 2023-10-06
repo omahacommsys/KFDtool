@@ -427,6 +427,29 @@ void loop()
                 spTxDataWait(rspData, sizeof(rspData));
             }
         }
+        else if (cmdData[0] == CMD_SEND_BYTES) // send bytes
+        {
+            uint16_t dataCount = (uint16_t)cmdData[2] * 256 + cmdData[3];
+            if (cmdCount == dataCount + 4)
+            {
+                twiSendPhyBytes(cmdData + 4, dataCount);
+
+                uint8_t rspData[1];
+
+                rspData[0] = RSP_SEND_BYTES;
+
+                spTxDataWait(rspData, sizeof(rspData));
+            }
+            else // invalid command length
+            {
+                uint8_t rspData[2];
+
+                rspData[0] = RSP_ERROR;
+                rspData[1] = ERR_INVALID_CMD_LENGTH;
+
+                spTxDataWait(rspData, sizeof(rspData));
+            }
+        }
         else // invalid command opcode
         {
             uint8_t rspData[2];

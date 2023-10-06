@@ -299,9 +299,8 @@ void twiSendKeySig(void)
     ENABLE_KFD_RX_INT
 }
 
-void twiSendPhyByte(uint8_t byteToSend)
+void twiSendPhyByteHelper(uint8_t byteToSend)
 {
-    DISABLE_KFD_RX_INT
     halGpio1High();
     halActLedOff();
 
@@ -334,6 +333,21 @@ void twiSendPhyByte(uint8_t byteToSend)
 
     halGpio1Low();
     halActLedOn();
+}
+
+void twiSendPhyBytes(uint8_t* byteToSend, uint16_t count)
+{
+    DISABLE_KFD_RX_INT
+    for (uint32_t i = 0; i < count; i++) {
+        twiSendPhyByteHelper(byteToSend[i]);
+    }
+    ENABLE_KFD_RX_INT
+}
+
+void twiSendPhyByte(uint8_t byteToSend)
+{
+    DISABLE_KFD_RX_INT
+    twiSendPhyByteHelper(byteToSend);
     ENABLE_KFD_RX_INT
 }
 
