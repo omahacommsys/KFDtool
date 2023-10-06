@@ -19,6 +19,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
         private const byte CMD_SELF_TEST = 0x15;
         private const byte CMD_SEND_KEY_SIG = 0x16;
         private const byte CMD_SEND_BYTE = 0x17;
+        private const byte CMD_SEND_BYTES = 0x18;
 
         /* RESPONSE OPCODES */
         private const byte RSP_ERROR = 0x20;
@@ -29,6 +30,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
         private const byte RSP_SELF_TEST = 0x25;
         private const byte RSP_SEND_KEY_SIG = 0x26;
         private const byte RSP_SEND_BYTE = 0x27;
+        private const byte RSP_SEND_BYTES = 0x28;
 
         /* BROADCAST OPCODES */
         private const byte BCST_RECEIVE_BYTE = 0x31;
@@ -654,11 +656,67 @@ namespace KFDtool.Adapter.Protocol.Adapter
             }
         }
 
+        public void SendBytes(List<byte> data)
+        {
+            List<byte> cmd = new List<byte>();
+
+            /*
+            * CMD: SEND BYTES
+            * 
+            * [0] CMD_SEND_BYTE
+            * [1] reserved (set to 0x00)
+            * [2] MSB of total data bytes
+            * [3] LSB of total data bytes
+            * [4..] bytes to send
+            */
+
+            cmd.Add(CMD_SEND_BYTES);
+            cmd.Add(0x00);
+            cmd.Add((byte)(data.Count >> 8));
+            cmd.Add((byte)(data.Count));
+            cmd.AddRange(data);
+
+            Lower.Send(cmd);
+
+            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+
+            /*
+            * RSP: SEND BYTES
+            * 
+            * [0] RSP_SEND_BYTE
+            */
+
+            if (rsp.Count == 1)
+            {
+                if (rsp[0] != RSP_SEND_BYTES)
+                {
+                    throw new Exception("invalid response opcode");
+                }
+            }
+            else
+            {
+                throw new Exception("invalid response length");
+            }
+        }
+
         public void SendData(List<byte> data)
         {
-            foreach (byte b in data)
+            if (data.Count == 0)
             {
-                SendByte(b);
+                return;
+            }
+
+            const int dataBytesPerCommand = 500;
+            if (data.Count <= dataBytesPerCommand)
+            {
+                SendBytes(data);
+            }
+            else
+            {
+                for (int offset = 0; offset < data.Count; offset += dataBytesPerCommand)
+                {
+                    SendBytes(data.Skip(offset).Take(dataBytesPerCommand).ToList());
+                }
             }
         }
 
