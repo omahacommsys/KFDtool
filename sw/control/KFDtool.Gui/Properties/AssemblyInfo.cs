@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KFDtool")]
-[assembly: AssemblyCopyright("Copyright 2019-2020 Daniel Dugger\nCopyright 2021 Natalie 'Nat' Moore")]
+[assembly: AssemblyCopyright("Copyright 2019-2020 Ellie Dugger, 2021-2023 Natalie 'Nat' Moore")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
