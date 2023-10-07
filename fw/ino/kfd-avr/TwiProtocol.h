@@ -7,6 +7,10 @@ void twiInit(void);
 
 uint8_t twiSelfTest(void);
 
+void twiSetDefaultTransferSpeed();
+void twiSetTxTransferSpeed(uint8_t kilobaud);
+void twiSetRxTransferSpeed(uint8_t kilobaud);
+
 uint16_t twiReceiveByte(uint8_t *c);
 
 void twiSendKeySig(void);

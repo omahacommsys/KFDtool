@@ -279,6 +279,72 @@ void loop()
                         spTxDataWait(rspData, sizeof(rspData));
                     }
                 }
+                else if (cmdData[1] == WRITE_DEFAULT_TRANSFER_SPEED) // write default transfer speed
+                {
+                    if (cmdCount == 2)
+                    {
+                        twiSetDefaultTransferSpeed();
+
+                        uint8_t rspData[1];
+
+                        rspData[0] = RSP_WRITE_INFO;
+
+                        spTxDataWait(rspData, sizeof(rspData));
+                    }
+                    else // invalid command length
+                    {
+                        uint8_t rspData[2];
+
+                        rspData[0] = RSP_ERROR;
+                        rspData[1] = ERR_INVALID_CMD_LENGTH;
+
+                        spTxDataWait(rspData, sizeof(rspData));
+                    }
+                }
+                else if (cmdData[1] == WRITE_TX_TRANSFER_SPEED) // write new tx transfer speed
+                {
+                    if (cmdCount == 3)
+                    {
+                        twiSetTxTransferSpeed(cmdData[2]);
+
+                        uint8_t rspData[1];
+
+                        rspData[0] = RSP_WRITE_INFO;
+
+                        spTxDataWait(rspData, sizeof(rspData));
+                    }
+                    else // invalid command length
+                    {
+                        uint8_t rspData[2];
+
+                        rspData[0] = RSP_ERROR;
+                        rspData[1] = ERR_INVALID_CMD_LENGTH;
+
+                        spTxDataWait(rspData, sizeof(rspData));
+                    }
+                }
+                else if (cmdData[1] == WRITE_RX_TRANSFER_SPEED) // write new rx transfer speed
+                {
+                    if (cmdCount == 3)
+                    {
+                        twiSetRxTransferSpeed(cmdData[2]);
+
+                        uint8_t rspData[1];
+
+                        rspData[0] = RSP_WRITE_INFO;
+
+                        spTxDataWait(rspData, sizeof(rspData));
+                    }
+                    else // invalid command length
+                    {
+                        uint8_t rspData[2];
+
+                        rspData[0] = RSP_ERROR;
+                        rspData[1] = ERR_INVALID_CMD_LENGTH;
+
+                        spTxDataWait(rspData, sizeof(rspData));
+                    }
+                }
                 else // invalid write opcode
                 {
                     uint8_t rspData[2];
