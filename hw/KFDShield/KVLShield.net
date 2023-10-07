@@ -11,7 +11,7 @@
         (date 2021-10-26)
         (source KVLShield.sch)
         (comment (number 1) (value "Designed by Nat Moore (jelimoore)"))
-        (comment (number 2) (value "Based upon the work of Daniel Dugger (duggerd)"))
+        (comment (number 2) (value "Based upon the work of Ellie Dugger (duggerd)"))
         (comment (number 3) (value ""))
         (comment (number 4) (value "")))))
   (components

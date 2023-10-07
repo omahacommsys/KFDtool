@@ -1,4 +1,5 @@
-﻿using System;
+﻿using KFDtool.Adapter.Device;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,11 +11,13 @@ namespace KFDtool.P25.TransferConstructs
     {
         public enum DeviceTypeOptions
         {
-            TwiKfdtool,
+            TwiKfdDevice,
             DliIp
         }
 
         public DeviceTypeOptions DeviceType { get; set; }
+
+        public TwiKfdDevice KfdDeviceType { get; set; }
 
         public TwiKfdtoolDevice TwiKfdtoolDevice { get; set; }
 

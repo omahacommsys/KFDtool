@@ -1,4 +1,5 @@
 ﻿using KFDtool.Adapter.Protocol.Serial;
+using KFDtool.Adapter.Device;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,11 +57,23 @@ namespace KFDtool.Adapter.Protocol.Adapter
         private const byte ERR_INVALID_WRITE_OPCODE = 0x05;
         private const byte ERR_WRITE_FAILED = 0x06;
 
-        private SerialProtocol Lower;
+        private KfdSerialProtocol Lower;
 
-        public AdapterProtocol(string portName)
+        public AdapterProtocol(string portName, TwiKfdDevice deviceType)
         {
-            Lower = new SerialProtocol(portName);
+            if (deviceType == TwiKfdDevice.Kfdtool)
+            {
+                Lower = new KfdToolSerialProtocol(portName);
+            }
+            else if (deviceType == TwiKfdDevice.Kfdshield)
+            {
+                Lower = new KfdShieldSerialProtocol(portName);
+            }
+            else
+            {
+                throw new ArgumentException(String.Format("Unknown device type {0}", deviceType));
+            }
+            
         }
 
         public void Open()

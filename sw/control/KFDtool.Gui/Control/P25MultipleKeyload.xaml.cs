@@ -1,10 +1,17 @@
 ﻿using KFDtool.Container;
+using KFDtool.Elite;
+using KFDtool.Gui.Dialog;
 using KFDtool.P25.TransferConstructs;
 using KFDtool.Shared;
+using Microsoft.Win32;
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Windows.Input;
 
 namespace KFDtool.Gui.Control
 {
@@ -23,6 +30,8 @@ namespace KFDtool.Gui.Control
 
         private Dictionary<int, string> KeysSelected;
 
+        private Dictionary<int, string> KeksAvailable;
+
         private Dictionary<int, string> GroupsAvailable;
 
         private Dictionary<int, string> GroupsSelected;
@@ -39,6 +48,8 @@ namespace KFDtool.Gui.Control
 
             KeysSelected = new Dictionary<int, string>();
 
+            KeksAvailable = new Dictionary<int, string>();
+
             GroupsAvailable = new Dictionary<int, string>();
 
             GroupsSelected = new Dictionary<int, string>();
@@ -47,11 +58,15 @@ namespace KFDtool.Gui.Control
 
             lbKeysSelected.ItemsSource = KeysSelected;
 
+            dropKeksAvailable.ItemsSource = KeksAvailable;
+
             lbGroupsAvailable.ItemsSource = GroupsAvailable;
 
             lbGroupsSelected.ItemsSource = GroupsSelected;
 
             UpdateKeysColumns();
+
+            UpdateKeksDropdown();
 
             UpdateGroupsColumns();
         }
@@ -80,6 +95,25 @@ namespace KFDtool.Gui.Control
             lbKeysAvailable.Items.Refresh();
 
             lbKeysSelected.Items.Refresh();
+        }
+
+        private void UpdateKeksDropdown()
+        {
+            KeksAvailable.Clear();
+
+            KeksAvailable.Add(-1, "Clear Keyload");
+            dropKeksAvailable.SelectedIndex = 0;
+
+            foreach (KeyItem keyItem in Settings.ContainerInner.Keys)
+            {
+                // AACA-A 6.1/Fig. 5
+                if (keyItem.Sln >= 61440)
+                {
+                    KeksAvailable.Add(keyItem.Id, keyItem.Name);
+                }
+            }
+
+            dropKeksAvailable.Items.Refresh();
         }
 
         private void UpdateGroupsColumns()
@@ -112,10 +146,12 @@ namespace KFDtool.Gui.Control
         {
             if (lbKeysAvailable.SelectedItem != null)
             {
-                int key = ((KeyValuePair<int, string>)lbKeysAvailable.SelectedItem).Key;
-
-                Keys.Add(key);
-
+                foreach(var item in lbKeysAvailable.SelectedItems)
+                {
+                    int key = ((KeyValuePair<int, string>)item).Key;
+                    Keys.Add(key);
+                }
+ 
                 UpdateKeysColumns();
             }
         }
@@ -124,10 +160,12 @@ namespace KFDtool.Gui.Control
         {
             if (lbKeysSelected.SelectedItem != null)
             {
-                int key = ((KeyValuePair<int, string>)lbKeysSelected.SelectedItem).Key;
-
-                Keys.Remove(key);
-
+                foreach(var item in lbKeysSelected.SelectedItems)
+                {
+                    int key = ((KeyValuePair<int, string>)item).Key;
+                    Keys.Remove(key);
+                }
+                
                 UpdateKeysColumns();
             }
         }
@@ -136,9 +174,11 @@ namespace KFDtool.Gui.Control
         {
             if (lbGroupsAvailable.SelectedItem != null)
             {
-                int key = ((KeyValuePair<int, string>)lbGroupsAvailable.SelectedItem).Key;
-
-                Groups.Add(key);
+                foreach (var item in lbGroupsAvailable.SelectedItems)
+                {
+                    int key = ((KeyValuePair<int, string>)item).Key;
+                    Groups.Add(key);
+                }
 
                 UpdateGroupsColumns();
             }
@@ -148,10 +188,12 @@ namespace KFDtool.Gui.Control
         {
             if (lbGroupsSelected.SelectedItem != null)
             {
-                int key = ((KeyValuePair<int, string>)lbGroupsSelected.SelectedItem).Key;
-
-                Groups.Remove(key);
-
+                foreach (var item in lbGroupsSelected.SelectedItems)
+                {
+                    int key = ((KeyValuePair<int, string>)item).Key;
+                    Groups.Remove(key);
+                }
+                
                 UpdateGroupsColumns();
             }
         }
@@ -251,7 +293,30 @@ namespace KFDtool.Gui.Control
                 }
             }
 
-            Interact.Keyload(Settings.SelectedDevice, keys);
+            // if the combo box isn't set to Clear, then keyload with the kek
+            int selKekContainerIndex = ((KeyValuePair<int, string>)dropKeksAvailable.Items[dropKeksAvailable.SelectedIndex]).Key;
+            if (selKekContainerIndex > -1)
+            {
+                CmdKeyItem selectedKek = new CmdKeyItem();
+                foreach (KeyItem containerKeyItem in Settings.ContainerInner.Keys)
+                {
+                    if (selKekContainerIndex == containerKeyItem.Id)
+                    {
+                        selectedKek.Sln = containerKeyItem.Sln;
+                        selectedKek.IsKek = true;
+                        selectedKek.KeyId = containerKeyItem.KeyId;
+                        selectedKek.AlgorithmId = containerKeyItem.AlgorithmId;
+                        selectedKek.Key = Utility.ByteStringToByteList(containerKeyItem.Key);
+                    }
+                }
+                Interact.Keyload(Settings.SelectedDevice, keys, selectedKek);
+            }
+            else
+            {
+                Interact.Keyload(Settings.SelectedDevice, keys);
+            }
+
+            
         }
 
         private void Load_Click(object sender, RoutedEventArgs e)
@@ -267,6 +332,148 @@ namespace KFDtool.Gui.Control
             }
 
             MessageBox.Show("Key(s) Loaded Successfully", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void Export_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                List<int> combinedKeys = new List<int>();
+
+                combinedKeys.AddRange(Keys);
+
+                foreach (int groupItemId in Groups)
+                {
+                    bool found = false;
+
+                    foreach (Container.GroupItem containerGroupItem in Settings.ContainerInner.Groups)
+                    {
+                        if (groupItemId == containerGroupItem.Id)
+                        {
+                            found = true;
+
+                            combinedKeys.AddRange(containerGroupItem.Keys);
+
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        throw new Exception(string.Format("group with id {0} not found in container", groupItemId));
+                    }
+                }
+
+                if (combinedKeys.Count == 0)
+                {
+                    throw new Exception("no keys/groups selected");
+                }
+
+                List<KeyEntry> keys = new List<KeyEntry>();
+
+                foreach (int keyId in combinedKeys)
+                {
+                    bool found = false;
+
+                    foreach (KeyItem containerKeyItem in Settings.ContainerInner.Keys)
+                    {
+                        if (keyId == containerKeyItem.Id)
+                        {
+                            found = true;
+
+                            KeyEntry KeyItem = new KeyEntry();
+
+                            //KeyItem.UseActiveKeyset = containerKeyItem.ActiveKeyset;
+                            KeyItem.ksetId = containerKeyItem.KeysetId;
+                            KeyItem.ckrId = containerKeyItem.Sln;
+
+                            if (containerKeyItem.KeyTypeAuto)
+                            {
+                                if (KeyItem.ckrId >= 0 && KeyItem.ckrId <= 61439)
+                                {
+                                    //
+                                }
+                                else if (KeyItem.ckrId >= 61440 && KeyItem.ckrId <= 65535)
+                                {
+                                    throw new NotImplementedException("Elite Export does not support KEKs.");
+                                }
+                                else
+                                {
+                                    throw new Exception(string.Format("invalid Sln and KeyTypeAuto set: {0}", KeyItem.ckrId));
+                                }
+                            }
+                            else if (containerKeyItem.KeyTypeTek)
+                            {
+                                //
+                            }
+                            else if (containerKeyItem.KeyTypeKek)
+                            {
+                                throw new NotImplementedException("Elite Export does not support KEKs.");
+                            }
+                            else
+                            {
+                                throw new Exception("KeyTypeAuto, KeyTypeTek, and KeyTypeKek all false");
+                            }
+
+                            KeyItem.keyId = containerKeyItem.KeyId;
+                            KeyItem.algId = containerKeyItem.AlgorithmId;
+                            KeyItem.keyData = containerKeyItem.Key;
+                            // spaces are not allowed in Excel script, so replicate behavior here:
+                            KeyItem.KeyName = containerKeyItem.Name.Replace(' ', '_');
+
+                            keys.Add(KeyItem);
+
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                    {
+                        throw new Exception(string.Format("key with id {0} not found in container", keyId));
+                    }
+                }
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Encrypted 7-Zip File (*.7z)|*.7z";
+                saveFileDialog.Title = "Save KeyFile";
+                saveFileDialog.ShowDialog();
+
+                string xmlOut = KeyfileInteract.SerializeKeys(keys);
+
+                string sevenZipFileName = saveFileDialog.FileName;
+                string xmlFileName = saveFileDialog.FileName + ".xml";
+                ContainerSetPassword containerSetPassword = new ContainerSetPassword();
+                //containerSetPassword.Owner =; // for centering in parent window
+                containerSetPassword.ShowDialog();
+
+                if (containerSetPassword.PasswordSet)
+                {
+                    File.WriteAllText(xmlFileName, xmlOut);
+
+                    KeyfileInteract.GenerateKeyfile(xmlFileName, sevenZipFileName, containerSetPassword.PasswordText);
+                    // Ignore warning, this is intentional
+#pragma warning disable 4014
+                    cleanupKeyFile(xmlFileName);
+#pragma warning restore 4014
+                }
+                else
+                {
+                    throw new Exception("Password not set.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Error -- {0}", ex.Message), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            MessageBox.Show("Key(s) Exported Successfully", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private static async Task cleanupKeyFile(string xmlFileName)
+        {
+            await Task.Delay(5000);
+            // clean up after ourselves
+            File.Delete(xmlFileName);
         }
     }
 }

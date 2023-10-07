@@ -65,7 +65,7 @@ namespace KFDtool.Gui.Control
 
         private void Start_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (Settings.SelectedDevice.DeviceType != BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (Settings.SelectedDevice.DeviceType != BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 ErrorEmulation(string.Format("The device type {0} does not support MR emulation", Settings.SelectedDevice.DeviceType.ToString()));
                 return;
@@ -85,7 +85,7 @@ namespace KFDtool.Gui.Control
 
                 try
                 {
-                    ap = new AdapterProtocol(Settings.SelectedDevice.TwiKfdtoolDevice.ComPort);
+                    ap = new AdapterProtocol(Settings.SelectedDevice.TwiKfdtoolDevice.ComPort, Settings.SelectedDevice.KfdDeviceType);
 
                     ap.Open();
 

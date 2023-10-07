@@ -1,4 +1,5 @@
 ﻿using KFDtool.Adapter.Protocol.Adapter;
+using KFDtool.Adapter.Device;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,8 @@ namespace KFDtool.Cmd
     {
         public static void FreeRunRead(string port)
         {
-            AdapterProtocol ap = new AdapterProtocol(port);
+            TwiKfdDevice device = TwiKfdDevice.Kfdtool;
+            AdapterProtocol ap = new AdapterProtocol(port, device);
 
             Task.Run(() =>
             {

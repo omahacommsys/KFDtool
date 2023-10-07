@@ -63,7 +63,7 @@ namespace KFDtool.P25.ManualRekey
             DeviceProtocol.EndSession();
         }
 
-        public void Keyload(List<CmdKeyItem> keyItems)
+        public void Keyload(List<CmdKeyItem> keyItems, CmdKeyItem kek = null)
         {
             List<List<CmdKeyItem>> keyGroups = KeyPartitioner.PartitionKeys(keyItems);
 
@@ -131,6 +131,12 @@ namespace KFDtool.P25.ManualRekey
                     }
 
                     modifyKeyCommand.AlgorithmId = keyGroup[0].AlgorithmId;
+
+                    if (kek != null)
+                    {
+
+                        modifyKeyCommand.Kek = kek;
+                    }
 
                     foreach (CmdKeyItem key in keyGroup)
                     {

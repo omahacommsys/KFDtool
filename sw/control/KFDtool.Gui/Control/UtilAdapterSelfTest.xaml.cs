@@ -29,9 +29,9 @@ namespace KFDtool.Gui.Control
 
         private void ST_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (Settings.SelectedDevice.DeviceType != BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (Settings.SelectedDevice.DeviceType != BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
-                MessageBox.Show("Please select the KFDtool device type to perform this function", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Please select the KFDtool/KFDShield device type to perform this function", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -66,7 +66,7 @@ namespace KFDtool.Gui.Control
 
         private void BSL_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (Settings.SelectedDevice.DeviceType != BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (Settings.SelectedDevice.DeviceType != BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
                 MessageBox.Show("Please select the KFDtool device type to perform this function", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -94,9 +94,9 @@ namespace KFDtool.Gui.Control
 
         private void Info_Button_Click(object sender, RoutedEventArgs e)
         {
-            if (Settings.SelectedDevice.DeviceType != BaseDevice.DeviceTypeOptions.TwiKfdtool)
+            if (Settings.SelectedDevice.DeviceType != BaseDevice.DeviceTypeOptions.TwiKfdDevice)
             {
-                MessageBox.Show("Please select the KFDtool device type to perform this function", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Please select the KFDtool/KFDShield device type to perform this function", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
