@@ -62,6 +62,11 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
         private KfdSerialProtocol Lower;
 
+        /* Protocol versioning and feature flags */
+        private Version ProtocolVersion;
+        private bool FeatureAvailableSendBytes => ProtocolVersion >= new Version(2, 1, 0);
+        private bool FeatureAvailableSetTransferSpeed => ProtocolVersion >= new Version(2, 1, 0);
+
         public AdapterProtocol(string portName, TwiKfdDevice deviceType)
         {
             if (deviceType == TwiKfdDevice.Kfdtool)
@@ -92,10 +97,14 @@ namespace KFDtool.Adapter.Protocol.Adapter
         public void Clear()
         {
             Lower.Clear();
-            SetDefaultTransferSpeed();
+            ProtocolVersion = ReadAdapterProtocolVersion();
+            if (FeatureAvailableSetTransferSpeed)
+            {
+                SetDefaultTransferSpeed();
+            }
         }
 
-        public byte[] ReadAdapterProtocolVersion()
+        public Version ReadAdapterProtocolVersion()
         {
             List<byte> cmd = new List<byte>();
 
@@ -130,10 +139,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
                     if (rsp[1] == READ_AP_VER)
                     {
                         byte[] ver = new byte[3];
-                        ver[0] = rsp[2];
-                        ver[1] = rsp[3];
-                        ver[2] = rsp[4];
-                        return ver;
+                        return new Version(rsp[2], rsp[3], rsp[4]);
                     }
                     else
                     {
@@ -839,16 +845,26 @@ namespace KFDtool.Adapter.Protocol.Adapter
                 return;
             }
 
-            const int dataBytesPerCommand = 500;
-            if (data.Count <= dataBytesPerCommand)
+            if (FeatureAvailableSendBytes)
             {
-                SendBytes(data);
+                const int dataBytesPerCommand = 500;
+                if (data.Count <= dataBytesPerCommand)
+                {
+                    SendBytes(data);
+                }
+                else
+                {
+                    for (int offset = 0; offset < data.Count; offset += dataBytesPerCommand)
+                    {
+                        SendBytes(data.Skip(offset).Take(dataBytesPerCommand).ToList());
+                    }
+                }
             }
             else
             {
-                for (int offset = 0; offset < data.Count; offset += dataBytesPerCommand)
+                foreach (byte b in data)
                 {
-                    SendBytes(data.Skip(offset).Take(dataBytesPerCommand).ToList());
+                    SendByte(b);
                 }
             }
         }

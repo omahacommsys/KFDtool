@@ -32,9 +32,9 @@ namespace KFDtool.P25.TransferConstructs
 
                 ap.Clear();
 
-                byte[] ver = ap.ReadAdapterProtocolVersion();
+                Version ver = ap.ReadAdapterProtocolVersion();
 
-                version = string.Format("{0}.{1}.{2}", ver[0], ver[1], ver[2]);
+                version = string.Format("{0}.{1}.{2}", ver.Major, ver.Minor, ver.Build);
             }
             catch (Exception)
             {

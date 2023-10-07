@@ -8,7 +8,7 @@
 
 /* ADAPTER PROTOCOL VERSION */
 #define VER_AP_MAJOR 0x02
-#define VER_AP_MINOR 0x00
+#define VER_AP_MINOR 0x01
 #define VER_AP_PATCH 0x00
 
 #endif /* VERSIONS_H_ */
