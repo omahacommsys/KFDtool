@@ -11,7 +11,7 @@
 #define ESC_PLACEHOLDER 0x71
 
 uint16_t inDataCount = 0;
-uint8_t inData[128];
+uint8_t inData[512];
 
 void spConnect(void)
 {
@@ -147,7 +147,7 @@ void spTxDataBack(const uint8_t* inData,
                             uint16_t inLength)
 {
     uint16_t outLength;
-    uint8_t outData[128];
+    uint8_t outData[512];
 
     outLength = spFrameData(inData, inLength, outData);
 
@@ -158,7 +158,7 @@ void spTxDataWait(const uint8_t* inData,
                             uint16_t inLength)
 {
     uint16_t outLength;
-    uint8_t outData[128];
+    uint8_t outData[512];
 
     outLength = spFrameData(inData, inLength, outData);
 

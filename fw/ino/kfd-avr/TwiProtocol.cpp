@@ -2,10 +2,6 @@
 
 #include "TwiProtocol.h"
 
-#define BIT_TIME FCPU/4000
-#define HALF_BIT_TIME BIT_TIME/2
-#define SIG_TIME BIT_TIME*4
-
 #if defined(__AVR_ATmega328P__)
 // pin 3 is INT1
 #define CLEAR_INTERRUPTS EIFR=2
@@ -39,6 +35,25 @@ volatile uint16_t bitCount;
 volatile uint16_t TXByte;
 volatile uint16_t RXByte;
 volatile uint16_t hasReceived;
+
+// Durations for tx/rx/sig
+volatile uint16_t bitTimeTx = FCPU / 4000;
+volatile uint16_t bitTimeRx = FCPU / 4000;
+volatile uint16_t bitTimeRxHalf = FCPU / 8000;
+volatile uint16_t bitTimeSig = FCPU / 1000;
+
+void twiSetDefaultTransferSpeed() {
+    twiSetTxTransferSpeed(4);
+    twiSetRxTransferSpeed(4);
+}
+
+void twiSetTxTransferSpeed(uint8_t kilobaud) {
+    bitTimeTx = (FCPU / kilobaud) / 1000;
+}
+
+void twiSetRxTransferSpeed(uint8_t kilobaud) {
+    bitTimeRx = (FCPU / kilobaud) / 1000;
+}
 
 uint8_t reverseByte(uint8_t b)
 {
@@ -289,7 +304,7 @@ void twiSendKeySig(void)
 
     TCCR1B = 0b00000001; // set prescaler and CTC mode
     TIMSK1 = 0b00000010; // set interrupt callback
-    OCR1A = SIG_TIME; // set value to count up to
+    OCR1A = bitTimeSig; // set value to count up to
     interrupts(); // go!
 
     while (busySending); // wait for completion
@@ -299,9 +314,8 @@ void twiSendKeySig(void)
     ENABLE_KFD_RX_INT
 }
 
-void twiSendPhyByte(uint8_t byteToSend)
+void twiSendPhyByteHelper(uint8_t byteToSend)
 {
-    DISABLE_KFD_RX_INT
     halGpio1High();
     halActLedOff();
 
@@ -327,13 +341,28 @@ void twiSendPhyByte(uint8_t byteToSend)
 
     TCCR1B = 0b00000001; // set prescaler
     TIMSK1 = 0b00000010; // set compare match mode
-    OCR1A = BIT_TIME; // set value to count up to
+    OCR1A = bitTimeTx; // set value to count up to
     interrupts(); // go!
     
     while (busySending); // wait for completion
 
     halGpio1Low();
     halActLedOn();
+}
+
+void twiSendPhyBytes(uint8_t* byteToSend, uint16_t count)
+{
+    DISABLE_KFD_RX_INT
+    for (uint32_t i = 0; i < count; i++) {
+        twiSendPhyByteHelper(byteToSend[i]);
+    }
+    ENABLE_KFD_RX_INT
+}
+
+void twiSendPhyByte(uint8_t byteToSend)
+{
+    DISABLE_KFD_RX_INT
+    twiSendPhyByteHelper(byteToSend);
     ENABLE_KFD_RX_INT
 }
 
@@ -355,7 +384,7 @@ void Port_1(void)
 
     TCCR1B = 0b00000001; // set prescaler
     TIMSK1 = 0b00000010; // set compare match mode
-    OCR1A = HALF_BIT_TIME; // set value to count up to
+    OCR1A = bitTimeRx / 2; // set value to count up to
     interrupts(); // go!
 }
 
@@ -364,7 +393,7 @@ ISR(TIMER1_COMPA_vect)
     TCNT1 = 0; // clear counter value
     if (timerType == 0) // receive byte mode
     {
-        OCR1A = BIT_TIME; // set value to count up to
+        OCR1A = bitTimeRx; // set value to count up to
         if (rxBitsLeft == 0)
         {
             TCCR1B = 0; // stop timer by declocking

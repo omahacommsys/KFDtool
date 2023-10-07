@@ -20,6 +20,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
         private const byte CMD_SELF_TEST = 0x15;
         private const byte CMD_SEND_KEY_SIG = 0x16;
         private const byte CMD_SEND_BYTE = 0x17;
+        private const byte CMD_SEND_BYTES = 0x18;
 
         /* RESPONSE OPCODES */
         private const byte RSP_ERROR = 0x20;
@@ -30,6 +31,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
         private const byte RSP_SELF_TEST = 0x25;
         private const byte RSP_SEND_KEY_SIG = 0x26;
         private const byte RSP_SEND_BYTE = 0x27;
+        private const byte RSP_SEND_BYTES = 0x28;
 
         /* BROADCAST OPCODES */
         private const byte BCST_RECEIVE_BYTE = 0x31;
@@ -45,6 +47,9 @@ namespace KFDtool.Adapter.Protocol.Adapter
         /* WRITE OPCODES */
         private const byte WRITE_MDL_REV = 0x01;
         private const byte WRITE_SER = 0x02;
+        private const byte WRITE_DEFAULT_TRANSFER_SPEED = 0x03;
+        private const byte WRITE_TX_TRANSFER_SPEED = 0x04;
+        private const byte WRITE_RX_TRANSFER_SPEED = 0x05;
 
         /* ERROR OPCODES */
         private const byte ERR_OTHER = 0x00;
@@ -56,6 +61,11 @@ namespace KFDtool.Adapter.Protocol.Adapter
         private const byte ERR_WRITE_FAILED = 0x06;
 
         private KfdSerialProtocol Lower;
+
+        /* Protocol versioning and feature flags */
+        private Version ProtocolVersion;
+        private bool FeatureAvailableSendBytes => ProtocolVersion >= new Version(2, 1, 0);
+        private bool FeatureAvailableSetTransferSpeed => ProtocolVersion >= new Version(2, 1, 0);
 
         public AdapterProtocol(string portName, TwiKfdDevice deviceType)
         {
@@ -87,9 +97,14 @@ namespace KFDtool.Adapter.Protocol.Adapter
         public void Clear()
         {
             Lower.Clear();
+            ProtocolVersion = ReadAdapterProtocolVersion();
+            if (FeatureAvailableSetTransferSpeed)
+            {
+                SetDefaultTransferSpeed();
+            }
         }
 
-        public byte[] ReadAdapterProtocolVersion()
+        public Version ReadAdapterProtocolVersion()
         {
             List<byte> cmd = new List<byte>();
 
@@ -124,10 +139,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
                     if (rsp[1] == READ_AP_VER)
                     {
                         byte[] ver = new byte[3];
-                        ver[0] = rsp[2];
-                        ver[1] = rsp[3];
-                        ver[2] = rsp[4];
-                        return ver;
+                        return new Version(rsp[2], rsp[3], rsp[4]);
                     }
                     else
                     {
@@ -481,6 +493,122 @@ namespace KFDtool.Adapter.Protocol.Adapter
             }
         }
 
+        public void SetDefaultTransferSpeed()
+        {
+            List<byte> cmd = new List<byte>();
+
+            /*
+            * CMD: WRITE DEFAULT TRANSFER SPEED
+            * 
+            * [0] CMD_WRITE_INFO
+            * [1] WRITE_DEFAULT_TRANSFER_SPEED
+            * [2] speed in kilobaud
+            */
+
+            cmd.Add(CMD_WRITE_INFO);
+            cmd.Add(WRITE_DEFAULT_TRANSFER_SPEED);
+
+            Lower.Send(cmd);
+
+            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+
+            /*
+            * RSP: WRITE INFO
+            * 
+            * [0] RSP_WRITE_INFO
+            */
+
+            if (rsp.Count == 1)
+            {
+                if (rsp[0] != RSP_WRITE_INFO)
+                {
+                    throw new Exception("invalid response opcode");
+                }
+            }
+            else
+            {
+                throw new Exception("invalid response length");
+            }
+        }
+
+        public void SetTxTransferSpeed(byte kilobaud)
+        {
+            List<byte> cmd = new List<byte>();
+
+            /*
+            * CMD: WRITE TX TRANSFER SPEED
+            * 
+            * [0] CMD_WRITE_INFO
+            * [1] WRITE_TX_TRANSFER_SPEED
+            * [2] speed in kilobaud
+            */
+
+            cmd.Add(CMD_WRITE_INFO);
+            cmd.Add(WRITE_TX_TRANSFER_SPEED);
+            cmd.Add(kilobaud);
+
+            Lower.Send(cmd);
+
+            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+
+            /*
+            * RSP: WRITE INFO
+            * 
+            * [0] RSP_WRITE_INFO
+            */
+
+            if (rsp.Count == 1)
+            {
+                if (rsp[0] != RSP_WRITE_INFO)
+                {
+                    throw new Exception("invalid response opcode");
+                }
+            }
+            else
+            {
+                throw new Exception("invalid response length");
+            }
+        }
+
+        public void SetRxTransferSpeed(byte kilobaud)
+        {
+            List<byte> cmd = new List<byte>();
+
+            /*
+            * CMD: WRITE RX TRANSFER SPEED
+            * 
+            * [0] CMD_WRITE_INFO
+            * [1] WRITE_RX_TRANSFER_SPEED
+            * [2] speed in kilobaud
+            */
+
+            cmd.Add(CMD_WRITE_INFO);
+            cmd.Add(WRITE_RX_TRANSFER_SPEED);
+            cmd.Add(kilobaud);
+
+            Lower.Send(cmd);
+
+            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+
+            /*
+            * RSP: WRITE INFO
+            * 
+            * [0] RSP_WRITE_INFO
+            */
+
+            if (rsp.Count == 1)
+            {
+                if (rsp[0] != RSP_WRITE_INFO)
+                {
+                    throw new Exception("invalid response opcode");
+                }
+            }
+            else
+            {
+                throw new Exception("invalid response length");
+            }
+        }
+
         public void EnterBslMode()
         {
             List<byte> cmd = new List<byte>();
@@ -667,11 +795,77 @@ namespace KFDtool.Adapter.Protocol.Adapter
             }
         }
 
+        public void SendBytes(List<byte> data)
+        {
+            List<byte> cmd = new List<byte>();
+
+            /*
+            * CMD: SEND BYTES
+            * 
+            * [0] CMD_SEND_BYTE
+            * [1] reserved (set to 0x00)
+            * [2] MSB of total data bytes
+            * [3] LSB of total data bytes
+            * [4..] bytes to send
+            */
+
+            cmd.Add(CMD_SEND_BYTES);
+            cmd.Add(0x00);
+            cmd.Add((byte)(data.Count >> 8));
+            cmd.Add((byte)(data.Count));
+            cmd.AddRange(data);
+
+            Lower.Send(cmd);
+
+            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+
+            /*
+            * RSP: SEND BYTES
+            * 
+            * [0] RSP_SEND_BYTE
+            */
+
+            if (rsp.Count == 1)
+            {
+                if (rsp[0] != RSP_SEND_BYTES)
+                {
+                    throw new Exception("invalid response opcode");
+                }
+            }
+            else
+            {
+                throw new Exception("invalid response length");
+            }
+        }
+
         public void SendData(List<byte> data)
         {
-            foreach (byte b in data)
+            if (data.Count == 0)
             {
-                SendByte(b);
+                return;
+            }
+
+            if (FeatureAvailableSendBytes)
+            {
+                const int dataBytesPerCommand = 500;
+                if (data.Count <= dataBytesPerCommand)
+                {
+                    SendBytes(data);
+                }
+                else
+                {
+                    for (int offset = 0; offset < data.Count; offset += dataBytesPerCommand)
+                    {
+                        SendBytes(data.Skip(offset).Take(dataBytesPerCommand).ToList());
+                    }
+                }
+            }
+            else
+            {
+                foreach (byte b in data)
+                {
+                    SendByte(b);
+                }
             }
         }
 

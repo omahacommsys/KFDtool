@@ -178,6 +178,7 @@ Contributors
 
 * [Ellie Dugger](https://github.com/duggerd)
 * [Matt Ames](https://github.com/mattames)
+* [Ilya Smirnov](https://github.com/ilyacodes)
 
 License / Legal
 ---------------

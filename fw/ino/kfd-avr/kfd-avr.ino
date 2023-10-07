@@ -7,7 +7,7 @@
 #include "UID.h"
 
 uint16_t cmdCount;
-uint8_t cmdData[128];
+uint8_t cmdData[512];
 uint16_t rxReady;
 uint8_t rxTemp;
 
@@ -279,6 +279,72 @@ void loop()
                         spTxDataWait(rspData, sizeof(rspData));
                     }
                 }
+                else if (cmdData[1] == WRITE_DEFAULT_TRANSFER_SPEED) // write default transfer speed
+                {
+                    if (cmdCount == 2)
+                    {
+                        twiSetDefaultTransferSpeed();
+
+                        uint8_t rspData[1];
+
+                        rspData[0] = RSP_WRITE_INFO;
+
+                        spTxDataWait(rspData, sizeof(rspData));
+                    }
+                    else // invalid command length
+                    {
+                        uint8_t rspData[2];
+
+                        rspData[0] = RSP_ERROR;
+                        rspData[1] = ERR_INVALID_CMD_LENGTH;
+
+                        spTxDataWait(rspData, sizeof(rspData));
+                    }
+                }
+                else if (cmdData[1] == WRITE_TX_TRANSFER_SPEED) // write new tx transfer speed
+                {
+                    if (cmdCount == 3)
+                    {
+                        twiSetTxTransferSpeed(cmdData[2]);
+
+                        uint8_t rspData[1];
+
+                        rspData[0] = RSP_WRITE_INFO;
+
+                        spTxDataWait(rspData, sizeof(rspData));
+                    }
+                    else // invalid command length
+                    {
+                        uint8_t rspData[2];
+
+                        rspData[0] = RSP_ERROR;
+                        rspData[1] = ERR_INVALID_CMD_LENGTH;
+
+                        spTxDataWait(rspData, sizeof(rspData));
+                    }
+                }
+                else if (cmdData[1] == WRITE_RX_TRANSFER_SPEED) // write new rx transfer speed
+                {
+                    if (cmdCount == 3)
+                    {
+                        twiSetRxTransferSpeed(cmdData[2]);
+
+                        uint8_t rspData[1];
+
+                        rspData[0] = RSP_WRITE_INFO;
+
+                        spTxDataWait(rspData, sizeof(rspData));
+                    }
+                    else // invalid command length
+                    {
+                        uint8_t rspData[2];
+
+                        rspData[0] = RSP_ERROR;
+                        rspData[1] = ERR_INVALID_CMD_LENGTH;
+
+                        spTxDataWait(rspData, sizeof(rspData));
+                    }
+                }
                 else // invalid write opcode
                 {
                     uint8_t rspData[2];
@@ -414,6 +480,29 @@ void loop()
                 uint8_t rspData[1];
 
                 rspData[0] = RSP_SEND_BYTE;
+
+                spTxDataWait(rspData, sizeof(rspData));
+            }
+            else // invalid command length
+            {
+                uint8_t rspData[2];
+
+                rspData[0] = RSP_ERROR;
+                rspData[1] = ERR_INVALID_CMD_LENGTH;
+
+                spTxDataWait(rspData, sizeof(rspData));
+            }
+        }
+        else if (cmdData[0] == CMD_SEND_BYTES) // send bytes
+        {
+            uint16_t dataCount = (uint16_t)cmdData[2] * 256 + cmdData[3];
+            if (cmdCount == dataCount + 4)
+            {
+                twiSendPhyBytes(cmdData + 4, dataCount);
+
+                uint8_t rspData[1];
+
+                rspData[0] = RSP_SEND_BYTES;
 
                 spTxDataWait(rspData, sizeof(rspData));
             }

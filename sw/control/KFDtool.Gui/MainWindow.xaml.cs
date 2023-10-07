@@ -751,9 +751,13 @@ namespace KFDtool.Gui
 
                 Version apVersion = new Version(apVerStr);
 
-                if (apVersion.Major > 2)    // TODO: handle this better
+                if (apVersion.Major != 2)    // TODO: handle this better
                 {
-                    MessageBox.Show(string.Format("Adapter protocol version not compatible ({0})", apVerStr), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    MessageBox.Show(string.Format(
+                        "Adapter protocol version not compatible ({0})\n\n" +
+                        "This version of KFDtool supports adapter protocol versions 2.x.x.\n\n" +
+                        "Please update your adapter firmware.",
+                        apVerStr), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
@@ -797,27 +801,19 @@ namespace KFDtool.Gui
 
         private void About_MenuItem_Click(object sender, RoutedEventArgs e)
         {
+            MessageBox.Show(
+                string.Format(
+                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Ellie Dugger{0}{0}Copyright 2021-2023 Natalie Moore{0}{0}Copyright 2023 Ilya Smirnov{0}{0}Version: {1}"
 #if DEBUG
-            MessageBox.Show(
-                string.Format(
-                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Ellie Dugger{0}{0}Copyright 2021-2023 Natalie Moore{0}{0}Version: {1} DEBUG{0}{0}",
-                    Environment.NewLine,
-                    Settings.AssemblyInformationalVersion
-                ),
-                "About",
-                MessageBoxButton.OK
-            );
-#else
-            MessageBox.Show(
-                string.Format(
-                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Ellie Dugger{0}{0}Copyright 2021-2023 Natalie Moore{0}{0}Version: {1}{0}{0}",
-                    Environment.NewLine,
-                    Settings.AssemblyInformationalVersion
-                ),
-                "About",
-                MessageBoxButton.OK
-            );
+                    + " DEBUG"
 #endif
+                    + "{0}{0}",
+                    Environment.NewLine,
+                    Settings.AssemblyInformationalVersion
+                ),
+                "About",
+                MessageBoxButton.OK
+            );
         }
     }
 }
