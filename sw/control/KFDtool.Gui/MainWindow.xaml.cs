@@ -28,11 +28,61 @@ namespace KFDtool.Gui
             InitializeComponent();
 
             UpdateContainerText();
+            try
+            {
+                Settings.LoadSettings();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Saved settings invalid, resetting to default", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                Settings.InitSettings();
+                Settings.LoadSettings();
+            }
 
             InitAppDet();
 
-            // on load select the KFDtool type
-            SwitchType(TypeTwiKfdtool);
+            // on load select the type from settings
+            switch (Settings.SelectedDevice.DeviceType)
+            {
+                case BaseDevice.DeviceTypeOptions.DliIp:
+                    {
+                        SwitchType(TypeDliIp);
+                        break;
+                    }
+
+                case BaseDevice.DeviceTypeOptions.TwiKfdDevice:
+                default:
+                    {
+                        // Select the appropriate device type based on loaded settings
+                        switch (Settings.SelectedDevice.KfdDeviceType)
+                        {
+                            case TwiKfdDevice.Kfdshield:
+                                {
+                                    SwitchType(TypeTwiKfdshield);
+                                    break;
+                                }
+                            case TwiKfdDevice.Kfdtool:
+                                {
+                                    SwitchType(TypeTwiKfdtool);
+                                    break;
+                                }
+                            default:
+                                {
+                                    SwitchType(TypeTwiKfdtool);
+                                    break;
+                                }
+                        }
+                        // Select proper com port from loaded settings
+                        foreach(MenuItem port in DeviceMenu.Items)
+                        {
+                            if (port.Name == Settings.SelectedDevice.TwiKfdtoolDevice.ComPort)
+                            {
+                                SelectDevice(port);
+                            }
+                        }
+                        break;
+                    }
+            }
 
             // on load select the P25 Keyload function
             SwitchScreen("NavigateP25Keyload", true);
@@ -519,7 +569,17 @@ namespace KFDtool.Gui
             {
                 DeviceMenu.Items.Clear();
 
-                Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdtool;
+                Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
+                Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.Kfdtool;
+
+                StartAppDet();
+            }
+            else if (mi.Name == "TypeTwiKfdshield")
+            {
+                DeviceMenu.Items.Clear();
+
+                Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
+                Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.Kfdshield;
 
                 StartAppDet();
             }
@@ -550,6 +610,9 @@ namespace KFDtool.Gui
                 Settings.SelectedDevice.DliIpDevice.Port.ToString(),
                 Settings.SelectedDevice.DliIpDevice.Variant.ToString()
             );
+
+            // Save config
+            Settings.SaveSettings();
         }
 
         private void Type_MenuItem_Click(object sender, RoutedEventArgs e)
@@ -557,6 +620,9 @@ namespace KFDtool.Gui
             MenuItem mi = sender as MenuItem;
 
             SwitchType(mi);
+
+            // Save config
+            Settings.SaveSettings();
         }
 
         private void DliIpEdit_MenuItem_Click(object sender, RoutedEventArgs e)
@@ -628,6 +694,8 @@ namespace KFDtool.Gui
 
                     DeviceMenu.Items.Add(item);
 
+                    // Removed auto-select on startup to get rid of the annoying timeout error
+                    /*
                     // there was a change in the device list, but the device that was previously selected is still connected
                     if (port == Settings.SelectedDevice.TwiKfdtoolDevice.ComPort)
                     {
@@ -641,7 +709,7 @@ namespace KFDtool.Gui
                     {
                         SelectDevice(item);
                         first = false;
-                    }
+                    }*/
                 }
             });
         }
@@ -668,6 +736,9 @@ namespace KFDtool.Gui
 
                 string apVerStr = string.Empty;
 
+                // Save new selection
+                Settings.SaveSettings();
+
                 try
                 {
                     apVerStr = Interact.ReadAdapterProtocolVersion(Settings.SelectedDevice);
@@ -680,7 +751,7 @@ namespace KFDtool.Gui
 
                 Version apVersion = new Version(apVerStr);
 
-                if (apVersion.Major != 2)
+                if (apVersion.Major > 2)    // TODO: handle this better
                 {
                     MessageBox.Show(string.Format("Adapter protocol version not compatible ({0})", apVerStr), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
@@ -729,7 +800,7 @@ namespace KFDtool.Gui
 #if DEBUG
             MessageBox.Show(
                 string.Format(
-                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Daniel Dugger{0}{0}Copyright 2021-2023 Natalie 'Nat' Moore{0}{0}Copyright 2023 Ilya Smirnov{0}{0}Version: {1} DEBUG",
+                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Ellie Dugger{0}{0}Copyright 2021-2023 Natalie Moore{0}{0}Copyright 2023 Ilya Smirnov{0}{0}Version: {1} DEBUG{0}{0}",
                     Environment.NewLine,
                     Settings.AssemblyInformationalVersion
                 ),
@@ -739,7 +810,7 @@ namespace KFDtool.Gui
 #else
             MessageBox.Show(
                 string.Format(
-                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Daniel Dugger{0}{0}Copyright 2021-2023 Natalie 'Nat' Moore{0}{0}Copyright 2023 Ilya Smirnov{0}{0}Version: {1}",
+                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Ellie Dugger{0}{0}Copyright 2021-2023 Natalie Moore{0}{0}Copyright 2023 Ilya Smirnov{0}{0}Version: {1}{0}{0}",
                     Environment.NewLine,
                     Settings.AssemblyInformationalVersion
                 ),

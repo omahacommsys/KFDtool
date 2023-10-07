@@ -59,9 +59,12 @@
     <Compile Include="Bundle\Model.cs" />
     <Compile Include="Bundle\Firmware.cs" />
     <Compile Include="Bundle\Update.cs" />
+    <Compile Include="Device\TwiKfdDevice.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol\Adapter\AdapterProtocol.cs" />
-    <Compile Include="Protocol\Serial\SerialProtocol.cs" />
+    <Compile Include="Protocol\Serial\KfdSerialProtocol.cs" />
+    <Compile Include="Protocol\Serial\KfdShieldSerialProtocol.cs" />
+    <Compile Include="Protocol\Serial\KfdToolSerialProtocol.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KFDtool.BSL430\KFDtool.BSL430.csproj">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <export version="D">
   <design>
-    <source>C:\Users\JackMoore\codestuff\KFDTool-fork\hw\KFDShield\KVLShield.sch</source>
+    <source>C:\Users\natalie\codestuff\KFDTool-fork\hw\KFDShield\KVLShield.sch</source>
     <date>10/27/2021 2:25:33 AM</date>
     <tool>Eeschema (5.1.10)-1</tool>
     <sheet number="1" name="/" tstamps="/">
@@ -12,7 +12,7 @@
         <date>2021-10-26</date>
         <source>KVLShield.sch</source>
         <comment number="1" value="Designed by Natalie Moore (jelimoore)"/>
-        <comment number="2" value="Based upon the work of Daniel Dugger (duggerd)"/>
+        <comment number="2" value="Based upon the work of Ellie Dugger (duggerd)"/>
         <comment number="3" value=""/>
         <comment number="4" value=""/>
       </title_block>

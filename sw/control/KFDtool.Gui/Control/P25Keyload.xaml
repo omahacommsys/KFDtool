@@ -42,5 +42,6 @@
         <Button Content="Generate" Click="Generate_Button_Click" HorizontalAlignment="Left" Margin="626,219,0,0" VerticalAlignment="Top" Width="75"/>
         <CheckBox Name="cbHide" Content="Hide" Checked="OnHideChecked" Unchecked="OnHideUnchecked" HorizontalAlignment="Left" Margin="564,252,0,0" VerticalAlignment="Top"/>
         <Button Content="Load" Click="Load_Button_Click" HorizontalAlignment="Left" Margin="109,252,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Elite Export" Click="Export_Button_Click" HorizontalAlignment="Left" Margin="209,252,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </UserControl>

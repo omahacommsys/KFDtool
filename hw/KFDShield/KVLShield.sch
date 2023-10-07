@@ -9,7 +9,7 @@ Date "2021-10-26"
 Rev "1.0"
 Comp ""
 Comment1 "Designed by Nat Moore (jelimoore)"
-Comment2 "Based upon the work of Daniel Dugger (duggerd)"
+Comment2 "Based upon the work of Ellie Dugger (duggerd)"
 Comment3 ""
 Comment4 ""
 $EndDescr

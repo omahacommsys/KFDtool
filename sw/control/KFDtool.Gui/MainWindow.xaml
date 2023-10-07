@@ -23,6 +23,7 @@
                 </MenuItem>
                 <MenuItem Name="TypeMenu" Header="_Type">
                     <MenuItem Name="TypeTwiKfdtool" Header="_TWI (KFDtool)" Click="Type_MenuItem_Click" />
+                    <MenuItem Name="TypeTwiKfdshield" Header="_TWI (KFDShield)" Click="Type_MenuItem_Click" />
                     <MenuItem Name="TypeDliIp" Header="_DLI (IP)" Click="Type_MenuItem_Click" />
                 </MenuItem>
                 <MenuItem Name="DeviceMenu" Header="_Device" />
