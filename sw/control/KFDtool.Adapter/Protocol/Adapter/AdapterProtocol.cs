@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace KFDtool.Adapter.Protocol.Adapter
 {
@@ -81,7 +82,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
             {
                 throw new ArgumentException(String.Format("Unknown device type {0}", deviceType));
             }
-            
+
         }
 
         public void Open()
@@ -721,6 +722,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
         public void SendKeySignature()
         {
+            Debug.WriteLine("Sending key signature");
             List<byte> cmd = new List<byte>();
 
             /*
@@ -840,6 +842,13 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
         public void SendData(List<byte> data)
         {
+            Debug.Write("Sending data: ");
+            foreach (byte b in data)
+            {
+                Debug.Write($"{b:x2} ");
+            }
+            Debug.WriteLine("");
+
             if (data.Count == 0)
             {
                 return;
@@ -885,6 +894,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
             {
                 if (rsp[0] == BCST_RECEIVE_BYTE)
                 {
+                    Debug.WriteLine($"Received byte: {rsp[2]:x2}");
                     return rsp[2];
                 }
                 else
