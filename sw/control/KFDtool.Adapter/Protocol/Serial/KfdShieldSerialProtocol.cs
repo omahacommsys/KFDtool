@@ -149,7 +149,7 @@ namespace KFDtool.Adapter.Protocol.Serial
                 {
                     if (!PacketReady.WaitOne(timeout))
                     {
-                        throw new Exception("timeout waiting for data");
+                        throw new TimeoutException("timeout waiting for data");
                     }
                 }
                 else if (timeout == 0)
