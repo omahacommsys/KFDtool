@@ -11,8 +11,6 @@ namespace KFDtool.Adapter.Protocol.Adapter
 {
     public class AdapterProtocol
     {
-        private const int AP_TIMEOUT = 1000; // 1 second
-
         /* COMMAND OPCODES */
         private const byte CMD_READ = 0x11;
         private const byte CMD_WRITE_INFO = 0x12;
@@ -63,6 +61,8 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
         private KfdSerialProtocol Lower;
 
+        public int TimeoutMs { get; set; }
+
         /* Protocol versioning and feature flags */
         private Version ProtocolVersion;
         private bool FeatureAvailableSendBytes => ProtocolVersion >= new Version(2, 1, 0);
@@ -83,6 +83,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
                 throw new ArgumentException(String.Format("Unknown device type {0}", deviceType));
             }
 
+            TimeoutMs = 1000;
         }
 
         public void Open()
@@ -121,7 +122,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: READ AP VERSION
@@ -174,7 +175,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: READ FW VERSION
@@ -230,7 +231,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: READ UNIQUE ID
@@ -295,7 +296,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: READ MODEL ID
@@ -345,7 +346,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: READ HARDWARE REVISION
@@ -399,7 +400,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: READ SERIAL NUMBER
@@ -473,7 +474,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: WRITE INFO
@@ -511,7 +512,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: WRITE INFO
@@ -550,7 +551,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: WRITE INFO
@@ -589,7 +590,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: WRITE INFO
@@ -624,7 +625,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: ENTER BSL MODE
@@ -659,7 +660,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: RESET
@@ -694,7 +695,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: SELF TEST
@@ -737,7 +738,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: SEND KEY SIGNATURE
@@ -776,7 +777,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: SEND BYTE
@@ -819,7 +820,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             Lower.Send(cmd);
 
-            List<byte> rsp = Lower.Read(AP_TIMEOUT);
+            List<byte> rsp = Lower.Read(TimeoutMs);
 
             /*
             * RSP: SEND BYTES
