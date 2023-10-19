@@ -32,7 +32,7 @@ namespace KFDtool.Gui
             {
                 Settings.LoadSettings();
             }
-            catch (Exception ex)
+            catch
             {
                 MessageBox.Show("Saved settings invalid, resetting to default", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 Settings.InitSettings();
@@ -73,7 +73,7 @@ namespace KFDtool.Gui
                                 }
                         }
                         // Select proper com port from loaded settings
-                        foreach(MenuItem port in DeviceMenu.Items)
+                        foreach (MenuItem port in DeviceMenu.Items)
                         {
                             if (port.Name == Settings.SelectedDevice.TwiKfdtoolDevice.ComPort)
                             {
@@ -657,7 +657,7 @@ namespace KFDtool.Gui
             // needed to access UI elements from different thread
             this.Dispatcher.Invoke(() =>
             {
-                bool first = true;
+                //bool first = true;
 
                 List<string> ports = AppDet.Devices;
 
