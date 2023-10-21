@@ -56,8 +56,8 @@ namespace KFDtool.Gui
         {
             Properties.Settings.Default.TwiComPort = "";
             Properties.Settings.Default.DliHostname = "192.168.128.1";
-            Properties.Settings.Default.DliPort = 0;
-            Properties.Settings.Default.DliVariant = "Standard";
+            Properties.Settings.Default.DliPort = 49644;
+            Properties.Settings.Default.DliVariant = "Motorola";
             Properties.Settings.Default.DeviceType = "TwiKfdDevice";
             Properties.Settings.Default.KfdDeviceType = "Kfdshield";
             Properties.Settings.Default.Save();
