@@ -92,6 +92,9 @@
     <Compile Include="Control\P25ViewKmfConfig.xaml.cs">
       <DependentUpon>P25ViewKmfConfig.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Control\KMFViewKeys.xaml.cs">
+      <DependentUpon>KMFViewKeys.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Control\P25ViewRsiConfig.xaml.cs">
       <DependentUpon>P25ViewRsiConfig.xaml</DependentUpon>
     </Compile>
@@ -152,6 +155,10 @@
     <Page Include="Control\P25ViewKmfConfig.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Control\KMFViewKeys.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Control\P25ViewRsiConfig.xaml">
       <SubType>Designer</SubType>
@@ -251,6 +258,10 @@
     <ProjectReference Include="..\KFDtool.Elite\KFDtool.Elite.csproj">
       <Project>{6c166f22-1fc0-4c52-a2ed-5a46cf9216bd}</Project>
       <Name>KFDtool.Elite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KFDtool.KMF\KFDtool.KMF.csproj">
+      <Project>{a5dcaec8-fb5f-4ea5-b331-698547597e39}</Project>
+      <Name>KFDtool.KMF</Name>
     </ProjectReference>
     <ProjectReference Include="..\KFDtool.P25\KFDtool.P25.csproj">
       <Project>{824aca5b-01db-42b7-892f-e4cec6ff3887}</Project>

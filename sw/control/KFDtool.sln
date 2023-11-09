@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KFDtool.Container", "KFDtoo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KFDtool.Elite", "KFDtool.Elite\KFDtool.Elite.csproj", "{6C166F22-1FC0-4C52-A2ED-5A46CF9216BD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KFDtool.KMF", "KFDtool.KMF\KFDtool.KMF.csproj", "{A5DCAEC8-FB5F-4EA5-B331-698547597E39}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{6C166F22-1FC0-4C52-A2ED-5A46CF9216BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C166F22-1FC0-4C52-A2ED-5A46CF9216BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C166F22-1FC0-4C52-A2ED-5A46CF9216BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5DCAEC8-FB5F-4EA5-B331-698547597E39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5DCAEC8-FB5F-4EA5-B331-698547597E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5DCAEC8-FB5F-4EA5-B331-698547597E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5DCAEC8-FB5F-4EA5-B331-698547597E39}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

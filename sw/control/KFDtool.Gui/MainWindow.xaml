@@ -21,6 +21,9 @@
                     <MenuItem Header="_Save As" Click="Container_Save_As_Click"/>
                     <MenuItem Header="_Close" Click="Container_Close_Click"/>
                 </MenuItem>
+                <MenuItem Name="KMFMenu" Header="_KMF">
+                    <MenuItem Name="NavigateKMFViewKeys" Header="_View Keys" Click="Navigate_MenuItem_Click" />
+                </MenuItem>
                 <MenuItem Name="TypeMenu" Header="_Type">
                     <MenuItem Name="TypeTwiKfdtool" Header="_TWI (KFDtool)" Click="Type_MenuItem_Click" />
                     <MenuItem Name="TypeTwiKfdshield" Header="_TWI (KFDShield)" Click="Type_MenuItem_Click" />

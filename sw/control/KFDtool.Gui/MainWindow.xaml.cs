@@ -234,6 +234,13 @@ namespace KFDtool.Gui
                 Settings.ScreenCurrent = item;
                 UpdateTitle("Utility - Adapter Self Test");
             }
+            else if (item == "NavigateKMFViewKeys")
+            {
+                control = new Control.KMFViewKeys();
+                NavigateKMFViewKeys.IsChecked = true;
+                Settings.ScreenCurrent = item;
+                UpdateTitle("KMF - View Keys");
+            }
             else
             {
                 throw new Exception(string.Format("unknown item passed to SwitchScreen - {0}", item));
