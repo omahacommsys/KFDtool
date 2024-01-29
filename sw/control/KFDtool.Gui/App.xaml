@@ -4,6 +4,13 @@
              xmlns:local="clr-namespace:KFDtool.Gui"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <!-- WPFDarkTheme from https://github.com/AngryCarrot789/WPFDarkTheme -->
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/ColourDictionaries/DeepDark.xaml"/>
+                <ResourceDictionary Source="Themes/ControlColours.xaml"/>
+                <ResourceDictionary Source="Themes/Controls.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

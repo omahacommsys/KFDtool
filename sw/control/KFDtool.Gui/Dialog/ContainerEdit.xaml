@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KFDtool.Gui.Dialog"
         mc:Ignorable="d"
+        Style="{StaticResource CustomWindowStyle}"
         Title="Edit Container" Height="600" Width="950" MinHeight="600" MinWidth="950" WindowStartupLocation="CenterOwner"
         Closing="ContainerEdit_Closing">
     <Grid>
@@ -25,10 +26,27 @@
                 </StackPanel>
                 <TabControl Name="containerTabControl" SelectionChanged="Tab_SelectionChanged">
                     <TabItem Name="keysTabItem" Header="Keys">
-                        <ListView x:Name="keysListView" DisplayMemberPath="Name" />
+                        <ListView x:Name="keysListView" d:ItemsSource="{d:SampleData ItemCount=10}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" >
+                                        <Image Width="32" Height="16" Source="{Binding AlgoImage}" RenderOptions.BitmapScalingMode="HighQuality" />
+                                        <Label Content="{Binding Name}" Margin="2 0 0 0"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
                     </TabItem>
                     <TabItem Name="groupsTabItem" Header="Groups">
-                        <ListView x:Name="groupsListView" DisplayMemberPath="Name" />
+                        <ListView x:Name="groupsListView" d:ItemsSource="{d:SampleData ItemCount=10}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Label Content="{Binding Name}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
                     </TabItem>
                 </TabControl>
             </DockPanel>

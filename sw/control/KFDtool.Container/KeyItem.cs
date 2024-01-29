@@ -23,6 +23,29 @@ namespace KFDtool.Container
             }
         }
 
+        public string AlgoImage
+        {
+            get
+            {
+                switch (this.AlgorithmId)
+                {
+                    // DES-OFB & DES-XL
+                    case 0x81:
+                    case 0x9F:
+                        return "/Images/Algos/DES.png";
+                    // AES
+                    case 0x84:
+                        return "/Images/Algos/AES.png";
+                    // ARC4
+                    case 0xAA:
+                        return "/Images/Algos/ARC4.png";
+                    // Return TBD for all non-handled algos
+                    default:
+                        return "/Images/Algos/OTHER.png";
+                }
+            }
+        }
+
         public bool ActiveKeyset { get; set; }
 
         public int KeysetId { get; set; }
@@ -37,7 +60,23 @@ namespace KFDtool.Container
 
         public int KeyId { get; set; }
 
-        public int AlgorithmId { get; set; }
+        private int _algorithmId { get; set; }
+        public int AlgorithmId 
+        { 
+            get
+            {
+                return _algorithmId;
+            }
+            set
+            {
+                if (_algorithmId != value)
+                {
+                    _algorithmId = value;
+                }
+                NotifyPropertyChanged("AlgoImage");
+                NotifyPropertyChanged("AlgorithmId");
+            }
+        }
 
         public string Key { get; set; }
 

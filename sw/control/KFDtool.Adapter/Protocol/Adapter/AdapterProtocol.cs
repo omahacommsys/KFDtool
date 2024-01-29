@@ -74,7 +74,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
             {
                 Lower = new KfdToolSerialProtocol(portName);
             }
-            else if (deviceType == TwiKfdDevice.Kfdshield)
+            else if (deviceType == TwiKfdDevice.Kfdshield || deviceType == TwiKfdDevice.Kfdmicro)
             {
                 Lower = new KfdShieldSerialProtocol(portName);
             }
