@@ -66,6 +66,11 @@ namespace KFDtool.Gui
                                     SwitchType(TypeTwiKfdtool);
                                     break;
                                 }
+                            case TwiKfdDevice.Kfdmicro:
+                                {
+                                    SwitchType(TypeTwiKfdmicro);
+                                    break;
+                                }
                             default:
                                 {
                                     SwitchType(TypeTwiKfdtool);
@@ -572,7 +577,7 @@ namespace KFDtool.Gui
                 Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
                 Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.Kfdtool;
 
-                ResetTwiDeviceConfig();
+                ResetTwiDeviceInfo();
 
                 StartAppDet();
             }
@@ -583,7 +588,7 @@ namespace KFDtool.Gui
                 Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
                 Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.Kfdshield;
 
-                ResetTwiDeviceConfig();
+                ResetTwiDeviceInfo();
 
                 StartAppDet();
             }
@@ -594,7 +599,7 @@ namespace KFDtool.Gui
                 Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
                 Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.Kfdmicro;
 
-                ResetTwiDeviceConfig();
+                ResetTwiDeviceInfo();
 
                 StartAppDet();
             }
@@ -665,10 +670,8 @@ namespace KFDtool.Gui
             AppDet.Stop();
         }
 
-        private void ResetTwiDeviceConfig()
+        private void ResetTwiDeviceInfo()
         {
-            Settings.SelectedDevice.TwiKfdtoolDevice.ComPort = string.Empty;
-
             lblSelectedDevice.Text = string.Format(
                 "TWI ({0}) - None",
                 Settings.SelectedDevice.KfdDeviceType.ToString()
