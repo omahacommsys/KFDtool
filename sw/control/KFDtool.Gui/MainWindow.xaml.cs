@@ -34,7 +34,7 @@ namespace KFDtool.Gui
             }
             catch
             {
-                MessageBox.Show("Saved settings invalid, resetting to default", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Saved settings invalid, resetting to default", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
                 Settings.InitSettings();
                 Settings.LoadSettings();
             }

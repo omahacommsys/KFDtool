@@ -8,11 +8,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("KFDtool")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("OCS fork of KFDTool SW to support AVR-based keyloading platforms")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KFDtool")]
-[assembly: AssemblyCopyright("Copyright 2019-2020 Ellie Dugger\nCopyright 2021-2023 Natalie Moore\nCopyright 2023 Patrick McDonnell")]
+[assembly: AssemblyCopyright("Copyright 2019-2020 Ellie Dugger\nCopyright 2021-2023 Natalie Moore\nCopyright 2023-2024 Patrick McDonnell")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,6 +51,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.7.3.0")]
-[assembly: AssemblyFileVersion("1.7.3.0")]
-[assembly: AssemblyInformationalVersion("1.7.3")]
+[assembly: AssemblyVersion("1.8.0.0")]
+[assembly: AssemblyFileVersion("1.8.0.0")]
+[assembly: AssemblyInformationalVersion("1.8.0")]
