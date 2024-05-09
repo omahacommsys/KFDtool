@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KFDtool.Gui"
         mc:Ignorable="d"
+        Style="{StaticResource CustomWindowStyle}"
         Height="485" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Closing="MainWindow_Closing">
     <Grid>
         <DockPanel>
@@ -23,7 +24,8 @@
                 </MenuItem>
                 <MenuItem Name="TypeMenu" Header="_Type">
                     <MenuItem Name="TypeTwiKfdtool" Header="_TWI (KFDtool)" Click="Type_MenuItem_Click" />
-                    <MenuItem Name="TypeTwiKfdshield" Header="_TWI (KFDShield)" Click="Type_MenuItem_Click" />
+                    <MenuItem Name="TypeTwiKfdshield" Header="_TWI (KFDshield)" Click="Type_MenuItem_Click" />
+                    <MenuItem Name="TypeTwiKfdmicro" Header="_TWI (KFDmicro)" Click="Type_MenuItem_Click" />
                     <MenuItem Name="TypeDliIp" Header="_DLI (IP)" Click="Type_MenuItem_Click" />
                 </MenuItem>
                 <MenuItem Name="DeviceMenu" Header="_Device" />
@@ -51,10 +53,16 @@
             <StatusBar DockPanel.Dock="Bottom">
                 <StackPanel Orientation="Vertical">
                     <StatusBarItem>
-                        <TextBlock Name="lblSelectedContainer"></TextBlock>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock TextAlignment="Right" Width="60" Foreground="Gray">Container:</TextBlock>
+                            <TextBlock Name="lblSelectedContainer" Margin="6 0 0 0" Foreground="LightGray">Not Opened</TextBlock>
+                        </StackPanel>
                     </StatusBarItem>
                     <StatusBarItem>
-                        <TextBlock Name="lblSelectedDevice"></TextBlock>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock TextAlignment="Right" Width="60" Foreground="Gray">Device:</TextBlock>
+                            <TextBlock Name="lblSelectedDevice" Margin="6 0 0 0" Foreground="LightGray">Not Connected</TextBlock>
+                        </StackPanel>
                     </StatusBarItem>
                 </StackPanel>
             </StatusBar>

@@ -66,6 +66,11 @@ namespace KFDtool.Gui
                                     SwitchType(TypeTwiKfdtool);
                                     break;
                                 }
+                            case TwiKfdDevice.Kfdmicro:
+                                {
+                                    SwitchType(TypeTwiKfdmicro);
+                                    break;
+                                }
                             default:
                                 {
                                     SwitchType(TypeTwiKfdtool);
@@ -274,11 +279,11 @@ namespace KFDtool.Gui
         {
             if (Settings.ContainerOpen)
             {
-                lblSelectedContainer.Text = string.Format("Selected Container: {0}{1}", Settings.ContainerSaved ? string.Empty : "[UNSAVED] ", Settings.ContainerPath);
+                lblSelectedContainer.Text = string.Format("{0}{1}", Settings.ContainerSaved ? string.Empty : "[UNSAVED] ", Settings.ContainerPath);
             }
             else
             {
-                lblSelectedContainer.Text = "Selected Container: None";
+                lblSelectedContainer.Text = "Not Opened";
             }
         }
 
@@ -572,6 +577,8 @@ namespace KFDtool.Gui
                 Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
                 Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.Kfdtool;
 
+                ResetTwiDeviceInfo();
+
                 StartAppDet();
             }
             else if (mi.Name == "TypeTwiKfdshield")
@@ -580,6 +587,19 @@ namespace KFDtool.Gui
 
                 Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
                 Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.Kfdshield;
+
+                ResetTwiDeviceInfo();
+
+                StartAppDet();
+            }
+            else if (mi.Name == "TypeTwiKfdmicro")
+            {
+                DeviceMenu.Items.Clear();
+
+                Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
+                Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.Kfdmicro;
+
+                ResetTwiDeviceInfo();
 
                 StartAppDet();
             }
@@ -604,10 +624,10 @@ namespace KFDtool.Gui
         private void UpdateDeviceDliIp()
         {
             lblSelectedDevice.Text = string.Format(
-                "Selected Device - Type: DLI (IP) - Protocol: {0}, Hostname: {1}, Port: {2}, Variant: {3}",
-                Settings.SelectedDevice.DliIpDevice.Protocol.ToString(),
+                "DLI (IP) - {0}:{1}, {2}, Variant: {3}",
                 Settings.SelectedDevice.DliIpDevice.Hostname,
                 Settings.SelectedDevice.DliIpDevice.Port.ToString(),
+                Settings.SelectedDevice.DliIpDevice.Protocol.ToString(),
                 Settings.SelectedDevice.DliIpDevice.Variant.ToString()
             );
 
@@ -650,6 +670,14 @@ namespace KFDtool.Gui
             AppDet.Stop();
         }
 
+        private void ResetTwiDeviceInfo()
+        {
+            lblSelectedDevice.Text = string.Format(
+                "TWI ({0}) - None",
+                Settings.SelectedDevice.KfdDeviceType.ToString()
+            );
+        }
+
         private void CheckConnectedDevices(object sender, EventArgs e)
         {
             Log.Debug("device list updated");
@@ -671,7 +699,10 @@ namespace KFDtool.Gui
                 {
                     Settings.SelectedDevice.TwiKfdtoolDevice.ComPort = string.Empty;
 
-                    lblSelectedDevice.Text = "Selected Device - Type: TWI (KFDtool) - None";
+                    lblSelectedDevice.Text = string.Format(
+                        "TWI ({0}) - None",
+                        Settings.SelectedDevice.KfdDeviceType.ToString()
+                    );
 
                     MenuItem item = new MenuItem();
 
@@ -782,7 +813,8 @@ namespace KFDtool.Gui
                 }
 
                 lblSelectedDevice.Text = string.Format(
-                    "Selected Device - Type: TWI (KFDtool) - Port: {0}, Model: {1}, HW: {2}, Serial: {3}, UID: {4}, FW: {5}",
+                    "TWI ({0}) - {1}, Model {2}, HW {3}, Serial {4}, UID {5}, FW {6}",
+                    Settings.SelectedDevice.KfdDeviceType.ToString(),
                     Settings.SelectedDevice.TwiKfdtoolDevice.ComPort,
                     model,
                     hwRev,
