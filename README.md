@@ -1,12 +1,20 @@
-# KFD-AVR
+# KFDTool-AVR
 
-A fork of the amazing [KFDTool](https://github.com/KFDTool/KFDTool) software for an Arduino, plus schematics and board files for a shield.
+<img src="https://github.com/omahacommsys/KFDtool/blob/master/doc/pic/darkmode.png" height="320px">
+
+A fork of the amazing [KFDTool](https://github.com/KFDTool/KFDTool) software for AtMega devices, plus schematics and board files for an arduino-compatible shield.
 
 Completed shields can be purchased from the [online store](https://store.omahacommunicationsys.com)
 
 Note: You must use the build of the KFDTool software attached to this GitHub repo in order for your homebrew adapter to work. The stock KFDTool software will not find your Arduino.
 
-Currently, the following boards have been tested and confirmed to work:
+Officially supports the following devices:
+* Original DuggerD KFDTool
+* OmahaCommSys KFDShield
+* W3AXL KFDMicro
+* KFDNano
+
+Also supports homebrew keyloaders using the following AtMega processors:
 
 * Arduino Uno (and clones)
 * Arduino Uno R3 (and clones)
