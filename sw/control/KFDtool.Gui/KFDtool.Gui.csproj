@@ -16,7 +16,7 @@
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>KFDtool.ico</ApplicationIcon>
+    <ApplicationIcon>kfdtool-icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -298,6 +298,7 @@
     <Resource Include="Images\Algos\ARC4.png" />
     <Resource Include="Images\Algos\DES.png" />
     <Resource Include="Images\Algos\OTHER.png" />
+    <Resource Include="kfdtool-icon.ico" />
     <Content Include="NLog.config">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -311,9 +312,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="KFDtool.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KFDtool.Adapter\KFDtool.Adapter.csproj">
