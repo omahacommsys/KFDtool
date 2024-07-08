@@ -1,4 +1,5 @@
-﻿using KFDtool.Adapter.Device;
+﻿using FramePFX.Themes;
+using KFDtool.Adapter.Device;
 using KFDtool.Container;
 using KFDtool.Gui.Dialog;
 using KFDtool.P25.TransferConstructs;
@@ -40,6 +41,9 @@ namespace KFDtool.Gui
             }
 
             InitAppDet();
+
+            // Load selected theme
+            UpdateWindowTheme();
 
             // on load select the type from settings
             switch (Settings.SelectedDevice.DeviceType)
@@ -846,6 +850,70 @@ namespace KFDtool.Gui
                 "About",
                 MessageBoxButton.OK
             );
+        }
+
+        private void UpdateWindowTheme()
+        {
+            // Reset checks
+            NavigateUtilityChangeThemeDark.IsChecked = false;
+            NavigateUtilityChangeThemeLight.IsChecked = false;
+            NavigateUtilityChangeThemeSystem.IsChecked = false;
+            // Change theme
+            switch (Settings.SelectedTheme)
+            {
+                // System theme, detect light/dark mode
+                case Settings.ThemeMode.System:
+                    NavigateUtilityChangeThemeSystem.IsChecked = true;
+                    if (IsSystemLightTheme())
+                        ThemesController.SetTheme(ThemeType.LightTheme);
+                    else
+                        ThemesController.SetTheme(ThemeType.DeepDark);
+                    break;
+                // Light theme
+                case Settings.ThemeMode.Light:
+                    NavigateUtilityChangeThemeLight.IsChecked = true;
+                    ThemesController.SetTheme(ThemeType.LightTheme);
+                    break;
+                // Dark Theme
+                case Settings.ThemeMode.Dark:
+                    NavigateUtilityChangeThemeDark.IsChecked = true;
+                    ThemesController.SetTheme(ThemeType.DeepDark);
+                    break;
+            }
+        }
+
+        private void NavigateUtilityChangeThemeDark_Click(object sender, RoutedEventArgs e)
+        {
+            // Update settings
+            Settings.SelectedTheme = Settings.ThemeMode.Dark;
+            Settings.SaveSettings();
+            // Update
+            UpdateWindowTheme();
+        }
+
+        private void NavigateUtilityChangeThemeLight_Click(object sender, RoutedEventArgs e)
+        {
+            // Update settings
+            Settings.SelectedTheme = Settings.ThemeMode.Light;
+            Settings.SaveSettings();
+            // Update
+            UpdateWindowTheme();
+        }
+
+        private void NavigateUtilityChangeThemeSystem_Click(object sender, RoutedEventArgs e)
+        {
+            // Update settings
+            Settings.SelectedTheme = Settings.ThemeMode.System;
+            Settings.SaveSettings();
+            // Update
+            UpdateWindowTheme();
+        }
+
+        public static bool IsSystemLightTheme()
+        {
+            var key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize");
+            var value = key?.GetValue("AppsUseLightTheme");
+            return value is int i && i > 0;
         }
     }
 }

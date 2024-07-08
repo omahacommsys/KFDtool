@@ -3,6 +3,7 @@ using KFDtool.P25.TransferConstructs;
 using System.Diagnostics;
 using System.Reflection;
 using System;
+using FramePFX.Themes;
 
 namespace KFDtool.Gui
 {
@@ -30,6 +31,15 @@ namespace KFDtool.Gui
 
         public static BaseDevice SelectedDevice { get; set; }
 
+        public enum ThemeMode
+        {
+            System,
+            Dark,
+            Light
+        }
+
+        public static ThemeMode SelectedTheme { get; set; }
+
         static Settings()
         {
             AssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
@@ -49,6 +59,8 @@ namespace KFDtool.Gui
             SelectedDevice.DliIpDevice = new DliIpDevice();
             SelectedDevice.DliIpDevice.Protocol = DliIpDevice.ProtocolOptions.UDP;
 
+            SelectedTheme = ThemeMode.System;
+
             //LoadSettings();
         }
 
@@ -60,6 +72,7 @@ namespace KFDtool.Gui
             Properties.Settings.Default.DliVariant = "Motorola";
             Properties.Settings.Default.DeviceType = "TwiKfdDevice";
             Properties.Settings.Default.KfdDeviceType = "Kfdshield";
+            Properties.Settings.Default.SelectedTheme = "System";
             Properties.Settings.Default.Save();
         }
 
@@ -71,6 +84,7 @@ namespace KFDtool.Gui
             Properties.Settings.Default.DliVariant = SelectedDevice.DliIpDevice.Variant.ToString();
             Properties.Settings.Default.DeviceType = SelectedDevice.DeviceType.ToString();
             Properties.Settings.Default.KfdDeviceType = SelectedDevice.KfdDeviceType.ToString();
+            Properties.Settings.Default.SelectedTheme = SelectedTheme.ToString();
             Properties.Settings.Default.Save();
         }
 
@@ -82,6 +96,7 @@ namespace KFDtool.Gui
             SelectedDevice.DliIpDevice.Variant = (DliIpDevice.VariantOptions)Enum.Parse(typeof(DliIpDevice.VariantOptions), Properties.Settings.Default.DliVariant);
             SelectedDevice.DeviceType = (BaseDevice.DeviceTypeOptions)Enum.Parse(typeof(BaseDevice.DeviceTypeOptions), Properties.Settings.Default.DeviceType);
             SelectedDevice.KfdDeviceType = (Adapter.Device.TwiKfdDevice)Enum.Parse(typeof(Adapter.Device.TwiKfdDevice), Properties.Settings.Default.KfdDeviceType);
+            SelectedTheme = (ThemeMode)Enum.Parse(typeof(ThemeMode), Properties.Settings.Default.SelectedTheme);
         }
     }
 }

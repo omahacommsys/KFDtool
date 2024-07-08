@@ -45,6 +45,11 @@
                 <MenuItem Name="UtilityMenu" Header="_Utility">
                     <MenuItem Name="NavigateUtilityFixDesKeyParity" Header="_Fix DES Key Parity" IsCheckable="True" Click="Navigate_MenuItem_Click" />
                     <MenuItem Name="NavigateUtilityAdapterSelfTest" Header="_Adapter Self Test" IsCheckable="True" Click="Navigate_MenuItem_Click" />
+                    <MenuItem Name="NavigateUtilityChangeTheme" Header="_Change Theme">
+                        <MenuItem Name="NavigateUtilityChangeThemeLight" Header="_Light" Click="NavigateUtilityChangeThemeLight_Click" IsCheckable="True" />
+                        <MenuItem Name="NavigateUtilityChangeThemeDark" Header="_Dark" Click="NavigateUtilityChangeThemeDark_Click" IsCheckable="True" />
+                        <MenuItem Name="NavigateUtilityChangeThemeSystem" Header="_System" IsCheckable="True" Click="NavigateUtilityChangeThemeSystem_Click" />
+                    </MenuItem>
                 </MenuItem>
                 <MenuItem Header="_Help">
                     <MenuItem Header="_About" Click="About_MenuItem_Click" />
