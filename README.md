@@ -1,6 +1,6 @@
 # KFDTool-AVR
 
-<img src="https://github.com/omahacommsys/KFDtool/blob/master/doc/pic/darkmode.png" height="320px">
+<img src="https://github.com/omahacommsys/KFDtool/blob/master/doc/pic/darkmode.png" width="75%">
 
 A fork of the amazing [KFDTool](https://github.com/KFDTool/KFDTool) software for AtMega devices, plus schematics and board files for an arduino-compatible shield.
 
