@@ -83,7 +83,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
                 throw new ArgumentException(String.Format("Unknown device type {0}", deviceType));
             }
 
-            TimeoutMs = 1000;
+            TimeoutMs = 2000;
         }
 
         public void Open()
@@ -825,7 +825,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
             /*
             * RSP: SEND BYTES
             * 
-            * [0] RSP_SEND_BYTE
+            * [0] RSP_SEND_BYTES
             */
 
             if (rsp.Count == 1)
@@ -857,7 +857,10 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             if (FeatureAvailableSendBytes)
             {
-                const int dataBytesPerCommand = 500;
+                // We have a buffer of size 512 in the firmware; imagine a world where each byte
+                // happens to be one that needs to be escaped; size our maximum data in order to
+                // avoid overflowing our buffer.
+                const int dataBytesPerCommand = 250;
                 if (data.Count <= dataBytesPerCommand)
                 {
                     SendBytes(data);
