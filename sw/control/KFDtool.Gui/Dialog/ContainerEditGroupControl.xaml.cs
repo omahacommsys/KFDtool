@@ -70,9 +70,10 @@ namespace KFDtool.Gui.Dialog
         {
             if (lbAvailable.SelectedItem != null)
             {
-                int key = ((KeyValuePair<int, string>)lbAvailable.SelectedItem).Key;
-
-                Keys.Add(key);
+                foreach( KeyValuePair<int, string> selectedKey in lbAvailable.SelectedItems)
+                {
+                    Keys.Add(selectedKey.Key);
+                }
 
                 UpdateColumns();
             }
@@ -82,9 +83,10 @@ namespace KFDtool.Gui.Dialog
         {
             if (lbSelected.SelectedItem != null)
             {
-                int key = ((KeyValuePair<int, string>)lbSelected.SelectedItem).Key;
-
-                Keys.Remove(key);
+                foreach( KeyValuePair<int, string> selectedKey in lbSelected.SelectedItems)
+                {
+                    Keys.Remove(selectedKey.Key);
+                }
 
                 UpdateColumns();
             }

@@ -33,6 +33,13 @@ namespace FramePFX.Themes {
             Controls = new ResourceDictionary() { Source = new Uri("Themes/Controls.xaml", UriKind.Relative) };
         }
 
+        public static void ClearTheme()
+        {
+            ThemeDictionary = new ResourceDictionary();
+            ControlColours = new ResourceDictionary();
+            Controls = new ResourceDictionary();
+        }
+
         public static object GetResource(object key) {
             return ThemeDictionary[key];
         }

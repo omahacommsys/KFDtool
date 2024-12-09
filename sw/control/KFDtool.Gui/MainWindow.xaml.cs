@@ -300,6 +300,7 @@ namespace KFDtool.Gui
             }
 
             ContainerSetPassword containerSetPassword = new ContainerSetPassword();
+            containerSetPassword.Style = Window.GetWindow(this).Style;
             containerSetPassword.Owner = this; // for centering in parent window
             containerSetPassword.ShowDialog();
 
@@ -339,6 +340,7 @@ namespace KFDtool.Gui
                 }
 
                 ContainerEnterPassword containerEnterPassword = new ContainerEnterPassword();
+                containerEnterPassword.Style = Window.GetWindow(this).Style;
                 containerEnterPassword.Owner = this; // for centering in parent window
                 containerEnterPassword.ShowDialog();
 
@@ -389,6 +391,7 @@ namespace KFDtool.Gui
             if (Settings.ContainerOpen)
             {
                 ContainerEdit containerEdit = new ContainerEdit();
+                containerEdit.Style = Window.GetWindow(this).Style;
                 containerEdit.Owner = this; // for centering in parent window
 
                 try
@@ -422,6 +425,7 @@ namespace KFDtool.Gui
             if (Settings.ContainerOpen)
             {
                 ContainerSetPassword containerSetPassword = new ContainerSetPassword();
+                containerSetPassword.Style = Window.GetWindow(this).Style;
                 containerSetPassword.Owner = this; // for centering in parent window
                 containerSetPassword.ShowDialog();
 
@@ -865,19 +869,28 @@ namespace KFDtool.Gui
                 case Settings.ThemeMode.System:
                     NavigateUtilityChangeThemeSystem.IsChecked = true;
                     if (IsSystemLightTheme())
-                        ThemesController.SetTheme(ThemeType.LightTheme);
+                    {
+                        //ThemesController.SetTheme(ThemeType.LightTheme);
+                        ThemesController.ClearTheme();
+                        this.Style = new Style();
+                    }
                     else
+                    {
                         ThemesController.SetTheme(ThemeType.DeepDark);
+                    }
                     break;
                 // Light theme
                 case Settings.ThemeMode.Light:
                     NavigateUtilityChangeThemeLight.IsChecked = true;
-                    ThemesController.SetTheme(ThemeType.LightTheme);
+                    //ThemesController.SetTheme(ThemeType.LightTheme);
+                    ThemesController.ClearTheme();
+                    this.Style = new Style();
                     break;
                 // Dark Theme
                 case Settings.ThemeMode.Dark:
                     NavigateUtilityChangeThemeDark.IsChecked = true;
                     ThemesController.SetTheme(ThemeType.DeepDark);
+                    this.Style = (Style)FindResource("CustomWindowStyle");
                     break;
             }
         }

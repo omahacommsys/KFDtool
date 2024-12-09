@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KFDtool.Gui.Dialog"
         mc:Ignorable="d"
-        Style="{StaticResource CustomWindowStyle}"
         Title="DLI (IP) Connection Settings" Height="215" Width="250" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
     <Grid>
         <Label Content="Protocol" HorizontalAlignment="Left" Margin="12,9,0,0" VerticalAlignment="Top"/>

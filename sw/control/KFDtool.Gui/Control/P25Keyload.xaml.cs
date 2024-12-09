@@ -602,6 +602,7 @@ namespace KFDtool.Gui.Control
                 string sevenZipFileName = saveFileDialog.FileName;
                 string xmlFileName = saveFileDialog.FileName + ".xml";
                 ContainerSetPassword containerSetPassword = new ContainerSetPassword();
+                containerSetPassword.Style = Window.GetWindow(this).Style;
                 //containerSetPassword.Owner =; // for centering in parent window
                 containerSetPassword.ShowDialog();
 

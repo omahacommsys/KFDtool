@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KFDtool.Gui.Dialog"
         mc:Ignorable="d"
-        Style="{StaticResource CustomWindowStyle}"
         Title="Edit Container" Height="600" Width="950" MinHeight="600" MinWidth="950" WindowStartupLocation="CenterOwner"
         Closing="ContainerEdit_Closing">
     <Grid>

@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KFDtool.Gui"
         mc:Ignorable="d"
-        Style="{StaticResource CustomWindowStyle}"
         Height="485" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Closing="MainWindow_Closing">
     <Grid>
         <DockPanel>
@@ -60,13 +59,13 @@
                     <StatusBarItem>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock TextAlignment="Right" Width="60" Foreground="Gray">Container:</TextBlock>
-                            <TextBlock Name="lblSelectedContainer" Margin="6 0 0 0" Foreground="LightGray">Not Opened</TextBlock>
+                            <TextBlock Name="lblSelectedContainer" Margin="6 0 0 0">Not Opened</TextBlock>
                         </StackPanel>
                     </StatusBarItem>
                     <StatusBarItem>
                         <StackPanel Orientation="Horizontal">
                             <TextBlock TextAlignment="Right" Width="60" Foreground="Gray">Device:</TextBlock>
-                            <TextBlock Name="lblSelectedDevice" Margin="6 0 0 0" Foreground="LightGray">Not Connected</TextBlock>
+                            <TextBlock Name="lblSelectedDevice" Margin="6 0 0 0">Not Connected</TextBlock>
                         </StackPanel>
                     </StatusBarItem>
                 </StackPanel>
