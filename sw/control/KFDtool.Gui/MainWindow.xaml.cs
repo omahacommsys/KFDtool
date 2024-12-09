@@ -876,7 +876,7 @@ namespace KFDtool.Gui
                     }
                     else
                     {
-                        ThemesController.SetTheme(ThemeType.DeepDark);
+                        ThemesController.SetTheme(ThemeType.SoftDark);
                     }
                     break;
                 // Light theme
@@ -889,7 +889,7 @@ namespace KFDtool.Gui
                 // Dark Theme
                 case Settings.ThemeMode.Dark:
                     NavigateUtilityChangeThemeDark.IsChecked = true;
-                    ThemesController.SetTheme(ThemeType.DeepDark);
+                    ThemesController.SetTheme(ThemeType.SoftDark);
                     this.Style = (Style)FindResource("CustomWindowStyle");
                     break;
             }
