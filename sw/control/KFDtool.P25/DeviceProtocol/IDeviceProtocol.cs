@@ -10,7 +10,7 @@ namespace KFDtool.P25.DeviceProtocol
     {
         void SendKeySignature();
 
-        void InitSession();
+        DeviceType InitSession();
 
         void CheckTargetMrConnection();
 

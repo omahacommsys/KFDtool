@@ -120,6 +120,7 @@
     <Compile Include="Kmm\SessionControl.cs" />
     <Compile Include="NetworkProtocol\UdpProtocol.cs" />
     <Compile Include="Partition\KeyPartitioner.cs" />
+    <Compile Include="DeviceProtocol\DeviceType.cs" />
     <Compile Include="TransferConstructs\CmdKeyItem.cs" />
     <Compile Include="TransferConstructs\DliIpDevice.cs" />
     <Compile Include="TransferConstructs\BaseDevice.cs" />
