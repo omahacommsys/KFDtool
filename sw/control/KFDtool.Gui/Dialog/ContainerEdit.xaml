@@ -18,10 +18,10 @@
         <Grid Grid.Row="0" Grid.Column="0">
             <DockPanel>
                 <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" DockPanel.Dock="Bottom" Margin="0,5,0,5">
-                    <Button Content="New" Click="New_Click" Padding="5,0,5,0" Margin="0,0,5,0" />
-                    <Button Content="Up" Click="Up_Click" Padding="5,0,5,0" Margin="0,0,5,0" />
-                    <Button Content="Down" Click="Down_Click" Padding="5,0,5,0" Margin="0,0,5,0" />
-                    <Button Content="Delete" Click="Delete_Click" Padding="5,0,5,0" Margin="0,0,0,0" />
+                    <Button x:Name="btnListNew" Content="New" Click="New_Click" Padding="5,0,5,0" Margin="0,0,5,0" />
+                    <Button x:Name="btnListUp" Content="Up" Click="Up_Click" Padding="5,0,5,0" Margin="0,0,5,0" />
+                    <Button x:Name="btnListDown" Content="Down" Click="Down_Click" Padding="5,0,5,0" Margin="0,0,5,0" />
+                    <Button x:Name="btnListDel" Content="Delete" Click="Delete_Click" Padding="5,0,5,0" Margin="0,0,0,0" />
                 </StackPanel>
                 <TabControl Name="containerTabControl" SelectionChanged="Tab_SelectionChanged">
                     <TabItem Name="keysTabItem" Header="Keys">

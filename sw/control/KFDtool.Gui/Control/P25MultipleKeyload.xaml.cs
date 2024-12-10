@@ -12,6 +12,8 @@ using System.Windows.Controls;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Input;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace KFDtool.Gui.Control
 {
@@ -26,15 +28,15 @@ namespace KFDtool.Gui.Control
 
         private List<int> Groups;
 
-        private Dictionary<int, string> KeysAvailable;
+        public ObservableCollection<KeyValuePair<int, string>> KeysAvailable { get; set; }
 
-        private Dictionary<int, string> KeysSelected;
+        public ObservableCollection<KeyValuePair<int, string>> KeysSelected { get; set; }
 
-        private Dictionary<int, string> KeksAvailable;
+        public ObservableCollection<KeyValuePair<int, string>> KeksAvailable { get; set; }
 
-        private Dictionary<int, string> GroupsAvailable;
+        public ObservableCollection<KeyValuePair<int, string>> GroupsAvailable { get; set; }
 
-        private Dictionary<int, string> GroupsSelected;
+        public ObservableCollection<KeyValuePair<int, string>> GroupsSelected { get; set; }
 
         public P25MultipleKeyload()
         {
@@ -44,25 +46,17 @@ namespace KFDtool.Gui.Control
 
             Groups = new List<int>();
 
-            KeysAvailable = new Dictionary<int, string>();
+            KeysAvailable = new ObservableCollection<KeyValuePair<int, string>>();
 
-            KeysSelected = new Dictionary<int, string>();
+            KeysSelected = new ObservableCollection<KeyValuePair<int, string>>();
 
-            KeksAvailable = new Dictionary<int, string>();
+            KeksAvailable = new ObservableCollection<KeyValuePair<int, string>>();
 
-            GroupsAvailable = new Dictionary<int, string>();
+            GroupsAvailable = new ObservableCollection<KeyValuePair<int, string>>();
 
-            GroupsSelected = new Dictionary<int, string>();
+            GroupsSelected = new ObservableCollection<KeyValuePair<int, string>>();
 
-            lbKeysAvailable.ItemsSource = KeysAvailable;
-
-            lbKeysSelected.ItemsSource = KeysSelected;
-
-            dropKeksAvailable.ItemsSource = KeksAvailable;
-
-            lbGroupsAvailable.ItemsSource = GroupsAvailable;
-
-            lbGroupsSelected.ItemsSource = GroupsSelected;
+            this.DataContext = this;
 
             UpdateKeysColumns();
 
@@ -77,31 +71,28 @@ namespace KFDtool.Gui.Control
 
             foreach (KeyItem keyItem in Settings.ContainerInner.Keys)
             {
-                KeysAvailable.Add(keyItem.Id, keyItem.Name);
+                KeysAvailable.Add(new KeyValuePair<int, string>(keyItem.Id, keyItem.Name));
             }
 
             KeysSelected.Clear();
 
             foreach (int key in Keys)
             {
-                KeysSelected.Add(key, KeysAvailable[key]);
+                KeysSelected.Add(KeysAvailable.SingleOrDefault(i => i.Key == key));
             }
 
             foreach (KeyValuePair<int, string> selected in KeysSelected)
             {
-                KeysAvailable.Remove(selected.Key);
+                KeysAvailable.Remove(KeysAvailable.SingleOrDefault(i => i.Key == selected.Key));
             }
 
-            lbKeysAvailable.Items.Refresh();
-
-            lbKeysSelected.Items.Refresh();
         }
 
         private void UpdateKeksDropdown()
         {
             KeksAvailable.Clear();
 
-            KeksAvailable.Add(-1, "Clear Keyload");
+            KeksAvailable.Add(new KeyValuePair<int, string>(-1, "None (Clear Keyload)"));
             dropKeksAvailable.SelectedIndex = 0;
 
             foreach (KeyItem keyItem in Settings.ContainerInner.Keys)
@@ -109,7 +100,7 @@ namespace KFDtool.Gui.Control
                 // AACA-A 6.1/Fig. 5
                 if (keyItem.Sln >= 61440)
                 {
-                    KeksAvailable.Add(keyItem.Id, keyItem.Name);
+                    KeksAvailable.Add(new KeyValuePair<int, string>(keyItem.Id, keyItem.Name));
                 }
             }
 
@@ -122,19 +113,19 @@ namespace KFDtool.Gui.Control
 
             foreach (Container.GroupItem groupItem in Settings.ContainerInner.Groups)
             {
-                GroupsAvailable.Add(groupItem.Id, groupItem.Name);
+                GroupsAvailable.Add(new KeyValuePair<int, string>(groupItem.Id, groupItem.Name));
             }
 
             GroupsSelected.Clear();
 
             foreach (int group in Groups)
             {
-                GroupsSelected.Add(group, GroupsAvailable[group]);
+                GroupsSelected.Add(GroupsAvailable.SingleOrDefault(i => i.Key == group));
             }
 
             foreach (KeyValuePair<int, string> selected in GroupsSelected)
             {
-                GroupsAvailable.Remove(selected.Key);
+                GroupsAvailable.Remove(GroupsAvailable.SingleOrDefault(i => i.Key == selected.Key));
             }
 
             lbGroupsAvailable.Items.Refresh();
