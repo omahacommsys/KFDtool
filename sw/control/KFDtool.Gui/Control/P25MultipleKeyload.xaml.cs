@@ -92,7 +92,7 @@ namespace KFDtool.Gui.Control
         {
             KeksAvailable.Clear();
 
-            KeksAvailable.Add(new KeyValuePair<int, string>(-1, "Clear Keyload"));
+            KeksAvailable.Add(new KeyValuePair<int, string>(-1, "None (Clear Keyload)"));
             dropKeksAvailable.SelectedIndex = 0;
 
             foreach (KeyItem keyItem in Settings.ContainerInner.Keys)
