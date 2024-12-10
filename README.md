@@ -187,6 +187,7 @@ Contributors
 * [Ellie Dugger](https://github.com/duggerd)
 * [Matt Ames](https://github.com/mattames)
 * [Ilya Smirnov](https://github.com/ilyacodes)
+* [Patrick McDonnell](https://github.com/W3AXL)
 
 License / Legal
 ---------------

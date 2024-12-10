@@ -41,6 +41,12 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Images\kfdtool-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\kfdtool-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
     <Resource Include="Images\Algos\AES.png" />
     <Resource Include="Images\Algos\ARC4.png" />
     <Resource Include="Images\Algos\DES.png" />

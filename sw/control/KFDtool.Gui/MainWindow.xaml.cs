@@ -842,19 +842,18 @@ namespace KFDtool.Gui
 
         private void About_MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(
-                string.Format(
-                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Ellie Dugger{0}{0}Copyright 2021-2023 Natalie Moore{0}{0}Copyright 2023 Ilya Smirnov{0}{0}Copyright 2023-2024 Patrick McDonnell{0}{0}Version: {1}"
-#if DEBUG
-                    + " DEBUG"
-#endif
-                    + "{0}{0}",
-                    Environment.NewLine,
-                    Settings.AssemblyInformationalVersion
-                ),
-                "About",
-                MessageBoxButton.OK
+            string aboutText = string.Format(
+                "KFDtool Control Application{0}{0}Copyright 2019-2020 Ellie Dugger{0}Copyright 2021-2024 Natalie Moore{0}Copyright 2023-2024 Ilya Smirnov{0}Copyright 2023-2024 Patrick McDonnell"
+                #if DEBUG
+                + " DEBUG"
+                #endif
+                + "{0}{0}",
+                Environment.NewLine
             );
+            AboutPage about = new AboutPage(aboutText);
+            about.Style = this.Style;
+            about.Owner = this;
+            about.Show();
         }
 
         private void UpdateWindowTheme()
