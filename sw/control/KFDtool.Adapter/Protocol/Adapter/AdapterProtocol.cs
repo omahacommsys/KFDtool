@@ -857,9 +857,9 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
             if (FeatureAvailableSendBytes)
             {
-                // We have a buffer of size 512 in the firmware; imagine a world where each byte
-                // happens to be one that needs to be escaped; size our maximum data in order to
-                // avoid overflowing our buffer.
+                // We have a command buffer of size 512 in the firmware; imagine a world where each
+                // byte happens to be one that needs to be escaped; size our maximum data in order
+                // to avoid overrunning our buffer.
                 const int dataBytesPerCommand = 250;
                 if (data.Count <= dataBytesPerCommand)
                 {
