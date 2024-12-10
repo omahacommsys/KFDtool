@@ -5,6 +5,7 @@ on:
     # Only run this workflow when a new tag is pushed
     tags:
       - '*'
+  workflow_dispatch:
 
 jobs:
   build:
