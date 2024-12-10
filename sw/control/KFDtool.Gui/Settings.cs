@@ -11,6 +11,8 @@ namespace KFDtool.Gui
     {
         public static string AssemblyVersion { get; private set; }
 
+        public static string AssemblyFileVersion { get; private set; }
+
         public static string AssemblyInformationalVersion { get; private set; }
 
         public static string ScreenCurrent { get; set; }
@@ -42,8 +44,19 @@ namespace KFDtool.Gui
 
         static Settings()
         {
-            AssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            AssemblyInformationalVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+            //AssemblyVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            //AssemblyInformationalVersion = FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+
+            // Versions are now pulled from the git tags
+            AssemblyVersion = ThisAssembly.Git.BaseVersion.Major + "." + ThisAssembly.Git.BaseVersion.Minor + "." + ThisAssembly.Git.BaseVersion.Patch;
+            AssemblyFileVersion = ThisAssembly.Git.SemVer.Major + "." + ThisAssembly.Git.SemVer.Minor + "." + ThisAssembly.Git.SemVer.Patch;
+            AssemblyInformationalVersion = ThisAssembly.Git.BaseVersion.Major + "." +
+                ThisAssembly.Git.BaseVersion.Minor + "." +
+                ThisAssembly.Git.BaseVersion.Patch + "." +
+                ThisAssembly.Git.Commits + "-" +
+                ThisAssembly.Git.Branch + "+" +
+                ThisAssembly.Git.Commit;
+
             ScreenCurrent = string.Empty;
             ScreenInProgress = false;
             ContainerOpen = false;

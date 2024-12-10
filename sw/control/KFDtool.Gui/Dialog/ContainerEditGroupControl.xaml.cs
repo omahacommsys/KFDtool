@@ -1,5 +1,9 @@
 ﻿using KFDtool.Container;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,9 +18,8 @@ namespace KFDtool.Gui.Dialog
 
         private List<int> Keys;
 
-        private Dictionary<int, string> Available;
-
-        private Dictionary<int, string> Selected;
+        public ObservableCollection<KeyValuePair<int, string>> Available { get; set; }
+        public ObservableCollection<KeyValuePair<int, string>> Selected { get; set; }
 
         public ContainerEditGroupControl(Container.GroupItem groupItem)
         {
@@ -27,43 +30,37 @@ namespace KFDtool.Gui.Dialog
             Keys = new List<int>();
             Keys.AddRange(groupItem.Keys);
 
-            Available = new Dictionary<int, string>();
-
-            Selected = new Dictionary<int, string>();
+            Available = new ObservableCollection<KeyValuePair<int, string>>();
+            Selected = new ObservableCollection<KeyValuePair<int, string>>();
 
             txtName.Text = groupItem.Name;
 
-            lbAvailable.ItemsSource = Available;
-
-            lbSelected.ItemsSource = Selected;
+            this.DataContext = this;
 
             UpdateColumns();
         }
 
         private void UpdateColumns()
         {
+            Debug.Print("Updaing key group columns");
             Available.Clear();
 
             foreach (KeyItem keyItem in Settings.ContainerInner.Keys)
             {
-                Available.Add(keyItem.Id, keyItem.Name);
+                Available.Add(new KeyValuePair<int, string>(keyItem.Id, keyItem.Name));
             }
 
             Selected.Clear();
 
             foreach (int key in Keys)
             {
-                Selected.Add(key, Available[key]);
+                Selected.Add(new KeyValuePair<int, string>(key, Available.SingleOrDefault(i => i.Key == key).Value));
             }
 
             foreach (KeyValuePair<int, string> selected in Selected)
             {
-                Available.Remove(selected.Key);
+                Available.Remove(Available.SingleOrDefault(i => i.Key == selected.Key));
             }
-
-            lbAvailable.Items.Refresh();
-
-            lbSelected.Items.Refresh();
         }
 
         private void Add_Button_Click(object sender, RoutedEventArgs e)
