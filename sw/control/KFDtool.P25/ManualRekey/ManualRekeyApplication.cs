@@ -38,11 +38,11 @@ namespace KFDtool.P25.ManualRekey
             Mfid = motVariant ? (byte)0x90 : (byte)0x00;
         }
 
-        private void Begin()
+        private DeviceType Begin()
         {
             DeviceProtocol.SendKeySignature();
 
-            DeviceProtocol.InitSession();
+            return DeviceProtocol.InitSession();
         }
 
         private KmmBody TxRxKmm(KmmBody commandKmmBody)
@@ -65,51 +65,63 @@ namespace KFDtool.P25.ManualRekey
 
         public void Keyload(List<CmdKeyItem> keyItems, CmdKeyItem kek = null)
         {
-            List<List<CmdKeyItem>> keyGroups = KeyPartitioner.PartitionKeys(keyItems);
+            DeviceType deviceType = Begin();
 
-            Begin();
+            int maxBytes = KeyPartitioner.MAX_BYTES;
+            if (deviceType == DeviceType.Kvl)
+            {
+                // Adjusted to definitely fit KMM entirely within a single CMD_SEND_BYTES because
+                // the KVL 4000 doesn't like when a KMM has any timing delays in the middle of it
+                maxBytes = 250;
+            }
+            List<List<CmdKeyItem>> keyGroups = KeyPartitioner.PartitionKeys(keyItems, maxBytes);
 
             try
             {
-                InventoryCommandListActiveKsetIds cmdKmmBody1 = new InventoryCommandListActiveKsetIds();
-
-                KmmBody rspKmmBody1 = TxRxKmm(cmdKmmBody1);
-
-                int activeKeysetId = 0;
-
-                if (rspKmmBody1 is InventoryResponseListActiveKsetIds)
+                // KVL does not support inventorying the active keyset; use keyset 1 as the default
+                int activeKeysetId = 1;
+             
+                if (deviceType == DeviceType.Mr)
                 {
-                    InventoryResponseListActiveKsetIds kmm = rspKmmBody1 as InventoryResponseListActiveKsetIds;
+                    InventoryCommandListActiveKsetIds cmdKmmBody1 = new InventoryCommandListActiveKsetIds();
 
-                    Logger.Debug("number of active keyset ids: {0}", kmm.KsetIds.Count);
+                    KmmBody rspKmmBody1 = TxRxKmm(cmdKmmBody1);
 
-                    for (int i = 0; i < kmm.KsetIds.Count; i++)
+
+                    if (rspKmmBody1 is InventoryResponseListActiveKsetIds)
                     {
-                        Logger.Debug("* keyset id index {0} *", i);
-                        Logger.Debug("keyset id: {0} (dec), {0:X} (hex)", kmm.KsetIds[i]);
+                        InventoryResponseListActiveKsetIds kmm = rspKmmBody1 as InventoryResponseListActiveKsetIds;
+
+                        Logger.Debug("number of active keyset ids: {0}", kmm.KsetIds.Count);
+
+                        for (int i = 0; i < kmm.KsetIds.Count; i++)
+                        {
+                            Logger.Debug("* keyset id index {0} *", i);
+                            Logger.Debug("keyset id: {0} (dec), {0:X} (hex)", kmm.KsetIds[i]);
+                        }
+
+                        // TODO support more than one crypto group
+                        if (kmm.KsetIds.Count > 0)
+                        {
+                            activeKeysetId = kmm.KsetIds[0];
+                        }
+                        else
+                        {
+                            activeKeysetId = 1; // to match KVL3000+ R3.53.03 behavior
+                        }
                     }
-
-                    // TODO support more than one crypto group
-                    if (kmm.KsetIds.Count > 0)
+                    else if (rspKmmBody1 is NegativeAcknowledgment)
                     {
-                        activeKeysetId = kmm.KsetIds[0];
+                        NegativeAcknowledgment kmm = rspKmmBody1 as NegativeAcknowledgment;
+
+                        string statusDescr = OperationStatusExtensions.ToStatusString(kmm.Status);
+                        string statusReason = OperationStatusExtensions.ToReasonString(kmm.Status);
+                        throw new Exception(string.Format("received negative acknowledgment{0}status: {1} (0x{2:X2}){0}{3}", Environment.NewLine, statusDescr, kmm.Status, statusReason));
                     }
                     else
                     {
-                        activeKeysetId = 1; // to match KVL3000+ R3.53.03 behavior
+                        throw new Exception("unexpected kmm");
                     }
-                }
-                else if (rspKmmBody1 is NegativeAcknowledgment)
-                {
-                    NegativeAcknowledgment kmm = rspKmmBody1 as NegativeAcknowledgment;
-
-                    string statusDescr = OperationStatusExtensions.ToStatusString(kmm.Status);
-                    string statusReason = OperationStatusExtensions.ToReasonString(kmm.Status);
-                    throw new Exception(string.Format("received negative acknowledgment{0}status: {1} (0x{2:X2}){0}{3}", Environment.NewLine, statusDescr, kmm.Status, statusReason));
-                }
-                else
-                {
-                    throw new Exception("unexpected kmm");
                 }
 
                 foreach (List<CmdKeyItem> keyGroup in keyGroups)

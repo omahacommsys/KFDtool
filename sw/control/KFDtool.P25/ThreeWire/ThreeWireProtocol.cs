@@ -19,7 +19,8 @@ namespace KFDtool.P25.ThreeWire
         private const int TIMEOUT_STD = 5000; // 5 second timeout
 
         private const byte OPCODE_READY_REQ = 0xC0;
-        private const byte OPCODE_READY_GENERAL_MODE = 0xD0;
+        private const byte OPCODE_READY_GENERAL_MODE_MR = 0xD0;
+        private const byte OPCODE_READY_GENERAL_MODE_KVL = 0xD1;
         private const byte OPCODE_TRANSFER_DONE = 0xC1;
         private const byte OPCODE_KMM = 0xC2;
         private const byte OPCODE_DISCONNECT_ACK = 0x90;
@@ -38,7 +39,7 @@ namespace KFDtool.P25.ThreeWire
             Protocol.SendKeySignature();
         }
 
-        public void InitSession()
+        public DeviceType InitSession()
         {
             // send ready req opcode
             List<byte> cmd = new List<byte>();
@@ -51,9 +52,11 @@ namespace KFDtool.P25.ThreeWire
             Log.Debug("mr: ready general mode");
             byte rsp = Protocol.GetByte(TIMEOUT_STD);
             Log.Debug("kfd -> mr: {0}", Utility.DataFormat(rsp));
-            if (rsp != OPCODE_READY_GENERAL_MODE)
+            switch (rsp)
             {
-                throw new Exception("mr: unexpected opcode");
+                case OPCODE_READY_GENERAL_MODE_MR: return DeviceType.Mr;
+                case OPCODE_READY_GENERAL_MODE_KVL: return DeviceType.Kvl;
+                default: throw new Exception("mr: unexpected opcode");
             }
         }
 
@@ -365,8 +368,8 @@ namespace KFDtool.P25.ThreeWire
                     /* TX: READY GENERAL MODE */
 
                     Log.Debug("out: ready general mode opcode");
-                    Log.Trace("out: {0}", Utility.DataFormat(OPCODE_READY_GENERAL_MODE));
-                    Protocol.SendByte(OPCODE_READY_GENERAL_MODE);
+                    Log.Trace("out: {0}", Utility.DataFormat(OPCODE_READY_GENERAL_MODE_MR));
+                    Protocol.SendByte(OPCODE_READY_GENERAL_MODE_MR);
 
                     while (true)
                     {

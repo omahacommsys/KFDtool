@@ -9,6 +9,8 @@ namespace KFDtool.P25.Partition
 {
     public class KeyPartitioner
     {
+        public const int MAX_BYTES = 512;
+
         private static void CheckForDifferentKeyLengths(List<CmdKeyItem> inKeys)
         {
             Dictionary<int, int> len = new Dictionary<int, int>();
@@ -29,11 +31,9 @@ namespace KFDtool.P25.Partition
             }
         }
 
-        private static int CalcMaxKeysPerKmm(int keyLength)
+        private static int CalcMaxKeysPerKmm(int keyLength, int maxBytes)
         {
             // TODO make this calc more dynamic
-
-            int maxBytes = 512;
             int availBytes = maxBytes - 27;
 
             int keyItemBytes = 5 + keyLength;
@@ -48,7 +48,7 @@ namespace KFDtool.P25.Partition
             return maxKeys;
         }
 
-        private static void PartitionByAlg(List<CmdKeyItem> inKeys, List<List<CmdKeyItem>> outKeys)
+        private static void PartitionByAlg(List<CmdKeyItem> inKeys, List<List<CmdKeyItem>> outKeys, int maxBytes)
         {
             Dictionary<int, List<CmdKeyItem>> alg = new Dictionary<int, List<CmdKeyItem>>();
 
@@ -64,7 +64,7 @@ namespace KFDtool.P25.Partition
 
             foreach (KeyValuePair<int, List<CmdKeyItem>> algGroup in alg)
             {
-                int maxKeys = CalcMaxKeysPerKmm(algGroup.Value[0].Key.Count);
+                int maxKeys = CalcMaxKeysPerKmm(algGroup.Value[0].Key.Count, maxBytes);
 
                 PartitionByType(maxKeys, algGroup.Value, outKeys);
             }
@@ -142,13 +142,13 @@ namespace KFDtool.P25.Partition
             }
         }
 
-        public static List<List<CmdKeyItem>> PartitionKeys(List<CmdKeyItem> inKeys)
+        public static List<List<CmdKeyItem>> PartitionKeys(List<CmdKeyItem> inKeys, int maxBytes = MAX_BYTES)
         {
             CheckForDifferentKeyLengths(inKeys);
 
             List<List<CmdKeyItem>> outKeys = new List<List<CmdKeyItem>>();
 
-            PartitionByAlg(inKeys, outKeys);
+            PartitionByAlg(inKeys, outKeys, maxBytes);
 
             return outKeys;
         }

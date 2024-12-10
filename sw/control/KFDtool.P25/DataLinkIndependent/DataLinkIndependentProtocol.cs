@@ -30,7 +30,7 @@ namespace KFDtool.P25.DataLinkIndependent
             // not needed
         }
 
-        public void InitSession()
+        public DeviceType InitSession()
         {
             if (MotVariant)
             {
@@ -42,6 +42,8 @@ namespace KFDtool.P25.DataLinkIndependent
             {
                 SendReadyRequest();
             }
+
+            return DeviceType.Mr;
         }
 
         public void EndSession()
