@@ -11,8 +11,9 @@ Note: You must use the build of the KFDTool software attached to this GitHub rep
 Officially supports the following devices:
 * Original DuggerD KFDTool
 * OmahaCommSys KFDShield
-* W3AXL KFDMicro
-* KFDNano
+* @W3AXL KFDMicro
+* @alexhanyuan KFDnano
+* @alexhanyuan KFDpico
 
 Also supports homebrew keyloaders using the following AtMega processors:
 
