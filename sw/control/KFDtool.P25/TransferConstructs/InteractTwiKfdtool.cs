@@ -191,6 +191,8 @@ namespace KFDtool.P25.TransferConstructs
                         model = "KFDmicro";
                         break;
                     case 0x04:
+                        model = "KFDpico";
+                        break;
                     case 0x05:
                         model = "RESERVED"; // @ilyacodes
                         break;
