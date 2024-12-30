@@ -177,21 +177,26 @@ namespace KFDtool.P25.TransferConstructs
 
                 byte mod = ap.ReadModelId();
 
-                if (mod == 0x00)
-                {
-                    model = "NOT SET";
-                }
-                else if (mod == 0x01)
-                {
-                    model = "KFD100";
-                }
-                else if (mod == 0x02)
-                {
-                    model = "KFD-AVR";
-                }
-                else
-                {
-                    model = "UNKNOWN";
+                switch (mod) {
+                    case 0x00:
+                        model = "NOT SET";
+                        break;
+                    case 0x01:
+                        model = "KFD100";
+                        break;
+                    case 0x02:
+                        model = "KFDshield";
+                        break;
+                    case 0x03:
+                        model = "KFDmicro";
+                        break;
+                    case 0x04:
+                    case 0x05:
+                        model = "RESERVED"; // @ilyacodes
+                        break;
+                    default:
+                        model = "UNKNOWN";
+                        break;
                 }
             }
             catch (Exception)
