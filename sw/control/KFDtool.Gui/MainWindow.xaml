@@ -7,7 +7,11 @@
         mc:Ignorable="d"
         Height="485" Width="800" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Closing="MainWindow_Closing">
     <Grid>
-        <DockPanel>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="17*"/>
+            <ColumnDefinition Width="183*"/>
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.ColumnSpan="2">
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_File">
                     <MenuItem Header="_Exit" Click="Exit_MenuItem_Click" />

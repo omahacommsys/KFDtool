@@ -1,6 +1,7 @@
 Copyright 2019-2020 KFDtool, LLC
-Copyright 2021-2023 Natalie Moore
-Copyright 2023 Ilya Smirnov
+Copyright 2021-2024 Natalie Moore
+Copyright 2023-2024 Ilya Smirnov
+Copyright 2023-2024 Patrick McDonnell
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

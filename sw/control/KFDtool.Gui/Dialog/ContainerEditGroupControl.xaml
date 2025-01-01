@@ -10,11 +10,29 @@
         <Label Content="Name" HorizontalAlignment="Left" Margin="10,24,0,0" VerticalAlignment="Top"/>
         <TextBox Name="txtName" HorizontalAlignment="Left" Height="23" Margin="85,24,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="258"/>
         <Label Content="Available" HorizontalAlignment="Left" Margin="154,57,0,0" VerticalAlignment="Top"/>
-        <ListBox Name="lbAvailable" DisplayMemberPath="Value" HorizontalAlignment="Left" Height="400" Margin="85,88,0,0" VerticalAlignment="Top" Width="200" SelectionMode="Extended"/>
+        <ListView ItemsSource="{Binding Path=Available}" d:ItemsSource="{d:SampleData ItemCount=10}" Name="lbAvailable" HorizontalAlignment="Left" Height="400" Margin="85,88,0,0" VerticalAlignment="Top" Width="200" SelectionMode="Extended">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" >
+                        <Image Width="32" Height="16" Source="{Binding AlgoImage}" RenderOptions.BitmapScalingMode="HighQuality" />
+                        <Label Content="{Binding Name}" Margin="2 0 0 0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListView>
         <Button Content="Add &gt;" Click="Add_Button_Click" HorizontalAlignment="Left" Margin="309,240,0,0" VerticalAlignment="Top" Width="74"/>
         <Button Content="&lt; Remove" Click="Remove_Button_Click" HorizontalAlignment="Left" Margin="309,272,0,0" VerticalAlignment="Top" Width="75"/>
         <Label Content="Selected" HorizontalAlignment="Left" Margin="482,57,0,0" VerticalAlignment="Top"/>
-        <ListBox Name="lbSelected" DisplayMemberPath="Value" HorizontalAlignment="Left" Height="400" Margin="406,88,0,0" VerticalAlignment="Top" Width="200" SelectionMode="Extended"/>
+        <ListView ItemsSource="{Binding Path=Selected}" d:ItemsSource="{d:SampleData ItemCount=10}" Name="lbSelected" HorizontalAlignment="Left" Height="400" Margin="406,88,0,0" VerticalAlignment="Top" Width="200" SelectionMode="Extended">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" >
+                        <Image Width="32" Height="16" Source="{Binding AlgoImage}" RenderOptions.BitmapScalingMode="HighQuality" />
+                        <Label Content="{Binding Name}" Margin="2 0 0 0"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <Button Content="Save" HorizontalAlignment="Left" Click="Save_Button_Click" Margin="309,505,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </UserControl>

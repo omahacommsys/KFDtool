@@ -1,5 +1,9 @@
 ﻿using KFDtool.Container;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -14,9 +18,8 @@ namespace KFDtool.Gui.Dialog
 
         private List<int> Keys;
 
-        private Dictionary<int, string> Available;
-
-        private Dictionary<int, string> Selected;
+        public ObservableCollection<KeyItem> Available { get; set; }
+        public ObservableCollection<KeyItem> Selected { get; set; }
 
         public ContainerEditGroupControl(Container.GroupItem groupItem)
         {
@@ -27,52 +30,46 @@ namespace KFDtool.Gui.Dialog
             Keys = new List<int>();
             Keys.AddRange(groupItem.Keys);
 
-            Available = new Dictionary<int, string>();
-
-            Selected = new Dictionary<int, string>();
+            Available = new ObservableCollection<KeyItem>();
+            Selected = new ObservableCollection<KeyItem>();
 
             txtName.Text = groupItem.Name;
 
-            lbAvailable.ItemsSource = Available;
-
-            lbSelected.ItemsSource = Selected;
+            this.DataContext = this;
 
             UpdateColumns();
         }
 
         private void UpdateColumns()
         {
+            Debug.Print("Updaing key group columns");
             Available.Clear();
 
-            foreach (KeyItem keyItem in Settings.ContainerInner.Keys)
+            foreach (KeyItem key in Settings.ContainerInner.Keys)
             {
-                Available.Add(keyItem.Id, keyItem.Name);
+                Available.Add(key);
             }
 
             Selected.Clear();
 
             foreach (int key in Keys)
             {
-                Selected.Add(key, Available[key]);
+                Selected.Add(Settings.ContainerInner.Keys.Where(i => i.Id == key).Single());
             }
 
-            foreach (KeyValuePair<int, string> selected in Selected)
+            foreach (KeyItem selected in Selected)
             {
-                Available.Remove(selected.Key);
+                Available.Remove(selected);
             }
-
-            lbAvailable.Items.Refresh();
-
-            lbSelected.Items.Refresh();
         }
 
         private void Add_Button_Click(object sender, RoutedEventArgs e)
         {
             if (lbAvailable.SelectedItem != null)
             {
-                foreach( KeyValuePair<int, string> selectedKey in lbAvailable.SelectedItems)
+                foreach( KeyItem selectedKey in lbAvailable.SelectedItems)
                 {
-                    Keys.Add(selectedKey.Key);
+                    Keys.Add(selectedKey.Id);
                 }
 
                 UpdateColumns();
@@ -83,9 +80,9 @@ namespace KFDtool.Gui.Dialog
         {
             if (lbSelected.SelectedItem != null)
             {
-                foreach( KeyValuePair<int, string> selectedKey in lbSelected.SelectedItems)
+                foreach( KeyItem selectedKey in lbSelected.SelectedItems)
                 {
-                    Keys.Remove(selectedKey.Key);
+                    Keys.Remove(selectedKey.Id);
                 }
 
                 UpdateColumns();

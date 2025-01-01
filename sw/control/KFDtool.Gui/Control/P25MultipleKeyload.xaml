@@ -10,19 +10,20 @@
         <Label Content="Keys" HorizontalAlignment="Left" Margin="183,5,0,0" VerticalAlignment="Top"/>
         <Label Content="Available" HorizontalAlignment="Left" Margin="56,23,0,0" VerticalAlignment="Top"/>
         <Label Content="Selected" HorizontalAlignment="Left" Margin="285,23,0,0" VerticalAlignment="Top"/>
-        <ListBox Name="lbKeysAvailable" DisplayMemberPath="Value" HorizontalAlignment="Left" Height="275" Margin="19,54,0,0" VerticalAlignment="Top" Width="140" SelectionMode="Extended"/>
+        <ListBox Name="lbKeysAvailable" ItemsSource="{Binding Path=KeysAvailable}" DisplayMemberPath="Value" HorizontalAlignment="Left" Height="275" Margin="19,54,0,0" VerticalAlignment="Top" Width="140" SelectionMode="Extended"/>
         <Button Content="Add &gt;" HorizontalAlignment="Left" Margin="164,163,0,0" VerticalAlignment="Top" Width="75" Click="Keys_Add_Click"/>
         <Button Content="&lt; Remove" HorizontalAlignment="Left" Margin="164,195,0,0" VerticalAlignment="Top" Width="75" Click="Keys_Remove_Click"/>
-        <ListBox Name="lbKeysSelected" DisplayMemberPath="Value" HorizontalAlignment="Left" Height="275" Margin="244,54,0,0" VerticalAlignment="Top" Width="140" SelectionMode="Extended"/>
+        <ListBox Name="lbKeysSelected" ItemsSource="{Binding Path=KeysSelected}" DisplayMemberPath="Value" HorizontalAlignment="Left" Height="275" Margin="244,54,0,0" VerticalAlignment="Top" Width="140" SelectionMode="Extended"/>
         <Label Content="Groups" HorizontalAlignment="Left" Margin="556,5,0,0" VerticalAlignment="Top"/>
         <Label Content="Available" HorizontalAlignment="Left" Margin="438,23,0,0" VerticalAlignment="Top"/>
         <Label Content="Selected" HorizontalAlignment="Left" Margin="668,23,0,0" VerticalAlignment="Top"/>
-        <ListBox Name="lbGroupsAvailable" DisplayMemberPath="Value" HorizontalAlignment="Left" Height="275" Margin="399,54,0,0" VerticalAlignment="Top" Width="140" SelectionMode="Extended"/>
+        <ListBox Name="lbGroupsAvailable" ItemsSource="{Binding Path=GroupsAvailable}" DisplayMemberPath="Value" HorizontalAlignment="Left" Height="275" Margin="399,54,0,0" VerticalAlignment="Top" Width="140" SelectionMode="Extended"/>
         <Button Content="Add &gt;" HorizontalAlignment="Left" Margin="544,163,0,0" VerticalAlignment="Top" Width="75" Click="Groups_Add_Click"/>
         <Button Content="&lt; Remove" HorizontalAlignment="Left" Margin="544,195,0,0" VerticalAlignment="Top" Width="75" Click="Groups_Remove_Click"/>
-        <ListBox Name="lbGroupsSelected" DisplayMemberPath="Value" HorizontalAlignment="Left" Height="275" Margin="624,54,0,0" VerticalAlignment="Top" Width="140" SelectionMode="Extended"/>
-        <ComboBox Name="dropKeksAvailable" DisplayMemberPath="Value" HorizontalAlignment="Left" Margin="20,345,0,0" VerticalAlignment="Top" Width="175"/>
+        <ListBox Name="lbGroupsSelected" ItemsSource="{Binding Path=GroupsSelected}" DisplayMemberPath="Value" HorizontalAlignment="Left" Height="275" Margin="624,54,0,0" VerticalAlignment="Top" Width="140" SelectionMode="Extended"/>
+        <ComboBox Name="dropKeksAvailable" ItemsSource="{Binding Path=KeksAvailable}" DisplayMemberPath="Value" HorizontalAlignment="Left" Margin="52,345,0,0" VerticalAlignment="Top" Width="175"/>
         <Button Content="Load" HorizontalAlignment="Left" Margin="310,345,0,0" VerticalAlignment="Top" Width="75" Click="Load_Click"/>
         <Button Content="Elite Export" HorizontalAlignment="Left" Margin="400,345,0,0" VerticalAlignment="Top" Width="75" Click="Export_Click"/>
+        <Label Content="KEK" HorizontalAlignment="Left" Margin="19,342,0,0" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>
