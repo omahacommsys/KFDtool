@@ -70,13 +70,17 @@ namespace KFDtool.Adapter.Protocol.Adapter
 
         public AdapterProtocol(string portName, TwiKfdDevice deviceType)
         {
-            if (deviceType == TwiKfdDevice.Kfdtool)
+            if (deviceType == TwiKfdDevice.KfdTool)
             {
                 Lower = new KfdToolSerialProtocol(portName);
             }
-            else if (deviceType == TwiKfdDevice.Kfdshield || deviceType == TwiKfdDevice.Kfdmicro)
+            else if (deviceType == TwiKfdDevice.KfdShield)
             {
                 Lower = new KfdShieldSerialProtocol(portName);
+            }
+            else if (deviceType == TwiKfdDevice.KfdUsb)
+            {
+                Lower = new KfdShieldSerialProtocol(portName, dtrEnabled: true);
             }
             else
             {

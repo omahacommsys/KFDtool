@@ -12,7 +12,7 @@ namespace KFDtool.Cmd
     {
         public static void FreeRunRead(string port)
         {
-            TwiKfdDevice device = TwiKfdDevice.Kfdtool;
+            TwiKfdDevice device = TwiKfdDevice.KfdTool;
             AdapterProtocol ap = new AdapterProtocol(port, device);
 
             Task.Run(() =>

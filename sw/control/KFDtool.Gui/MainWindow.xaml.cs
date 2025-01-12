@@ -60,24 +60,24 @@ namespace KFDtool.Gui
                         // Select the appropriate device type based on loaded settings
                         switch (Settings.SelectedDevice.KfdDeviceType)
                         {
-                            case TwiKfdDevice.Kfdshield:
+                            case TwiKfdDevice.KfdShield:
                                 {
-                                    SwitchType(TypeTwiKfdshield);
+                                    SwitchType(TypeTwiKfdShield);
                                     break;
                                 }
-                            case TwiKfdDevice.Kfdtool:
+                            case TwiKfdDevice.KfdTool:
                                 {
-                                    SwitchType(TypeTwiKfdtool);
+                                    SwitchType(TypeTwiKfdTool);
                                     break;
                                 }
-                            case TwiKfdDevice.Kfdmicro:
+                            case TwiKfdDevice.KfdUsb:
                                 {
-                                    SwitchType(TypeTwiKfdmicro);
+                                    SwitchType(TypeTwiKfdUsb);
                                     break;
                                 }
                             default:
                                 {
-                                    SwitchType(TypeTwiKfdtool);
+                                    SwitchType(TypeTwiKfdTool);
                                     break;
                                 }
                         }
@@ -578,34 +578,34 @@ namespace KFDtool.Gui
 
             mi.IsChecked = true;
 
-            if (mi.Name == "TypeTwiKfdtool")
+            if (mi.Name == "TypeTwiKfdTool")
             {
                 DeviceMenu.Items.Clear();
 
                 Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
-                Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.Kfdtool;
+                Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.KfdTool;
 
                 ResetTwiDeviceInfo();
 
                 StartAppDet();
             }
-            else if (mi.Name == "TypeTwiKfdshield")
+            else if (mi.Name == "TypeTwiKfdShield")
             {
                 DeviceMenu.Items.Clear();
 
                 Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
-                Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.Kfdshield;
+                Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.KfdShield;
 
                 ResetTwiDeviceInfo();
 
                 StartAppDet();
             }
-            else if (mi.Name == "TypeTwiKfdmicro")
+            else if (mi.Name == "TypeTwiKfdUsb")
             {
                 DeviceMenu.Items.Clear();
 
                 Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
-                Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.Kfdmicro;
+                Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.KfdUsb;
 
                 ResetTwiDeviceInfo();
 

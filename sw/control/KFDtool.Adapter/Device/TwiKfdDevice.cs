@@ -8,8 +8,8 @@ namespace KFDtool.Adapter.Device
 {
     public enum TwiKfdDevice
     {
-        Kfdtool,
-        Kfdshield,
-        Kfdmicro
+        KfdTool,
+        KfdShield,
+        KfdUsb
     }
 }
