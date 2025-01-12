@@ -31,7 +31,7 @@ namespace KFDtool.Adapter.Protocol.Serial
 
         private SerialPort Port;
 
-        public KfdShieldSerialProtocol(string portName)
+        public KfdShieldSerialProtocol(string portName, bool dtrEnabled = false)
         {
             FrameBuffer = new List<byte>();
 
@@ -47,8 +47,11 @@ namespace KFDtool.Adapter.Protocol.Serial
             Port.DataBits = 8;
             Port.StopBits = StopBits.One;
             // Certain USB-based KFD devices require DTR to be set before they will respond to commands
-            Port.DtrEnable = true;
-            
+            if (dtrEnabled)
+            {
+                Port.DtrEnable = true;
+            }
+
             Port.DataReceived += new SerialDataReceivedEventHandler(OnDataReceived);
         }
 
