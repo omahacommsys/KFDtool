@@ -188,13 +188,16 @@ namespace KFDtool.P25.TransferConstructs
                         model = "KFDshield";
                         break;
                     case 0x03:
-                        model = "KFDmicro";
+                        model = "KFDmicro"; // @w3axl
                         break;
                     case 0x04:
-                        model = "KFDpico";
+                        model = "KFDpico"; // @alexhanyuan
                         break;
                     case 0x05:
                         model = "RESERVED"; // @ilyacodes
+                        break;
+                    case 0x06:
+                        model = "KFDnano"; // @alexhanyuan and @rentfrow72
                         break;
                     default:
                         model = "UNKNOWN";
