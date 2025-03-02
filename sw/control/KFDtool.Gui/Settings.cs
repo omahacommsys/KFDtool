@@ -71,7 +71,7 @@ namespace KFDtool.Gui
             Properties.Settings.Default.DliPort = 49644;
             Properties.Settings.Default.DliVariant = "Motorola";
             Properties.Settings.Default.DeviceType = "TwiKfdDevice";
-            Properties.Settings.Default.KfdDeviceType = "Kfdshield";
+            Properties.Settings.Default.KfdDeviceType = "KfdShield";
             Properties.Settings.Default.SelectedTheme = "System";
             Properties.Settings.Default.Save();
         }
