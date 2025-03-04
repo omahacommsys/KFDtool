@@ -472,7 +472,6 @@ namespace KFDtool.Gui
                 return;
             }
 
-            Settings.ContainerPath = path;
             Settings.ContainerSaved = true;
 
             UpdateContainerText();
