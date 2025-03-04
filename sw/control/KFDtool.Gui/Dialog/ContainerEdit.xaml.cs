@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace KFDtool.Gui.Dialog
 {
@@ -14,10 +15,15 @@ namespace KFDtool.Gui.Dialog
     public partial class ContainerEdit : Window
     {
         private string OriginalContainer;
+        public static RoutedCommand InsertCommand = new RoutedCommand();
+        public static RoutedCommand DeleteCommand = new RoutedCommand();
 
         public ContainerEdit()
         {
             InitializeComponent();
+
+            InsertCommand.InputGestures.Add(new KeyGesture(Key.Insert));
+            DeleteCommand.InputGestures.Add(new KeyGesture(Key.Delete));
 
             OriginalContainer = ContainerUtilities.SerializeInnerContainer(Settings.ContainerInner).OuterXml;
 

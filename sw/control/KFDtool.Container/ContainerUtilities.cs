@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 using System.Xml.XPath;
 
@@ -147,6 +151,297 @@ namespace KFDtool.Container
             byte[] fileBytes = Shared.Utility.Compress(outerContainerBytes);
 
             return fileBytes;
+        }
+
+        private static XmlDocument SerializeDKFOuterPersonality(DKFOuterPersonality pers)
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
+            doc.InsertBefore(xmlDeclaration, doc.DocumentElement);
+            XPathNavigator nav = doc.CreateNavigator();
+            using (XmlWriter w = nav.AppendChild())
+            {
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add(string.Empty, string.Empty); // remove xsd and xsi attributes
+                XmlSerializer s = new XmlSerializer(typeof(DKFOuterPersonality));
+                s.Serialize(w, pers, ns);
+            }
+            return doc;
+        }
+
+        private static XmlDocument SerializeDKFOuterParamData(DKFOuterParamData paramData)
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
+            doc.InsertBefore(xmlDeclaration, doc.DocumentElement);
+            XPathNavigator nav = doc.CreateNavigator();
+            using (XmlWriter w = nav.AppendChild())
+            {
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add(string.Empty, string.Empty); // remove xsd and xsi attributes
+                XmlSerializer s = new XmlSerializer(typeof(DKFOuterParamData));
+                s.Serialize(w, paramData, ns);
+            }
+            return doc;
+        }
+
+        private static void SerializeDKFOuterParam(XmlDocument doc, DKFOuterParam param)
+        {
+            XmlDocument eleDoc = new XmlDocument();
+            XPathNavigator nav = eleDoc.CreateNavigator();
+            using (XmlWriter w = nav.AppendChild())
+            {
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add(string.Empty, string.Empty); // remove xsd and xsi attributes
+                XmlSerializer s = new XmlSerializer(typeof(DKFOuterParam));
+                s.Serialize(w, param, ns);
+            }
+
+            XmlElement valueData = doc.GetElementsByTagName("paramdata")[0] as XmlElement;
+
+            XmlNode n = doc.ImportNode(eleDoc.DocumentElement, true);
+            valueData.AppendChild(n);
+        }
+
+        private static XmlDocument SerializeDKFInnerPersonality(DKFInnerPersonality pers)
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
+            doc.InsertBefore(xmlDeclaration, doc.DocumentElement);
+            XPathNavigator nav = doc.CreateNavigator();
+            using (XmlWriter w = nav.AppendChild())
+            {
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add(string.Empty, string.Empty); // remove xsd and xsi attributes
+                XmlSerializer s = new XmlSerializer(typeof(DKFInnerPersonality));
+                s.Serialize(w, pers, ns);
+            }
+            return doc;
+        }
+
+        private static XmlDocument SerializeDKFInnerValueData(DKFInnerValueData valueData)
+        {
+            XmlDocument doc = new XmlDocument();
+            XmlDeclaration xmlDeclaration = doc.CreateXmlDeclaration("1.0", "UTF-8", null);
+            doc.InsertBefore(xmlDeclaration, doc.DocumentElement);
+            XPathNavigator nav = doc.CreateNavigator();
+            using (XmlWriter w = nav.AppendChild())
+            {
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add(string.Empty, string.Empty); // remove xsd and xsi attributes
+                XmlSerializer s = new XmlSerializer(typeof(DKFInnerValueData));
+                s.Serialize(w, valueData, ns);
+            }
+            return doc;
+        }
+
+        private static void SerializeDKFInnerParam(XmlDocument doc, DKFInnerParam param)
+        {
+            XmlDocument eleDoc = new XmlDocument();
+            XPathNavigator nav = eleDoc.CreateNavigator();
+            using (XmlWriter w = nav.AppendChild())
+            {
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add(string.Empty, string.Empty); // remove xsd and xsi attributes
+                XmlSerializer s = new XmlSerializer(typeof(DKFInnerParam));
+                s.Serialize(w, param, ns);
+            }
+
+            XmlElement valueData = doc.GetElementsByTagName("valuedata")[0] as XmlElement;
+
+            XmlNode n = doc.ImportNode(eleDoc.DocumentElement, true);
+            valueData.AppendChild(n);
+        }
+
+        private static void SerializeDKFInnerKey(XmlDocument doc, DKFInnerKey key)
+        {
+            XmlDocument eleDoc = new XmlDocument();
+            XPathNavigator nav = eleDoc.CreateNavigator();
+            using (XmlWriter w = nav.AppendChild())
+            {
+                XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
+                ns.Add(string.Empty, string.Empty); // remove xsd and xsi attributes
+                XmlSerializer s = new XmlSerializer(typeof(DKFInnerKey));
+                s.Serialize(w, key, ns);
+            }
+
+            XmlElement valueData = doc.GetElementsByTagName("valuedata")[0] as XmlElement;
+
+            XmlNode n = doc.ImportNode(eleDoc.DocumentElement, true);
+            valueData.AppendChild(n);
+        }
+
+        public static byte[] EncryptOuterContainerDKF(OuterContainer outerContainer, InnerContainer innerContainer, string password)
+        {
+            // generate inner DKF container
+            string innerIVBase64 = string.Empty;
+            string innerSaltBase64 = string.Empty;
+            string innerBase64 = string.Empty;
+            {
+                DKFInnerValueData valueData = new DKFInnerValueData();
+
+                // add DKF params
+                XmlDocument valueDataXml = SerializeDKFInnerValueData(valueData);
+                DKFInnerParam persEnableFips = new DKFInnerParam(0, "enablefips", "boolean", "false");
+                SerializeDKFInnerParam(valueDataXml, persEnableFips);
+                DKFInnerParam persPIN = new DKFInnerParam(1, "pin", "string", "");
+                SerializeDKFInnerParam(valueDataXml, persPIN);
+                DKFInnerParam persKEK = new DKFInnerParam(2, "kek", "string", "");
+                SerializeDKFInnerParam(valueDataXml, persKEK);
+                DKFInnerParam persPrevKEK = new DKFInnerParam(3, "prevkek", "string", "");
+                SerializeDKFInnerParam(valueDataXml, persPrevKEK);
+                DKFInnerParam persDESMAC = new DKFInnerParam(4, "desmac", "string", "");
+                SerializeDKFInnerParam(valueDataXml, persDESMAC);
+                DKFInnerParam persPrevDESMAC = new DKFInnerParam(5, "prevdesmac", "string", "");
+                SerializeDKFInnerParam(valueDataXml, persPrevDESMAC);
+                DKFInnerParam persVersion = new DKFInnerParam(6, "version", "integer", "5");
+                SerializeDKFInnerParam(valueDataXml, persVersion);
+                DKFInnerParam persKEKEncryptionAlg = new DKFInnerParam(7, "kekencryptionalg", "string", "");
+                SerializeDKFInnerParam(valueDataXml, persKEKEncryptionAlg);
+                DKFInnerParam persDESMACEncryptionAlg = new DKFInnerParam(8, "desmacencryptionalg", "string", "");
+                SerializeDKFInnerParam(valueDataXml, persDESMACEncryptionAlg);
+                DKFInnerParam persTEKEncryptionAlg = new DKFInnerParam(9, "tekencryptionalg", "string", "Unencrypted");
+                SerializeDKFInnerParam(valueDataXml, persTEKEncryptionAlg);
+                DKFInnerParam persAESFIPSKEK = new DKFInnerParam(10, "aesfipskek", "string", "");
+                SerializeDKFInnerParam(valueDataXml, persAESFIPSKEK);
+                DKFInnerParam persPrevAESFIPSKEK = new DKFInnerParam(11, "prevaesfipskek", "string", "");
+                SerializeDKFInnerParam(valueDataXml, persPrevAESFIPSKEK);
+                DKFInnerParam persFIPSMACKey = new DKFInnerParam(12, "fipsmackey", "string", "");
+                SerializeDKFInnerParam(valueDataXml, persFIPSMACKey);
+                DKFInnerParam persPrevFIPSMACKey = new DKFInnerParam(13, "prevfipsmackey", "string", "");
+                SerializeDKFInnerParam(valueDataXml, persPrevFIPSMACKey);
+                DKFInnerParam persAESFIPSKEKEncryptionAlg = new DKFInnerParam(14, "aesfipskekencryptionalg", "string", "");
+                SerializeDKFInnerParam(valueDataXml, persAESFIPSKEKEncryptionAlg);
+                DKFInnerParam persFIPSMACKeyEncryptionAlg = new DKFInnerParam(15, "fipsmackeyencryptionalg", "string", "");
+                SerializeDKFInnerParam(valueDataXml, persFIPSMACKeyEncryptionAlg);
+                DKFInnerParam persPINIsValidFlag = new DKFInnerParam(16, "pinisvalidflag", "boolean", "false");
+                SerializeDKFInnerParam(valueDataXml, persPINIsValidFlag);
+                DKFInnerParam persIsMaster = new DKFInnerParam(17, "ismaster", "boolean", "true");
+                SerializeDKFInnerParam(valueDataXml, persIsMaster);
+
+                // add keys
+                foreach (KeyItem containerKey in innerContainer.Keys)
+                {
+                    string algString = "Aes";
+                    switch (containerKey.AlgorithmId)
+                    {
+                        case 0x81:
+                            algString = "Des";
+                            break;
+                        case 0x84:
+                            algString = "Aes";
+                            break;
+                        default:
+                            continue; // skip key
+                    }
+
+                    if (containerKey.KeyTypeKek)
+                        continue;
+
+                    DKFInnerKey dkfKey = new DKFInnerKey(algString, containerKey.KeyId.ToString(), containerKey.Sln.ToString(), containerKey.Key);
+                    dkfKey.KSID = containerKey.KeysetId.ToString();
+                    dkfKey.KSName = $"Set{containerKey.KeysetId.ToString("D3")}";
+                    SerializeDKFInnerKey(valueDataXml, dkfKey);
+                }
+
+                // create structures for DKF
+                DKFInnerPersonality personality = new DKFInnerPersonality()
+                {
+                    Definition = "1",
+                    Device = "1",
+                    Name = "KFDtool EKC to DKF",
+                    Family = "KeyManager"
+                };
+
+                // serialize
+                XmlDocument personalityXml = SerializeDKFInnerPersonality(personality);
+
+                XmlElement personalityElement = personalityXml.GetElementsByTagName("personality")[0] as XmlElement;
+
+                XmlNode n = personalityXml.ImportNode(valueDataXml.DocumentElement, true);
+                personalityElement.AppendChild(n);
+
+                string xml = personalityXml.OuterXml;
+                byte[] xmlBytes = Encoding.UTF8.GetBytes(xml);
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    GZipStream gZipStream = new GZipStream(memoryStream, CompressionMode.Compress);
+                    gZipStream.Write(xmlBytes, 0, xmlBytes.Length);
+                    gZipStream.Close();
+                    xmlBytes = memoryStream.ToArray();
+                }
+
+                using (AesCryptoServiceProvider aesCsp = new AesCryptoServiceProvider())
+                {
+                    aesCsp.KeySize = 256; // critical security parameter
+                    aesCsp.Mode = CipherMode.CBC; // critical security parameter
+
+                    // generate SALT and IV
+                    RNGCryptoServiceProvider rNGCryptoServiceProvider = new RNGCryptoServiceProvider();
+                    byte[] salt = new byte[32];
+                    rNGCryptoServiceProvider.GetBytes(salt);
+                    innerSaltBase64 = Convert.ToBase64String(salt);
+                    byte[] iv = new byte[16];
+                    rNGCryptoServiceProvider.GetBytes(iv);
+                    innerIVBase64 = Convert.ToBase64String(iv);
+
+                    Rfc2898DeriveBytes rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, salt, 10000);
+                    byte[] passwordKey = rfc2898DeriveBytes.GetBytes(32);
+
+                    using (ICryptoTransform cryptoTransform = aesCsp.CreateEncryptor(passwordKey, iv))
+                    {
+                        MemoryStream xmlms = new MemoryStream(xmlBytes);
+
+                        MemoryStream memoryStream = new MemoryStream();
+                        using (CryptoStream cryptoStream = new CryptoStream(memoryStream, cryptoTransform, CryptoStreamMode.Write))
+                        {
+                            byte[] buffer = new byte[4096];
+                            for (int i = xmlms.Read(buffer, 0, 4096); i > 0; i = xmlms.Read(buffer, 0, 4096))
+                                cryptoStream.Write(buffer, 0, i);
+                        }
+
+                        xmlBytes = memoryStream.ToArray();
+                    }
+                }
+
+                innerBase64 = Convert.ToBase64String(xmlBytes);
+            }
+
+            // generate outer DKR container
+            byte[] outBytes = null;
+            {
+                DKFOuterParamData paramData = new DKFOuterParamData();
+
+                // add DKF params
+                XmlDocument paramDataXml = SerializeDKFOuterParamData(paramData);
+                DKFOuterParam persEncryptMode = new DKFOuterParam("encryptMode", "string", "Aes256Cbc");
+                SerializeDKFOuterParam(paramDataXml, persEncryptMode);
+                DKFOuterParam persRFC2898 = new DKFOuterParam("rfc2898", "boolean", "True");
+                SerializeDKFOuterParam(paramDataXml, persRFC2898);
+                DKFOuterParam persIV = new DKFOuterParam("iv", "string", innerIVBase64);
+                SerializeDKFOuterParam(paramDataXml, persIV);
+                DKFOuterParam persSalt = new DKFOuterParam("salt", "string", innerSaltBase64);
+                SerializeDKFOuterParam(paramDataXml, persSalt);
+                DKFOuterParam persIterations = new DKFOuterParam("iterations", "int32", "10000");
+                SerializeDKFOuterParam(paramDataXml, persIterations);
+                DKFOuterParam perContent = new DKFOuterParam("content", "string", innerBase64);
+                SerializeDKFOuterParam(paramDataXml, perContent);
+
+                // create structures for DKF
+                DKFOuterPersonality personality = new DKFOuterPersonality();
+
+                // serialize
+                XmlDocument personalityXml = SerializeDKFOuterPersonality(personality);
+
+                XmlElement personalityElement = personalityXml.GetElementsByTagName("personality")[0] as XmlElement;
+
+                XmlNode n = personalityXml.ImportNode(paramDataXml.DocumentElement, true);
+                personalityElement.AppendChild(n);
+
+                outBytes = Encoding.UTF8.GetBytes(personalityXml.OuterXml);
+            }
+
+            return outBytes;
         }
 
         public static (OuterContainer ContainerOuter, InnerContainer ContainerInner, byte[] Key) DecryptOuterContainer(byte[] fileBytes, string password)

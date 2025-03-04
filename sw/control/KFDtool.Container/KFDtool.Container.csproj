@@ -87,10 +87,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContainerUtilities.cs" />
+    <Compile Include="DKFInnerKey.cs" />
+    <Compile Include="DKFOuterParam.cs" />
+    <Compile Include="DKFInnerParam.cs" />
+    <Compile Include="DKFOuterParamData.cs" />
+    <Compile Include="DKFOuterPersonality.cs" />
+    <Compile Include="DKFInnerValueData.cs" />
     <Compile Include="GroupItem.cs" />
     <Compile Include="InnerContainer.cs" />
     <Compile Include="KeyDerivation.cs" />
     <Compile Include="KeyItem.cs" />
+    <Compile Include="DKFInnerPersonality.cs" />
     <Compile Include="OuterContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
