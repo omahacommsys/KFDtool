@@ -3,6 +3,7 @@ using KFDtool.P25.Generator;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -42,29 +43,43 @@ namespace KFDtool.Gui.Dialog
 
         private void KeysListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (keysListView.SelectedItem != null)
+            if (keysListView.SelectedItem != null && keysListView.SelectedItems.Count <= 1)
             {
+                // Display the key edit panel
                 ContainerEditKeyControl keyEdit = new ContainerEditKeyControl((KeyItem)keysListView.SelectedItem);
-
                 ItemView.Content = keyEdit;
+                // Enable up & down buttons
+                btnListUp.IsEnabled = true;
+                btnListDown.IsEnabled = true;
             }
             else
             {
+                // Null out itemview
                 ItemView.Content = null;
+                // Disable up & down buttons
+                btnListUp.IsEnabled = false;
+                btnListDown.IsEnabled = false;
             }
         }
 
         private void GroupsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (groupsListView.SelectedItem != null)
+            if (groupsListView.SelectedItem != null && keysListView.SelectedItems.Count <= 1)
             {
+                // Display the group edit panel
                 ContainerEditGroupControl keyEdit = new ContainerEditGroupControl((Container.GroupItem)groupsListView.SelectedItem);
-
                 ItemView.Content = keyEdit;
+                // Enable up & down buttons
+                btnListUp.IsEnabled = true;
+                btnListDown.IsEnabled = true;
             }
             else
             {
+                // Null out itemview
                 ItemView.Content = null;
+                // Disable up & down buttons
+                btnListUp.IsEnabled = false;
+                btnListDown.IsEnabled = false;
             }
         }
 
@@ -168,31 +183,33 @@ namespace KFDtool.Gui.Dialog
         {
             if (containerTabControl.SelectedItem == keysTabItem)
             {
-                if (keysListView.SelectedItem != null)
+                if (keysListView.SelectedItems != null)
                 {
-                    int index = keysListView.SelectedIndex;
 
-                    int id = Settings.ContainerInner.Keys[index].Id;
-
-                    // remove key reference from groups
-                    foreach (Container.GroupItem groupItem in Settings.ContainerInner.Groups)
+                    // Remove key from any groups it's a part of (we have to work backwards to safely remove from a list we're enumerating)
+                    for (int i =  keysListView.SelectedItems.Count - 1; i >= 0; i--)
                     {
-                        if (groupItem.Keys.Contains(id))
+                        KeyItem key = (KeyItem)keysListView.SelectedItems[i];
+                        // remove key reference from groups
+                        foreach (Container.GroupItem groupItem in Settings.ContainerInner.Groups)
                         {
-                            groupItem.Keys.Remove(id);
+                            if (groupItem.Keys.Contains(key.Id))
+                            {
+                                groupItem.Keys.Remove(key.Id);
+                            }
                         }
-                    }
 
-                    // remove key item
-                    Settings.ContainerInner.Keys.RemoveAt(index);
+                        // remove key item
+                        Settings.ContainerInner.Keys.Remove(key);
+                    }
                 }
             }
             else if (containerTabControl.SelectedItem == groupsTabItem)
             {
-                if (groupsListView.SelectedItem != null)
+                for (int i = groupsListView.SelectedItems.Count - 1; i >= 0; i--)
                 {
-                    int index = groupsListView.SelectedIndex;
-                    Settings.ContainerInner.Groups.RemoveAt(index);
+                    Container.GroupItem group = (Container.GroupItem)groupsListView.SelectedItems[i];
+                    Settings.ContainerInner.Groups.Remove(group);
                 }
             }
         }

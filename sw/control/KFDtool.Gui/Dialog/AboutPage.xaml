@@ -1,0 +1,17 @@
+﻿<Window x:Name="aboutWindow" x:Class="KFDtool.Gui.Dialog.AboutPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KFDtool.Gui.Dialog"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterOwner"
+        Title="About KFDTool" Height="320" Width="480" ResizeMode="NoResize">
+    <Grid>
+        <Image Height="100" Margin="22,22,0,0" Source="/Images/kfdtool-icon.png" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+        <Label Content="KFDTool GUI" HorizontalAlignment="Left" Margin="138,14,0,0" VerticalAlignment="Top" Height="76" Width="310" FontSize="48"/>
+        <Label x:Name="lblAboutVersion" Content="Version String" HorizontalAlignment="Left" Margin="140,83,0,0" VerticalAlignment="Top" Width="308" FontSize="14"/>
+        <TextBlock x:Name="tbAboutInfo" HorizontalAlignment="Left" Margin="23,141,0,0" Text="TextBlock" VerticalAlignment="Top" Height="153" Width="425"/>
+
+    </Grid>
+</Window>
