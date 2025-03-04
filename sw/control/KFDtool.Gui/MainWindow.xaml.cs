@@ -447,6 +447,7 @@ namespace KFDtool.Gui
                 MessageBox.Show("No container open", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         private void ContainerWriteDKF(string path, string password)
         {
             byte[] contents;
