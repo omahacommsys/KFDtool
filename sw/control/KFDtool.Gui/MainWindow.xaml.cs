@@ -447,6 +447,62 @@ namespace KFDtool.Gui
                 MessageBox.Show("No container open", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        private void ContainerWriteDKF(string path, string password)
+        {
+            byte[] contents;
+
+            try
+            {
+                contents = ContainerUtilities.EncryptOuterContainerDKF(Settings.ContainerOuter, Settings.ContainerInner, password);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Failed to encrypt container: {0}", ex.Message), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            try
+            {
+                File.WriteAllBytes(path, contents);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(string.Format("Failed to write file: {0}", ex.Message), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            Settings.ContainerPath = path;
+            Settings.ContainerSaved = true;
+
+            UpdateContainerText();
+        }
+
+        private void Container_Export_DKF_Click(object sender, RoutedEventArgs e)
+        {
+            if (Settings.ContainerOpen)
+            {
+                SaveFileDialog saveFileDialog = new SaveFileDialog();
+                saveFileDialog.Filter = "Distribution Key File (*.dkf)|*.dkf";
+
+                if (saveFileDialog.ShowDialog() == true)
+                {
+                    ContainerSetPassword containerSetPassword = new ContainerSetPassword();
+                    containerSetPassword.Style = Window.GetWindow(this).Style;
+                    containerSetPassword.Owner = this; // for centering in parent window
+                    containerSetPassword.ShowDialog();
+
+                    if (containerSetPassword.PasswordSet)
+                    {
+                        string password = containerSetPassword.PasswordText;
+                        ContainerWriteDKF(saveFileDialog.FileName, password);
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("No container open", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         private void ContainerWrite(string path)
         {
