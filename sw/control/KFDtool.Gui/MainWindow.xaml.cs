@@ -846,15 +846,15 @@ namespace KFDtool.Gui
 
                 Version apVersion = new Version(apVerStr);
 
-                if (apVersion.Major != 2)    // TODO: handle this better
-                {
-                    MessageBox.Show(string.Format(
-                        "Adapter protocol version not compatible ({0})\n\n" +
-                        "This version of KFDtool supports adapter protocol versions 2.x.x.\n\n" +
-                        "Please update your adapter firmware.",
-                        apVerStr), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
+                // if (apVersion.Major != 2)    // TODO: handle this better
+                // {
+                //     MessageBox.Show(string.Format(
+                //         "Adapter protocol version not compatible ({0})\n\n" +
+                //         "This version of KFDtool supports adapter protocol versions 2.x.x.\n\n" +
+                //         "Please update your adapter firmware.",
+                //         apVerStr), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                //     return;
+                // }
 
                 string fwVersion = string.Empty;
                 string uniqueId = string.Empty;
