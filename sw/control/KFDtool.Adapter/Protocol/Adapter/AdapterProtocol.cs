@@ -20,6 +20,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
         private const byte CMD_SEND_KEY_SIG = 0x16;
         private const byte CMD_SEND_BYTE = 0x17;
         private const byte CMD_SEND_BYTES = 0x18;
+        private const byte CMD_SEND_KEY_SIG_AND_READY_REQ = 0x19;
 
         /* RESPONSE OPCODES */
         private const byte RSP_ERROR = 0x20;
@@ -31,6 +32,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
         private const byte RSP_SEND_KEY_SIG = 0x26;
         private const byte RSP_SEND_BYTE = 0x27;
         private const byte RSP_SEND_BYTES = 0x28;
+        private const byte RSP_SEND_KEY_SIG_AND_READY_REQ = 0x29;
 
         /* BROADCAST OPCODES */
         private const byte BCST_RECEIVE_BYTE = 0x31;
@@ -67,6 +69,7 @@ namespace KFDtool.Adapter.Protocol.Adapter
         private Version ProtocolVersion;
         private bool FeatureAvailableSendBytes => ProtocolVersion >= new Version(2, 1, 0);
         private bool FeatureAvailableSetTransferSpeed => ProtocolVersion >= new Version(2, 1, 0);
+        public bool FeatureAvailableSendKeySignatureAndReadyReq => ProtocolVersion >= new Version(2, 2, 0);
 
         public AdapterProtocol(string portName, TwiKfdDevice deviceType)
         {
@@ -753,6 +756,44 @@ namespace KFDtool.Adapter.Protocol.Adapter
             if (rsp.Count == 1)
             {
                 if (rsp[0] != RSP_SEND_KEY_SIG)
+                {
+                    throw new Exception("invalid response opcode");
+                }
+            }
+            else
+            {
+                throw new Exception("invalid response length");
+            }
+        }
+
+        public void SendKeySignatureAndReadyReq()
+        {
+            Debug.WriteLine("Sending key signature and ready req");
+            List<byte> cmd = new List<byte>();
+
+            /*
+            * CMD: SEND KEY SIGNATURE AND READY REQ
+            * 
+            * [0] CMD_SEND_KEY_SIG_AND_READY_REQ
+            * [1] reserved (set to 0x00)
+            */
+
+            cmd.Add(CMD_SEND_KEY_SIG_AND_READY_REQ);
+            cmd.Add(0x00);
+
+            Lower.Send(cmd);
+
+            List<byte> rsp = Lower.Read(TimeoutMs);
+
+            /*
+            * RSP: SEND KEY SIGNATURE AND READY REQ
+            * 
+            * [0] RSP_SEND_KEY_SIG_AND_READY_REQ
+            */
+
+            if (rsp.Count == 1)
+            {
+                if (rsp[0] != RSP_SEND_KEY_SIG_AND_READY_REQ)
                 {
                     throw new Exception("invalid response opcode");
                 }
