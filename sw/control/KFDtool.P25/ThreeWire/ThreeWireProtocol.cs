@@ -35,18 +35,29 @@ namespace KFDtool.P25.ThreeWire
 
         public void SendKeySignature()
         {
-            Log.Debug("kfd: key signature");
-            Protocol.SendKeySignature();
+            if (Protocol.FeatureAvailableSendKeySignatureAndReadyReq)
+            {
+                Log.Debug("kfd: key signature and ready req");
+                Protocol.SendKeySignatureAndReadyReq();
+            }
+            else
+            {
+                Log.Debug("kfd: key signature");
+                Protocol.SendKeySignature();
+            }
         }
 
         public DeviceType InitSession()
         {
-            // send ready req opcode
-            List<byte> cmd = new List<byte>();
-            cmd.Add(OPCODE_READY_REQ);
-            Log.Debug("kfd: ready req");
-            Log.Debug("kfd -> mr: {0}", Utility.DataFormat(cmd));
-            Protocol.SendData(cmd);
+            if (!Protocol.FeatureAvailableSendKeySignatureAndReadyReq)
+            {
+                // send ready req opcode
+                List<byte> cmd = new List<byte>();
+                cmd.Add(OPCODE_READY_REQ);
+                Log.Debug("kfd: ready req");
+                Log.Debug("kfd -> mr: {0}", Utility.DataFormat(cmd));
+                Protocol.SendData(cmd);
+            }
 
             // receive ready general mode opcode
             Log.Debug("mr: ready general mode");
