@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KFDtool")]
-[assembly: AssemblyCopyright("Copyright 2019-2020 Ellie Dugger\nCopyright 2021-2023 Natalie Moore\nCopyright 2023-2024 Patrick McDonnell")]
+[assembly: AssemblyCopyright("Copyright 2019-2020 Ellie Dugger\nCopyright 2021-2023 Natalie Moore\nCopyright 2023-2025 Ilya Smirnov\nCopyright 2023-2024 Patrick McDonnell")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -51,6 +51,6 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.8.5.0")]
-[assembly: AssemblyFileVersion("1.8.5.0")]
-[assembly: AssemblyInformationalVersion("1.8.5.0")]
+[assembly: AssemblyVersion("1.8.6.0")]
+[assembly: AssemblyFileVersion("1.8.6.0")]
+[assembly: AssemblyInformationalVersion("1.8.6.0")]

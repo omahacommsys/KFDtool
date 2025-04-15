@@ -899,7 +899,7 @@ namespace KFDtool.Gui
         {
             MessageBox.Show(
                 string.Format(
-                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Ellie Dugger{0}{0}Copyright 2021-2023 Natalie Moore{0}{0}Copyright 2023 Ilya Smirnov{0}{0}Copyright 2023-2024 Patrick McDonnell{0}{0}Version: {1}"
+                    "KFDtool Control Application{0}{0}Copyright 2019-2020 Ellie Dugger{0}{0}Copyright 2021-2023 Natalie Moore{0}{0}Copyright 2023-2025 Ilya Smirnov{0}{0}Copyright 2023-2024 Patrick McDonnell{0}{0}Version: {1}"
 #if DEBUG
                     + " DEBUG"
 #endif
