@@ -516,6 +516,29 @@ void loop()
                 spTxDataWait(rspData, sizeof(rspData));
             }
         }
+        else if (cmdData[0] == CMD_SEND_KEY_SIG_AND_READY_REQ) // send key signature and ready req
+        {
+            if (cmdCount == 2)
+            {
+                twiSendKeySig();
+                twiSendPhyByte(0xC0);
+
+                uint8_t rspData[1];
+
+                rspData[0] = RSP_SEND_KEY_SIG_AND_READY_REQ;
+
+                spTxDataWait(rspData, sizeof(rspData));
+            }
+            else // invalid command length
+            {
+                uint8_t rspData[2];
+
+                rspData[0] = RSP_ERROR;
+                rspData[1] = ERR_INVALID_CMD_LENGTH;
+
+                spTxDataWait(rspData, sizeof(rspData));
+            }
+        }
         else // invalid command opcode
         {
             uint8_t rspData[2];
