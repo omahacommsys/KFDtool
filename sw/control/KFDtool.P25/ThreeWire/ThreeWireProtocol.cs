@@ -62,7 +62,7 @@ namespace KFDtool.P25.ThreeWire
             // receive ready general mode opcode
             Log.Debug("mr: ready general mode");
             byte rsp = Protocol.GetByte(TIMEOUT_STD);
-            Log.Debug("kfd -> mr: {0}", Utility.DataFormat(rsp));
+            Log.Debug("mr -> kfd: {0}", Utility.DataFormat(rsp));
             switch (rsp)
             {
                 case OPCODE_READY_GENERAL_MODE_MR: return DeviceType.Mr;
