@@ -8,7 +8,7 @@
 
 #define ACTIVITY_LED_PIN 7  // if building without the shield, change this to 13 for an activity indicator on the built-in LED
 #define SENSE_LED_PIN 6
-#define DATA_TX 5   // TWI Data TX
+#define DATA_TX 2   // TWI Data TX
 #define DATA_RX 3   // TWI Data RX (INT0 Uno, INT5 Mega)
 #define SNS_TX 4    // TWI Sense TX
 #define SNS_RX 2    // TWI Sense RX (INT1 Uno, INT4 Mega)
