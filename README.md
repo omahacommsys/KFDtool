@@ -9,7 +9,7 @@ Completed [KFDshields](https://store.omahacommunicationsys.com) are no longer av
 ⚠️ **You must use the build of the KFDTool software attached to this GitHub repo in order for your homebrew adapter to work.** This build also supports the original DuggerD KFDTool. The original DuggerD KFDTool software will not find your Arduino-based KFD.
 
 The software officially supports the following devices:
-* Original [DuggerD](https://github.com/duggerd) [KFDTool](https://github.com/KFDtool/KFDtool)
+* Original [DuggerD](https://github.com/duggerd) [KFDTool](https://store.kfdtool.com/products/kfdtool-kfd100)
 * [OmahaCommSys](https://github.com/omahacommsys) [KFDshield](https://store.omahacommunicationsys.com)
 * [W3AXL](https://github.com/w3axl) [KFDMicro](https://store.w3axl.com/products/kfdmicro-3d-printed-case-1)
 * [alexhanyuan](https://github.com/alexhanyuan) KFDnano
