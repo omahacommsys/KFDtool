@@ -56,11 +56,11 @@ If you are using a shield, on the TRS connector, tip is data, ring is sense, and
 
 Head to the Releases page and download both the Firmware and Software zips from the latest version. Save the software for later. Unzip Firmware, and open the kfd-avr.ino file in the Arduino IDE, and select your board type and COM port from the Tools menu. If you are using a board that is not explicitly supported, or DIYing your own rather than using a shield, you should confirm that all options in the hal.h file are correct - namely, CPU speed and data/LED pins. Once you are done, hit upload.
 
-⚠️ If you have a BLUE KFDpico, please use the KFDpico firmware in the releases folder ⚠️
+⚠️ If you have a BLUE KFDpico, please use the KFDpico firmware in the releases folder.
 
-⚠️ If you have a GREEN KFDpico, it likely does not have the USB bootloader to allow updating over USB. Please contact [Alex](https://github.com/alexhanyuan). ⚠️
+⚠️ If you have a GREEN KFDpico, it likely does not have the USB bootloader to allow updating over USB. Please contact [Alex](https://github.com/alexhanyuan).
 
-For all other 328p-based versions (KFDShield, KFDMicro, and KFDnano), please use the normal firmware in the releases folder.
+For all other versions (KFDShield, KFDMicro, and KFDnano), please use the normal firmware in the releases folder.
 
 ### Software Setup
 
