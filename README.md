@@ -4,23 +4,23 @@
 
 A fork of the amazing [KFDTool](https://github.com/KFDTool/KFDTool) software for ATmega devices, plus schematics and board files for an Arduino-compatible shield.
 
-Completed KFDshields can be purchased from the [online store](https://store.omahacommunicationsys.com).
+Completed [KFDshields](https://store.omahacommunicationsys.com) are no longer available.
 
-⚠️ You must use the build of the KFDTool software attached to this GitHub repo in order for your homebrew adapter to work. This build also supports the original DuggerD KFDTool. The original DuggerD KFDTool software will not find your Arduino-based KFD.
+⚠️ **You must use the build of the KFDTool software attached to this GitHub repo in order for your homebrew adapter to work.** This build also supports the original DuggerD KFDTool. The original DuggerD KFDTool software will not find your Arduino-based KFD.
 
 The software officially supports the following devices:
-* Original [DuggerD](https://github.com/duggerd) KFDTool
-* [OmahaCommSys](https://github.com/omahacommsys) KFDShield
-* [W3AXL](https://github.com/w3axl) KFDMicro
-* [Alex Yuan](https://github.com/alexhanyuan) KFDnano
-* [Alex Yuan](https://github.com/alexhanyuan) KFDpico
+* Original [DuggerD](https://github.com/duggerd) [KFDTool](https://github.com/KFDtool/KFDtool)
+* [OmahaCommSys](https://github.com/omahacommsys) [KFDshield](https://store.omahacommunicationsys.com)
+* [W3AXL](https://github.com/w3axl) [KFDMicro](https://store.w3axl.com/products/kfdmicro-3d-printed-case-1)
+* [alexhanyuan](https://github.com/alexhanyuan) KFDnano
+* [alexhanyuan](https://github.com/alexhanyuan) KFDpico
 
-Also supports homebrew keyloaders using the following Arduino boards and their direct clones (ATmega328P and ATmega32u4 based boards):
+Also supports homebrew keyloaders using the following Arduino boards and their direct clones (ATmega328P, ATmega32u4, and ATmega2560 based boards):
 * Arduino Uno Rev3
 * Arduino Nano
-* Arduino Mega 2560
 * Arduino Micro
 * Arduino Leonardo
+* Arduino Mega 2560
 
 The following boards have been reported to work with minor modifications:
 
@@ -45,16 +45,16 @@ Where PIN3 is Arduino pin 3 for receive data, PIN5 is Arduino pin 5 for transmit
 
 On the 3.5mm TRS connector, tip is DATA, ring is SNS, and shield is GND.
 
-⚠️ KFDmini (eBay clones) cables and accessories are NOT compatible with KFD-AVR 3.5mm TRS jacks/pinouts, and vice-versa. 
+⚠️ KFDmini (eBay clones) cables and accessories are NOT compatible with any of the officially supported KFD-AVR devices, and vice-versa.
 
 ### Firmware Flashing
 
 Head to the **Releases** page and download the latest Firmware zip. Unzip the Firmware, and open the kfd-avr.ino file in [Arduino IDE](https://www.arduino.cc/en/software/). It should then automatically open the associated files. Select your board type and COM port from the **`Tools`** menu. Some Arduino clones may require you to select **`ATmega328P (Old Bootloader)`** under the **`Processor`** option. Try this if you are having trouble uploading the sketch.
 
 
-If you are using a board that is not explicitly supported, or DIYing your own rather than using a shield, you should confirm that all options in the hal.h file are correct - namely, CPU speed and DATA/LED pins. Once you are done, hit upload.
+If you are using a board that is not explicitly supported, or DIYing your own rather than using a shield, you should confirm that all options in the [hal.h](https://github.com/omahacommsys/KFDtool/blob/master/fw/ino/kfd-avr/hal.h) file are correct - namely, CPU speed and DATA/LED pins. Once you are done, hit upload.
 
-⚠️ If you have a KFDpico and it is BLUE, please use the KFDpico firmware in the releases folder. The DATA TX pin is Arduino pin 2. If you have a GREEN KFDpico, it likely does not have the USB bootloader to allow updating over USB. Please contact [Alex](https://github.com/alexhanyuan).
+⚠️ If you have a KFDpico and it is BLUE, please use the KFDpico firmware in the releases folder. The DATA TX pin is Arduino pin 2. There is also a KFDpico specific branch in this repository. If you have a GREEN KFDpico, it likely does not have the USB bootloader to allow updating over USB. Please contact [Alex](https://github.com/alexhanyuan).
 
 For all other versions (KFDShield, KFDMicro, and KFDnano), please use the normal firmware in the releases folder.
 
