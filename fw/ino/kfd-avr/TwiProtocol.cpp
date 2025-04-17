@@ -3,20 +3,16 @@
 #include "TwiProtocol.h"
 
 #if defined(__AVR_ATmega328P__)
-// pin 3 is INT1
-#define CLEAR_INTERRUPTS EIFR=2
+#define CLEAR_INTERRUPTS EIFR=0b00000010 // INT1
 #elif defined(__AVR_ATmega32U4__)
-// pin 3 is INT0
-#define CLEAR_INTERRUPTS EIFR=1
+#define CLEAR_INTERRUPTS EIFR=0b00000001 // INT0
 #elif defined(__AVR_ATmega2560__)
-// WIP
-#define CLEAR_INTERRUPTS EIFR=0b00100000
+#define CLEAR_INTERRUPTS EIFR=0b00100000 // INT5
 #else
 #error I don't think I'm compatible with your CPU. You might have to check the TwiProtocol file.
 #endif
 
 
-// set EIFR to 2 clears the interrupt flag
 // probably don't need to do it in the detach side but it keeps anything latent from firing off
 #define ENABLE_KFD_RX_INT cli(); CLEAR_INTERRUPTS; attachInterrupt(digitalPinToInterrupt(DATA_RX), Port_1, FALLING); sei();
 #define DISABLE_KFD_RX_INT cli(); CLEAR_INTERRUPTS; detachInterrupt(digitalPinToInterrupt(DATA_RX)); sei();
@@ -94,16 +90,6 @@ uint8_t reverseByte(uint8_t b)
 
     return table[b];
 }
-
-/*
-uint8_t reverseByte(uint8_t b)
-{
-    b = (b & 0xF0) >> 4 | (b & 0x0F) << 4;
-    b = (b & 0xCC) >> 2 | (b & 0x33) << 2;
-    b = (b & 0xAA) >> 1 | (b & 0x55) << 1;
-    return b;
-}
-*/
 
 uint16_t isEvenParity(uint16_t inByte)
 {
