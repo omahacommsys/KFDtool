@@ -12,6 +12,7 @@ The software officially supports the following devices:
 * Original [DuggerD](https://github.com/duggerd) [KFDTool](https://store.kfdtool.com/products/kfdtool-kfd100)
 * [OmahaCommSys](https://github.com/omahacommsys) [KFDshield](https://store.omahacommunicationsys.com)
 * [W3AXL](https://github.com/w3axl) [KFDMicro](https://store.w3axl.com/products/kfdmicro-3d-printed-case-1)
+* [rentfrowj](https://www.ebay.com/usr/rentfrowj) [KFDnano](https://www.ebay.com/itm/376069435923)
 * [alexhanyuan](https://github.com/alexhanyuan) KFDnano
 * [alexhanyuan](https://github.com/alexhanyuan) KFDpico
 
@@ -52,7 +53,7 @@ On the 3.5mm TRS connector, tip is DATA, ring is SNS, and shield is GND.
 Head to the **Releases** page and download the latest Firmware zip. Unzip the Firmware, and open the kfd-avr.ino file in [Arduino IDE](https://www.arduino.cc/en/software/). It should then automatically open the associated files. Select your board type and COM port from the **`Tools`** menu. Some Arduino clones may require you to select **`ATmega328P (Old Bootloader)`** under the **`Processor`** option. Try this if you are having trouble uploading the sketch.
 
 
-If you are using a board that is not explicitly supported, or DIYing your own rather than using a shield, you should confirm that all options in the [hal.h](https://github.com/omahacommsys/KFDtool/blob/master/fw/ino/kfd-avr/hal.h) file are correct - namely, CPU speed and DATA/LED pins. Once you are done, hit upload.
+If you are using a board that is not explicitly supported, or DIYing your own rather than using a shield, you should confirm that all options in the [hal.h](fw/ino/kfd-avr/hal.h) file are correct - namely, CPU speed and DATA/LED pins. Once you are done, hit upload.
 
 ⚠️ If you have a KFDpico and it is BLUE, please use the KFDpico firmware in the releases folder. The DATA TX pin is Arduino pin 2. There is also a KFDpico specific branch in this repository. If you have a GREEN KFDpico, it likely does not have the USB bootloader to allow updating over USB. Please contact [Alex](https://github.com/alexhanyuan).
 
