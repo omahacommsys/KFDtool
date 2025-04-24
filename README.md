@@ -4,17 +4,15 @@
 
 A fork of the amazing [KFDTool](https://github.com/KFDTool/KFDTool) software for ATmega devices, plus schematics and board files for an Arduino-compatible shield.
 
-Completed [KFDshields](https://store.omahacommunicationsys.com) are no longer available.
-
-⚠️ **You must use the build of the KFDTool software attached to this GitHub repo in order for your homebrew adapter to work.** This build also supports the original DuggerD KFDTool. The original DuggerD KFDTool software will not find your Arduino-based KFD.
+⚠️ **You must use the build of the KFDTool software attached to this GitHub repo in order for your homebrew adapter to work.** This build also supports the original [KFDTool](https://github.com/KFDTool/KFDTool). The original [KFDTool](https://github.com/KFDTool/KFDTool) software will not find your Arduino-based KFD.
 
 The software officially supports the following devices:
-* Original [DuggerD](https://github.com/duggerd) [KFDTool](https://store.kfdtool.com/products/kfdtool-kfd100)
+* Original [duggerd](https://github.com/duggerd) [KFDTool](https://store.kfdtool.com/products/kfdtool-kfd100)
 * [OmahaCommSys](https://github.com/omahacommsys) [KFDshield](https://store.omahacommunicationsys.com)
 * [W3AXL](https://github.com/w3axl) [KFDMicro](https://store.w3axl.com/products/kfdmicro-3d-printed-case-1)
-* [rentfrowj](https://www.ebay.com/usr/rentfrowj) [KFDnano](https://www.ebay.com/itm/376069435923)
+* [rentfrowj](https://github.com/rentfrowj) [KFDnano](https://www.ebay.com/usr/rentfrowj)
 * [alexhanyuan](https://github.com/alexhanyuan) KFDnano
-* [alexhanyuan](https://github.com/alexhanyuan) KFDpico
+* [alexhanyuan](https://github.com/alexhanyuan) [KFDpico](https://www.ebay.com/usr/alexhyuan)
 
 Also supports homebrew keyloaders using the following Arduino boards and their direct clones (ATmega328P, ATmega32u4, and ATmega2560 based boards):
 * Arduino Uno Rev3
