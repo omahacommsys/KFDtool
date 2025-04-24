@@ -70,11 +70,6 @@ namespace KFDtool.Gui
                                     SwitchType(TypeTwiKfdTool);
                                     break;
                                 }
-                            case TwiKfdDevice.KfdUsb:
-                                {
-                                    SwitchType(TypeTwiKfdUsb);
-                                    break;
-                                }
                             default:
                                 {
                                     SwitchType(TypeTwiKfdTool);
@@ -651,17 +646,6 @@ namespace KFDtool.Gui
 
                 Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
                 Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.KfdShield;
-
-                ResetTwiDeviceInfo();
-
-                StartAppDet();
-            }
-            else if (mi.Name == "TypeTwiKfdUsb")
-            {
-                DeviceMenu.Items.Clear();
-
-                Settings.SelectedDevice.DeviceType = BaseDevice.DeviceTypeOptions.TwiKfdDevice;
-                Settings.SelectedDevice.KfdDeviceType = TwiKfdDevice.KfdUsb;
 
                 ResetTwiDeviceInfo();
 

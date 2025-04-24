@@ -23,9 +23,8 @@
                     <MenuItem Header="_Close" Click="Container_Close_Click"/>
                 </MenuItem>
                 <MenuItem Name="TypeMenu" Header="_Type">
-                    <MenuItem Name="TypeTwiKfdTool" Header="_TWI (KFDtool)" Click="Type_MenuItem_Click" />
-                    <MenuItem Name="TypeTwiKfdShield" Header="_TWI (KFDshield)" Click="Type_MenuItem_Click" />
-                    <MenuItem Name="TypeTwiKfdUsb" Header="_TWI (KFD USB)" Click="Type_MenuItem_Click" />
+                    <MenuItem Name="TypeTwiKfdTool" Header="_TWI (original KFDtool)" Click="Type_MenuItem_Click" />
+                    <MenuItem Name="TypeTwiKfdShield" Header="_TWI (KFDshield / other)" Click="Type_MenuItem_Click" />
                     <MenuItem Name="TypeDliIp" Header="_DLI (IP)" Click="Type_MenuItem_Click" />
                 </MenuItem>
                 <MenuItem Name="DeviceMenu" Header="_Device" />

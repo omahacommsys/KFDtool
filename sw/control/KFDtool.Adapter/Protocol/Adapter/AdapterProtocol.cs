@@ -81,10 +81,6 @@ namespace KFDtool.Adapter.Protocol.Adapter
             {
                 Lower = new KfdShieldSerialProtocol(portName);
             }
-            else if (deviceType == TwiKfdDevice.KfdUsb)
-            {
-                Lower = new KfdShieldSerialProtocol(portName, dtrEnabled: true);
-            }
             else
             {
                 throw new ArgumentException(String.Format("Unknown device type {0}", deviceType));
