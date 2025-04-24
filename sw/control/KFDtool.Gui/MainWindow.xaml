@@ -17,7 +17,7 @@
                     <MenuItem Name="miContainerOpen" Header="_Open" Click="Container_Open_Click" />
                     <MenuItem Header="_Edit" Click="Container_Edit_Click" />
                     <MenuItem Header="_Change Password" Click="Container_Change_Password_Click" />
-                    <MenuItem Header="Export to _DKF" Click="Container_Export_DKF_Click"/>
+                    <MenuItem Header="Export to Harris _DKF" Click="Container_Export_DKF_Click"/>
                     <MenuItem Header="_Save" Click="Container_Save_Click"/>
                     <MenuItem Header="_Save As" Click="Container_Save_As_Click"/>
                     <MenuItem Header="_Close" Click="Container_Close_Click"/>
