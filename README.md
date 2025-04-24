@@ -2,31 +2,26 @@
 
 <img src="https://github.com/omahacommsys/KFDtool/blob/master/doc/pic/darkmode.png" width="75%">
 
-A fork of the amazing [KFDTool](https://github.com/KFDTool/KFDTool) software for AtMega devices, plus schematics and board files for an arduino-compatible shield.
+A fork of the amazing [KFDTool](https://github.com/KFDTool/KFDTool) software for ATmega devices, plus schematics and board files for an Arduino-compatible shield.
 
-Completed shields can be purchased from the [online store](https://store.omahacommunicationsys.com)
+Completed [KFDshields](https://store.omahacommunicationsys.com) are no longer available.
 
-Note: You must use the build of the KFDTool software attached to this GitHub repo in order for your homebrew adapter to work. The stock KFDTool software will not find your Arduino.
+⚠️ **You must use the build of the KFDTool software attached to this GitHub repo in order for your homebrew adapter to work.** This build also supports the original DuggerD KFDTool. The original DuggerD KFDTool software will not find your Arduino-based KFD.
 
-Officially supports the following devices:
-* Original DuggerD KFDTool
-* OmahaCommSys KFDShield
-* W3AXL KFDMicro
-* Alex Yuan KFDnano
-* Alex Yuan KFDpico
+The software officially supports the following devices:
+* Original [DuggerD](https://github.com/duggerd) [KFDTool](https://store.kfdtool.com/products/kfdtool-kfd100)
+* [OmahaCommSys](https://github.com/omahacommsys) [KFDshield](https://store.omahacommunicationsys.com)
+* [W3AXL](https://github.com/w3axl) [KFDMicro](https://store.w3axl.com/products/kfdmicro-3d-printed-case-1)
+* [rentfrowj](https://www.ebay.com/usr/rentfrowj) [KFDnano](https://www.ebay.com/itm/376069435923)
+* [alexhanyuan](https://github.com/alexhanyuan) KFDnano
+* [alexhanyuan](https://github.com/alexhanyuan) KFDpico
 
-Also supports homebrew keyloaders using the following AtMega processors:
-
-* Arduino Uno (and clones)
-* Arduino Uno R3 (and clones)
-* Arduino Mega 2560 (and clones)
-
-The following boards should work, however have not been tested:
-
-* Arduino Leonardo (and clones)
-* Arduino Pro Micro (and clones)
-* Arduino Nano (and clones)
-* Basically anything using an ATMega328p, 2560, 32u4, or 16u2
+Also supports homebrew keyloaders using the following Arduino boards and their direct clones (ATmega328P, ATmega32u4, and ATmega2560 based boards):
+* Arduino Uno Rev3
+* Arduino Nano
+* Arduino Micro
+* Arduino Leonardo
+* Arduino Mega 2560
 
 The following boards have been reported to work with minor modifications:
 
@@ -36,8 +31,7 @@ Further testing and problem reporting by the community is encouraged to further 
 
 ## Setup/Installation
 
-Setup consists of three parts.
-
+Setup consists of three parts:
 1. Hardware Setup
 2. Firmware Flashing
 3. Software Setup
@@ -48,25 +42,30 @@ The hardware for the KFD-AVR fork is very simple. You can either purchase a KFDS
 
 ![schematic](doc/pic/basic_hw_schematic.png)
 
-Where PIN3 is Arduino pin 3, PIN5 is Arduino pin 5, DATA is the radio data line, SNS, is the radio sense line, and GND is the radio ground line. VCC is 5 volts (make sure you are using a 5 volt tolerant board).
+Where PIN3 is Arduino pin 3 for receive data, PIN5 is Arduino pin 5 for transmit data, DATA is the radio data line, SNS, is the radio sense line, and GND is the radio ground line. VCC is 5 volts (make sure you are using a 5 volt tolerant board).
 
-If you are using a shield, on the TRS connector, tip is data, ring is sense, and shield is ground.
+On the 3.5mm TRS connector, tip is DATA, ring is SNS, and shield is GND.
+
+⚠️ KFDmini (eBay clones) cables and accessories are NOT compatible with any of the officially supported KFD-AVR devices, and vice-versa.
 
 ### Firmware Flashing
 
-Head to the Releases page and download both the Firmware and Software zips from the latest version. Save the software for later. Unzip Firmware, and open the kfd-avr.ino file in the Arduino IDE, and select your board type and COM port from the Tools menu. If you are using a board that is not explicitly supported, or DIYing your own rather than using a shield, you should confirm that all options in the hal.h file are correct - namely, CPU speed and data/LED pins. Once you are done, hit upload.
+Head to the **Releases** page and download the latest Firmware zip. Unzip the Firmware, and open the kfd-avr.ino file in [Arduino IDE](https://www.arduino.cc/en/software/). It should then automatically open the associated files. Select your board type and COM port from the **`Tools`** menu. Some Arduino clones may require you to select **`ATmega328P (Old Bootloader)`** under the **`Processor`** option. Try this if you are having trouble uploading the sketch.
 
-⚠️ If you have a BLUE KFDpico, please use the KFDpico firmware in the releases folder.
 
-⚠️ If you have a GREEN KFDpico, it likely does not have the USB bootloader to allow updating over USB. Please contact [Alex](https://github.com/alexhanyuan).
+If you are using a board that is not explicitly supported, or DIYing your own rather than using a shield, you should confirm that all options in the [hal.h](fw/ino/kfd-avr/hal.h) file are correct - namely, CPU speed and DATA/LED pins. Once you are done, hit upload.
+
+⚠️ If you have a KFDpico and it is BLUE, please use the KFDpico firmware in the releases folder. The DATA TX pin is Arduino pin 2. There is also a KFDpico specific branch in this repository. If you have a GREEN KFDpico, it likely does not have the USB bootloader to allow updating over USB. Please contact [Alex](https://github.com/alexhanyuan).
 
 For all other versions (KFDShield, KFDMicro, and KFDnano), please use the normal firmware in the releases folder.
 
 ### Software Setup
 
-The software distributed with the KFD-AVR release is "flat pack", meaning there is no installer supplied - all you need to do to run the software is unzip the Software zip and run the KFDToolGui.exe file. You may see an "Error - timeout while waiting for data" when first opening the software. **This is completely normal, especially if you have many COM ports on your system. The warning will be suppressed in a future release.** Select the COM port corresponding to your Arduino, and you should see information populate in the bottom bar of the screen indicating that the KFDTool software is connecting to your Arduino.
+The software distributed with the KFD-AVR release is "flat pack", meaning there is no installer supplied - all you need to do to run the software is unzip the Software zip and run KFDToolGui.exe. You may see an "Error - timeout while waiting for data" when first opening the software. **This is completely normal, especially if you have many COM ports on your system. The warning will be suppressed in a future release.** Select the COM port corresponding to your KFD, and you should see information populate in the bottom bar of the screen indicating that the KFDTool software is connected to your device.
 
 In order to validate that every part of the chain - hardware, firmware, and software - is working, go to the Utility - Adapter Self Test menu, and click "Detect MR". This will send a signal to your radio asking it to reply and confirm it is there. If you get a success message, congrats! You are ready to load keys.
+
+If you do not have the circuit shown in the **Hardware Setup** section for the TWI sense line, you may get an error saying that Sense is shorted to ground. This is expected and does not mean your KFD is not working.
 
 # Original Readme:
 
