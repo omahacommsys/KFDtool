@@ -10,6 +10,5 @@ namespace KFDtool.Adapter.Device
     {
         KfdTool,
         KfdShield,
-        KfdUsb
     }
 }

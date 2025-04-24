@@ -17,15 +17,14 @@
                     <MenuItem Name="miContainerOpen" Header="_Open" Click="Container_Open_Click" />
                     <MenuItem Header="_Edit" Click="Container_Edit_Click" />
                     <MenuItem Header="_Change Password" Click="Container_Change_Password_Click" />
-                    <MenuItem Header="Export to _DKF" Click="Container_Export_DKF_Click"/>
+                    <MenuItem Header="Export to Harris _DKF" Click="Container_Export_DKF_Click"/>
                     <MenuItem Header="_Save" Click="Container_Save_Click"/>
                     <MenuItem Header="_Save As" Click="Container_Save_As_Click"/>
                     <MenuItem Header="_Close" Click="Container_Close_Click"/>
                 </MenuItem>
                 <MenuItem Name="TypeMenu" Header="_Type">
-                    <MenuItem Name="TypeTwiKfdTool" Header="_TWI (KFDtool)" Click="Type_MenuItem_Click" />
-                    <MenuItem Name="TypeTwiKfdShield" Header="_TWI (KFDshield)" Click="Type_MenuItem_Click" />
-                    <MenuItem Name="TypeTwiKfdUsb" Header="_TWI (KFD USB)" Click="Type_MenuItem_Click" />
+                    <MenuItem Name="TypeTwiKfdTool" Header="_TWI (original KFDtool)" Click="Type_MenuItem_Click" />
+                    <MenuItem Name="TypeTwiKfdShield" Header="_TWI (KFDshield / other)" Click="Type_MenuItem_Click" />
                     <MenuItem Name="TypeDliIp" Header="_DLI (IP)" Click="Type_MenuItem_Click" />
                 </MenuItem>
                 <MenuItem Name="DeviceMenu" Header="_Device" />
