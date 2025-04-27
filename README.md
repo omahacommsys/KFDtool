@@ -82,7 +82,8 @@ If you have used KFDtool with a radio that is not listed, please get in touch so
 | Harris XL                    | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
 | Harris Unity (XG-100)        | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     | [^ch100]
 | Harris XG                    | ❔ Untested      | —                | —            | —                       | [^harrisxg]
-| Kenwood NX 5000              | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     | [^kenwoodnx]
+| Kenwood NX                   | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     | [^kenwood]
+| Kenwood TK                   | ❔ Untested      | —                | —            | —                       | [^kenwood]
 | Motorola APX (TWI)           | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
 | Motorola APX (DLI IP)        | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | ≥ R27.03                | [^freon]
 | Motorola ASTRO 25 (MACE)     | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
@@ -252,4 +253,4 @@ Firmware (see [doc/FW_LICENSE.txt](doc/FW_LICENSE.txt)):
 [^ch721]: XG-100M with CH721 supports TWI keyloading via Harris adapter cable 14002-0143-10
 [^freon]: "Freon" (OMAP L-138) architecture only (APX 900, 6000 BN, 8000, 8500, NEXT, N-series, and BN mobiles)
 [^harrisxg]: Harris XG radios require Harris adapter cable (portable: unknown part number; mobile: 14002-0143-10)
-[^kenwoodnx]: Requires SCM hardware module
+[^kenwood]: Requires SCM hardware module
