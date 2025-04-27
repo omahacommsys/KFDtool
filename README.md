@@ -65,6 +65,32 @@ In order to validate that every part of the chain - hardware, firmware, and soft
 
 If you do not have the circuit shown in the **Hardware Setup** section for the TWI sense line, you may get an error saying that Sense is shorted to ground. This is expected and does not mean your KFD is not working.
 
+## Radio Compatibility
+
+Radios that have been specifically tested with KFD devices are listed below, along with any notes or firmware restrictions.
+
+If you have used KFDtool with a radio that is not listed, please get in touch so we can update this list!
+
+| Product line                 | Support status   | KFDtool software | KFD firmware | Radio firmware          | Notes |
+|------------------------------|------------------|------------------|--------------|-------------------------|-------|
+| Bendix King BK               | ❔ Untested      | —                | —            | —                       |
+| Bendix King KNG              | ❔ Untested      | —                | —            | —                       |
+| EF Johnson VP/VM 8000        | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
+| EF Johnson VP/VM x000        | ❔ Untested      | —                | —            | —                       |
+| EF Johnson VP/VM x00         | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | ≥ 8.28.5                |
+| Harris XL                    | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
+| Harris Unity (XG-100)        | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     | [^ch100]
+| Harris XG                    | ❔ Untested      | —                | —            | —                       | [^harrisxg]
+| Kenwood NX 5000              | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     | [^kenwoodnx]
+| Motorola APX (TWI)           | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
+| Motorola APX (DLI IP)        | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | ≥ R27.03                | [^freon]
+| Motorola ASTRO 25 (MACE)     | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
+| Motorola ASTRO 25 (UCM)      | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
+| Motorola ASTRO               | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | ≥ R07.71.06, EMC R03.56 |
+| Thales Liberty               | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
+| Tait TP/TM 9x00 series       | ❌ Not supported | —                | —            | —                       |
+
+
 # Original Readme:
 
 Open Source P25 Key Fill Device
@@ -219,3 +245,10 @@ Software (see [doc/SW_LICENSE.txt](doc/SW_LICENSE.txt)):
 Firmware (see [doc/FW_LICENSE.txt](doc/FW_LICENSE.txt)):
 
 * Texas Instruments - BSD 3 Clause License
+
+
+[^ch100]: XG-100M supports native TWI keyloading[^ch721] only via CH100
+[^ch721]: XG-100M with CH721 supports TWI keyloading via Harris adapter cable 14002-0143-10
+[^freon]: "Freon" (OMAP L-138) architecture only (APX 900, 6000 BN, 8000, 8500, NEXT, N-series, and BN mobiles)
+[^harrisxg]: Harris XG radios require Harris adapter cable (portable: unknown part number; mobile: 14002-0143-10)
+[^kenwoodnx]: Requires SCM hardware module
