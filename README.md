@@ -78,6 +78,7 @@ If you have used KFDtool with a radio that is not listed, please get in touch so
 | EF Johnson VP/VM 8000        | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
 | EF Johnson VP/VM x000        | ❔ Untested      | —                | —            | —                       |
 | EF Johnson VP/VM x00         | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | ≥ 8.28.5                |
+| EF Johnson 5100/ES           | ✅ Tested        | ≥ 1.7.3          | ≥ 1.7.3      | ≥ 6.12.4                |
 | Harris XL                    | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
 | Harris Unity (XG-100)        | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     | [^ch100]
 | Harris XG                    | ❔ Untested      | —                | —            | —                       | [^harrisxg]
