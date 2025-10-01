@@ -194,10 +194,13 @@ namespace KFDtool.P25.TransferConstructs
                         model = "KFDpico"; // @alexhanyuan
                         break;
                     case 0x05:
-                        model = "RESERVED"; // @ilyacodes
+                        model = "bblkey"; // @beepbooplabsltd
                         break;
                     case 0x06:
                         model = "KFDnano"; // @alexhanyuan and @rentfrow72
+                        break;
+                    case 0x07:
+                        model = "RESERVED"; // @beepbooplabsltd
                         break;
                     default:
                         model = "UNKNOWN";
