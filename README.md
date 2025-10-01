@@ -89,8 +89,8 @@ If you have used KFDtool with a radio that is not listed, please get in touch so
 | Motorola ASTRO 25 (MACE)     | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
 | Motorola ASTRO 25 (UCM)      | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
 | Motorola ASTRO               | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | ≥ R07.71.06, EMC R03.56 |
+| Tait TP/TM 9x00 series       | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     | [^kiwikey][^taitbox]
 | Thales Liberty               | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
-| Tait TP/TM 9x00 series       | ❌ Not supported | —                | —            | —                       |
 
 
 # Original Readme:
@@ -252,5 +252,7 @@ Firmware (see [doc/FW_LICENSE.txt](doc/FW_LICENSE.txt)):
 [^ch100]: XG-100M supports native TWI keyloading[^ch721] only via CH100
 [^ch721]: XG-100M with CH721 supports TWI keyloading via Harris adapter cable 14002-0143-10
 [^freon]: "Freon" (OMAP L-138) architecture only (APX 900, 6000 BN, 8000, 8500, NEXT, N-series, and BN mobiles)
-[^harrisxg]: Harris XG radios require Harris adapter cable (portable: unknown part number; mobile: 14002-0143-10)
+[^harrisxg]: Requires Harris adapter cable (portable: unknown part number; mobile: 14002-0143-10)
 [^kenwood]: Requires SCM hardware module
+[^kiwikey]: Requires [kiwi**key**](https://github.com/beepbooplabsltd/kiwikey) keyloading adapter
+[^taitbox]: Tait TPA-SV-020 keyloading adapter box not currently supported
