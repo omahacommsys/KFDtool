@@ -20,9 +20,9 @@ namespace KFDtool.Elite
             {
                 throw new Exception("7-zip does not exist.");
             }
-            string strCmdText = $"/C 7z a {outputPath} -p\"{password}\" {xmlPath}";
+            string strCmdText = $"a {outputPath} -p\"{password}\" {xmlPath}";
             //Console.WriteLine(strCmdText);
-            System.Diagnostics.Process.Start("CMD.exe", strCmdText);
+            System.Diagnostics.Process.Start("C:\\Program Files\\7-Zip\\7z.exe", strCmdText);
         }
         public static string SerializeKeys(List<KeyEntry> keys)
         {
