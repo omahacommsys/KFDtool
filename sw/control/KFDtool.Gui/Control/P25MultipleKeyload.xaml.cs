@@ -440,7 +440,7 @@ namespace KFDtool.Gui.Control
                 string xmlOut = KeyfileInteract.SerializeKeys(keys);
 
                 string sevenZipFileName = saveFileDialog.FileName;
-                string xmlFileName = saveFileDialog.FileName + ".xml";
+                string xmlFileName = "keys.xml";
                 ContainerSetPassword containerSetPassword = new ContainerSetPassword();
                 containerSetPassword.Style = Window.GetWindow(this).Style;
                 //containerSetPassword.Owner =; // for centering in parent window
