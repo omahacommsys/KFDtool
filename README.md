@@ -1,5 +1,8 @@
 # KFDTool-AVR
 
+## NOTICE
+This project is no longer actively maintained. At this time, we are not accepting check-ins/PRs or issues.
+
 <img src="https://github.com/omahacommsys/KFDtool/blob/master/doc/pic/darkmode.png" width="75%">
 
 A fork of the amazing [KFDTool](https://github.com/KFDTool/KFDTool) software for ATmega devices, plus schematics and board files for an Arduino-compatible shield.
@@ -53,8 +56,6 @@ Head to the **Releases** page and download the latest Firmware zip. Unzip the Fi
 
 If you are using a board that is not explicitly supported, or DIYing your own rather than using a shield, you should confirm that all options in the [hal.h](fw/ino/kfd-avr/hal.h) file are correct - namely, CPU speed and DATA/LED pins. Once you are done, hit upload.
 
-⚠️ If you have a KFDpico and it is BLUE, please use the KFDpico firmware in the releases folder. The DATA TX pin is Arduino pin 2. There is also a KFDpico specific branch in this repository. If you have a GREEN KFDpico, it likely does not have the USB bootloader to allow updating over USB. Please contact [Alex](https://github.com/alexhanyuan).
-
 For all other versions (KFDShield, KFDMicro, and KFDnano), please use the normal firmware in the releases folder.
 
 ### Software Setup
@@ -89,7 +90,6 @@ If you have used KFDtool with a radio that is not listed, please get in touch so
 | Motorola ASTRO 25 (MACE)     | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
 | Motorola ASTRO 25 (UCM)      | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
 | Motorola ASTRO               | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | ≥ R07.71.06, EMC R03.56 |
-| Tait TP/TM 9x00 series       | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     | [^kiwikey][^taitbox]
 | Thales Liberty               | ✅ Tested        | ≥ 1.8.7          | ≥ 1.8.7      | Any                     |
 
 
@@ -98,5 +98,3 @@ If you have used KFDtool with a radio that is not listed, please get in touch so
 [^freon]: "Freon" (OMAP L-138) architecture only (APX 900, 6000 BN, 8000, 8500, NEXT, N-series, and BN mobiles)
 [^harrisxg]: Requires Harris adapter cable (portable: unknown part number; mobile: 14002-0143-10)
 [^kenwood]: Requires SCM hardware module
-[^kiwikey]: Requires [kiwi**key**](https://github.com/beepbooplabsltd/kiwikey) keyloading adapter
-[^taitbox]: Tait TPA-SV-020 keyloading adapter box not currently supported
