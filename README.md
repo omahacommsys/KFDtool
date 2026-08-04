@@ -1,8 +1,5 @@
 # KFDTool-AVR
 
-## NOTICE
-This project is no longer actively maintained. At this time, we are not accepting check-ins/PRs or issues.
-
 <img src="https://github.com/omahacommsys/KFDtool/blob/master/doc/pic/darkmode.png" width="75%">
 
 A fork of the amazing [KFDTool](https://github.com/KFDTool/KFDTool) software for ATmega devices, plus schematics and board files for an Arduino-compatible shield.
