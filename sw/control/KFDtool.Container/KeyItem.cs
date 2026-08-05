@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
+using System.Xml.Serialization;
 
 namespace KFDtool.Container
 {
@@ -61,8 +62,8 @@ namespace KFDtool.Container
         public int KeyId { get; set; }
 
         private int _algorithmId { get; set; }
-        public int AlgorithmId 
-        { 
+        public int AlgorithmId
+        {
             get
             {
                 return _algorithmId;
@@ -79,6 +80,42 @@ namespace KFDtool.Container
         }
 
         public string Key { get; set; }
+
+        private bool _hasConflict;
+
+        [XmlIgnore]
+        public bool HasConflict
+        {
+            get { return _hasConflict; }
+
+            set
+            {
+                if (_hasConflict != value)
+                {
+                    _hasConflict = value;
+
+                    NotifyPropertyChanged("HasConflict");
+                }
+            }
+        }
+
+        private string _conflictSummary;
+
+        [XmlIgnore]
+        public string ConflictSummary
+        {
+            get { return _conflictSummary; }
+
+            set
+            {
+                if (_conflictSummary != value)
+                {
+                    _conflictSummary = value;
+
+                    NotifyPropertyChanged("ConflictSummary");
+                }
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 

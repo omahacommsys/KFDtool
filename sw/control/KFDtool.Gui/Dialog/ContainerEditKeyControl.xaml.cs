@@ -1,4 +1,4 @@
-﻿using KFDtool.Container;
+using KFDtool.Container;
 using KFDtool.P25.Constant;
 using KFDtool.P25.Generator;
 using KFDtool.P25.Validator;
@@ -6,36 +6,262 @@ using KFDtool.Shared;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace KFDtool.Gui.Dialog
 {
+    internal static class KeyConflictHelper
+    {
+        public static void RefreshConflictStates(IEnumerable<KeyItem> keys)
+        {
+            List<KeyItem> keyList = keys.ToList();
+
+            foreach (KeyItem key in keyList)
+            {
+                List<string> conflicts = GetConflictMessages(keyList, key.ActiveKeyset, key.KeysetId, key.Sln, key.KeyId, key);
+
+                key.HasConflict = conflicts.Count > 0;
+                key.ConflictSummary = string.Join(Environment.NewLine, conflicts);
+            }
+        }
+
+        public static List<string> GetConflictMessages(IEnumerable<KeyItem> keys, bool activeKeyset, int keysetId, int sln, int keyId, KeyItem excludedKey)
+        {
+            List<string> conflicts = new List<string>();
+
+            bool duplicateSln = keys.Any(key =>
+                !object.ReferenceEquals(key, excludedKey) &&
+                IsSameEffectiveKeyset(key, activeKeyset, keysetId) &&
+                key.Sln == sln);
+
+            if (duplicateSln)
+            {
+                conflicts.Add("Another key already uses this SLN/CKR in the same effective keyset.");
+            }
+
+            bool duplicateKeyId = keys.Any(key =>
+                !object.ReferenceEquals(key, excludedKey) &&
+                IsSameEffectiveKeyset(key, activeKeyset, keysetId) &&
+                key.KeyId == keyId);
+
+            if (duplicateKeyId)
+            {
+                conflicts.Add("Another key already uses this Key ID in the same effective keyset.");
+            }
+
+            return conflicts;
+        }
+
+        public static int GetNextAvailableValue(IEnumerable<KeyItem> keys, bool activeKeyset, int keysetId, int currentValue, Func<KeyItem, int> selector)
+        {
+            HashSet<int> usedValues = new HashSet<int>(
+                keys
+                    .Where(key => IsSameEffectiveKeyset(key, activeKeyset, keysetId))
+                    .Select(selector)
+            );
+
+            for (int offset = 1; offset <= 0x10000; offset++)
+            {
+                int candidate = (currentValue + offset) & 0xFFFF;
+
+                if (!usedValues.Contains(candidate))
+                {
+                    return candidate;
+                }
+            }
+
+            return currentValue;
+        }
+
+        private static bool IsSameEffectiveKeyset(KeyItem key, bool activeKeyset, int keysetId)
+        {
+            if (activeKeyset)
+            {
+                return key.ActiveKeyset;
+            }
+
+            return !key.ActiveKeyset && key.KeysetId == keysetId;
+        }
+    }
+
     /// <summary>
     /// Interaction logic for ContainerEditKeyControl.xaml
     /// </summary>
     public partial class ContainerEditKeyControl : UserControl
     {
-        private KeyItem LocalKey { get; set; }
+        private sealed class KeyEditorState
+        {
+            public string Name { get; set; }
+
+            public bool UseActiveKeyset { get; set; }
+
+            public string KeysetIdHex { get; set; }
+
+            public int KeyTypeSelection { get; set; }
+
+            public string SlnHex { get; set; }
+
+            public string KeyIdHex { get; set; }
+
+            public string AlgorithmHex { get; set; }
+
+            public string Key { get; set; }
+
+            public bool SemanticallyEquals(KeyEditorState other)
+            {
+                if (other == null)
+                {
+                    return false;
+                }
+
+                if (!string.Equals(Name, other.Name, StringComparison.Ordinal))
+                {
+                    return false;
+                }
+
+                if (UseActiveKeyset != other.UseActiveKeyset)
+                {
+                    return false;
+                }
+
+                if (KeyTypeSelection != other.KeyTypeSelection)
+                {
+                    return false;
+                }
+
+                if (!UseActiveKeyset && !HexValuesEqual(KeysetIdHex, other.KeysetIdHex))
+                {
+                    return false;
+                }
+
+                if (!HexValuesEqual(SlnHex, other.SlnHex))
+                {
+                    return false;
+                }
+
+                if (!HexValuesEqual(KeyIdHex, other.KeyIdHex))
+                {
+                    return false;
+                }
+
+                if (!HexValuesEqual(AlgorithmHex, other.AlgorithmHex))
+                {
+                    return false;
+                }
+
+                return string.Equals(NormalizeText(Key), NormalizeText(other.Key), StringComparison.OrdinalIgnoreCase);
+            }
+
+            private static bool HexValuesEqual(string left, string right)
+            {
+                int leftValue;
+                int rightValue;
+
+                if (int.TryParse(left, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out leftValue) &&
+                    int.TryParse(right, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out rightValue))
+                {
+                    return leftValue == rightValue;
+                }
+
+                return string.Equals(NormalizeHex(left), NormalizeHex(right), StringComparison.OrdinalIgnoreCase);
+            }
+
+            private static string NormalizeHex(string value)
+            {
+                string normalizedText = NormalizeText(value);
+
+                if (normalizedText.Length == 0)
+                {
+                    return string.Empty;
+                }
+
+                string normalized = normalizedText.TrimStart('0');
+
+                return normalized.Length == 0 ? "0" : normalized;
+            }
+
+            private static string NormalizeText(string value)
+            {
+                return (value ?? string.Empty).Trim();
+            }
+        }
+
+        private readonly KeyItem LocalKey;
 
         private bool IsKek { get; set; }
 
+        private bool FocusNameOnLoad { get; set; }
+
+        private bool IsInitializing { get; set; }
+
+        private bool InitialFocusApplied { get; set; }
+
+        private KeyEditorState SavedState { get; set; }
+
+        public bool HasUnsavedChanges { get; private set; }
+
+        public bool IsKeyMaterialHidden
+        {
+            get { return cbHide.IsChecked == true; }
+        }
+
+        public event EventHandler DirtyStateChanged;
+
+        public event EventHandler Saved;
+
+        public event EventHandler HidePreferenceChanged;
+
         public ContainerEditKeyControl(KeyItem keyItem)
+            : this(keyItem, true, false)
+        {
+        }
+
+        public ContainerEditKeyControl(KeyItem keyItem, bool hideKeyMaterial, bool focusNameOnLoad)
         {
             InitializeComponent();
 
             LocalKey = keyItem;
+            FocusNameOnLoad = focusNameOnLoad;
 
+            Loaded += ContainerEditKeyControl_Loaded;
+            txtName.TextChanged += PersistentFieldChanged;
+            txtKeyVisible.TextChanged += PersistentFieldChanged;
+            txtKeyHidden.PasswordChanged += KeyHidden_PasswordChanged;
+
+            IsInitializing = true;
+
+            try
+            {
+                LoadKeyState(keyItem, hideKeyMaterial);
+                SavedState = CaptureEditorState();
+                HasUnsavedChanges = false;
+            }
+            finally
+            {
+                IsInitializing = false;
+            }
+        }
+
+        private void ContainerEditKeyControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (FocusNameOnLoad && !InitialFocusApplied)
+            {
+                txtName.Focus();
+                txtName.SelectAll();
+                InitialFocusApplied = true;
+            }
+        }
+
+        private void LoadKeyState(KeyItem keyItem, bool hideKeyMaterial)
+        {
             txtName.Text = keyItem.Name;
 
-            if (keyItem.ActiveKeyset)
-            {
-                cbActiveKeyset.IsChecked = true;
-            }
-            else
-            {
-                cbActiveKeyset.IsChecked = false;
+            cbActiveKeyset.IsChecked = keyItem.ActiveKeyset;
 
+            if (!keyItem.ActiveKeyset)
+            {
                 txtKeysetIdDec.Text = keyItem.KeysetId.ToString();
                 UpdateKeysetIdDec();
             }
@@ -84,14 +310,54 @@ namespace KFDtool.Gui.Dialog
                 cboAlgo.SelectedIndex = 4;
 
                 txtAlgoDec.Text = keyItem.AlgorithmId.ToString();
-
                 UpdateAlgoDec();
             }
 
-            cbHide.IsChecked = true;
-
             txtKeyHidden.Password = keyItem.Key;
+            txtKeyVisible.Text = keyItem.Key;
+            cbHide.IsChecked = hideKeyMaterial;
+            SetHideState(hideKeyMaterial);
+        }
 
+        private void PersistentFieldChanged(object sender, TextChangedEventArgs e)
+        {
+            UpdateDirtyState();
+        }
+
+        private void KeyHidden_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            UpdateDirtyState();
+        }
+
+        private void UpdateDirtyState()
+        {
+            if (IsInitializing)
+            {
+                return;
+            }
+
+            bool hasUnsavedChanges = !SavedState.SemanticallyEquals(CaptureEditorState());
+
+            if (HasUnsavedChanges != hasUnsavedChanges)
+            {
+                HasUnsavedChanges = hasUnsavedChanges;
+                DirtyStateChanged?.Invoke(this, EventArgs.Empty);
+            }
+        }
+
+        private KeyEditorState CaptureEditorState()
+        {
+            return new KeyEditorState
+            {
+                Name = txtName.Text,
+                UseActiveKeyset = cbActiveKeyset.IsChecked == true,
+                KeysetIdHex = txtKeysetIdHex.Text,
+                KeyTypeSelection = cboType.SelectedIndex,
+                SlnHex = txtSlnHex.Text,
+                KeyIdHex = txtKeyIdHex.Text,
+                AlgorithmHex = txtAlgoHex.Text,
+                Key = GetKey()
+            };
         }
 
         private void UpdateKeysetIdDec()
@@ -128,6 +394,8 @@ namespace KFDtool.Gui.Dialog
             {
                 UpdateKeysetIdDec();
             }
+
+            UpdateDirtyState();
         }
 
         private void KeysetIdHex_TextChanged(object sender, TextChangedEventArgs e)
@@ -136,6 +404,8 @@ namespace KFDtool.Gui.Dialog
             {
                 UpdateKeysetIdHex();
             }
+
+            UpdateDirtyState();
         }
 
         private void OnActiveKeysetChecked(object sender, RoutedEventArgs e)
@@ -144,12 +414,16 @@ namespace KFDtool.Gui.Dialog
             txtKeysetIdHex.Text = string.Empty;
             txtKeysetIdDec.IsEnabled = false;
             txtKeysetIdHex.IsEnabled = false;
+
+            UpdateDirtyState();
         }
 
         private void OnActiveKeysetUnchecked(object sender, RoutedEventArgs e)
         {
             txtKeysetIdDec.IsEnabled = true;
             txtKeysetIdHex.IsEnabled = true;
+
+            UpdateDirtyState();
         }
 
         private void UpdateSlnDec()
@@ -190,6 +464,8 @@ namespace KFDtool.Gui.Dialog
             {
                 UpdateSlnDec();
             }
+
+            UpdateDirtyState();
         }
 
         private void SlnHex_TextChanged(object sender, TextChangedEventArgs e)
@@ -198,6 +474,8 @@ namespace KFDtool.Gui.Dialog
             {
                 UpdateSlnHex();
             }
+
+            UpdateDirtyState();
         }
 
         private void UpdateType()
@@ -242,16 +520,13 @@ namespace KFDtool.Gui.Dialog
                     lblType.Content = "KEK";
                     IsKek = true;
                 }
-                else
-                {
-                    // error
-                }
             }
         }
 
         private void OnTypeChanged(object sender, SelectionChangedEventArgs e)
         {
             UpdateType();
+            UpdateDirtyState();
         }
 
         private void UpdateKeyIdDec()
@@ -288,6 +563,8 @@ namespace KFDtool.Gui.Dialog
             {
                 UpdateKeyIdDec();
             }
+
+            UpdateDirtyState();
         }
 
         private void KeyIdHex_TextChanged(object sender, TextChangedEventArgs e)
@@ -296,6 +573,8 @@ namespace KFDtool.Gui.Dialog
             {
                 UpdateKeyIdHex();
             }
+
+            UpdateDirtyState();
         }
 
         private void UpdateAlgoDec()
@@ -332,6 +611,8 @@ namespace KFDtool.Gui.Dialog
             {
                 UpdateAlgoDec();
             }
+
+            UpdateDirtyState();
         }
 
         private void AlgoHex_TextChanged(object sender, TextChangedEventArgs e)
@@ -340,6 +621,8 @@ namespace KFDtool.Gui.Dialog
             {
                 UpdateAlgoHex();
             }
+
+            UpdateDirtyState();
         }
 
         private void OnAlgoChanged(object sender, SelectionChangedEventArgs e)
@@ -384,6 +667,8 @@ namespace KFDtool.Gui.Dialog
                     txtAlgoHex.IsEnabled = true;
                 }
             }
+
+            UpdateDirtyState();
         }
 
         private void Generate_Button_Click(object sender, RoutedEventArgs e)
@@ -427,22 +712,47 @@ namespace KFDtool.Gui.Dialog
             }
 
             SetKey(BitConverter.ToString(key.ToArray()).Replace("-", string.Empty));
+            UpdateDirtyState();
+        }
+
+        private void SetHideState(bool hideKeyMaterial)
+        {
+            string currentKey = string.IsNullOrEmpty(txtKeyVisible.Text) ? txtKeyHidden.Password : txtKeyVisible.Text;
+
+            if (hideKeyMaterial)
+            {
+                txtKeyHidden.Password = currentKey;
+                txtKeyVisible.Text = string.Empty;
+                txtKeyVisible.Visibility = Visibility.Hidden;
+                txtKeyHidden.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                txtKeyVisible.Text = currentKey;
+                txtKeyHidden.Password = string.Empty;
+                txtKeyVisible.Visibility = Visibility.Visible;
+                txtKeyHidden.Visibility = Visibility.Hidden;
+            }
         }
 
         private void OnHideChecked(object sender, RoutedEventArgs e)
         {
-            txtKeyHidden.Password = txtKeyVisible.Text;
-            txtKeyVisible.Text = string.Empty;
-            txtKeyVisible.Visibility = Visibility.Hidden;
-            txtKeyHidden.Visibility = Visibility.Visible;
+            SetHideState(true);
+
+            if (!IsInitializing)
+            {
+                HidePreferenceChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private void OnHideUnchecked(object sender, RoutedEventArgs e)
         {
-            txtKeyVisible.Text = txtKeyHidden.Password;
-            txtKeyHidden.Password = null;
-            txtKeyVisible.Visibility = Visibility.Visible;
-            txtKeyHidden.Visibility = Visibility.Hidden;
+            SetHideState(false);
+
+            if (!IsInitializing)
+            {
+                HidePreferenceChanged?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         private string GetKey()
@@ -469,7 +779,7 @@ namespace KFDtool.Gui.Dialog
             }
         }
 
-        private void Save_Button_Click(object sender, RoutedEventArgs e)
+        public bool TrySaveChanges()
         {
             int keysetId;
             int sln;
@@ -492,7 +802,7 @@ namespace KFDtool.Gui.Dialog
                 catch (Exception)
                 {
                     MessageBox.Show("Error Parsing Keyset ID", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    return false;
                 }
             }
 
@@ -503,7 +813,7 @@ namespace KFDtool.Gui.Dialog
             catch (Exception)
             {
                 MessageBox.Show("Error Parsing SLN", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             try
@@ -513,7 +823,7 @@ namespace KFDtool.Gui.Dialog
             catch (Exception)
             {
                 MessageBox.Show("Error Parsing Key ID", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             try
@@ -523,7 +833,7 @@ namespace KFDtool.Gui.Dialog
             catch (Exception)
             {
                 MessageBox.Show("Error Parsing Algorithm ID", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             try
@@ -533,28 +843,34 @@ namespace KFDtool.Gui.Dialog
             catch (Exception)
             {
                 MessageBox.Show("Error Parsing Key", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             Tuple<ValidateResult, string> validateResult = FieldValidator.KeyloadValidate(keysetId, sln, IsKek, keyId, algId, key);
 
             if (validateResult.Item1 == ValidateResult.Warning)
             {
-                if (MessageBox.Show(string.Format("{1}{0}{0}Continue?", Environment.NewLine, validateResult.Item2), "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                bool suppressWeakKeyWarning = !Properties.Settings.Default.PromptWeakKeyWarnings &&
+                                              IsWeakKeyWarning(validateResult.Item2);
+
+                if (!suppressWeakKeyWarning)
                 {
-                    return;
+                    if (MessageBox.Show(string.Format("{1}{0}{0}Continue?", Environment.NewLine, validateResult.Item2), "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                    {
+                        return false;
+                    }
                 }
             }
             else if (validateResult.Item1 == ValidateResult.Error)
             {
                 MessageBox.Show(validateResult.Item2, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             if (txtName.Text.Length == 0)
             {
                 MessageBox.Show("Key name required", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                return false;
             }
 
             if (txtName.Text != LocalKey.Name)
@@ -564,8 +880,24 @@ namespace KFDtool.Gui.Dialog
                     if (txtName.Text == keyItem.Name)
                     {
                         MessageBox.Show("Key name must be unique", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        return;
+                        return false;
                     }
+                }
+            }
+
+            List<string> duplicateConflicts = KeyConflictHelper.GetConflictMessages(Settings.ContainerInner.Keys, useActiveKeyset, keysetId, sln, keyId, LocalKey);
+
+            if (duplicateConflicts.Count > 0 && Properties.Settings.Default.PromptDuplicateKeyConflicts)
+            {
+                string message = string.Format(
+                    "Possible key configuration conflict:{0}{0}{1}{0}{0}Save anyway?",
+                    Environment.NewLine,
+                    string.Join(Environment.NewLine, duplicateConflicts)
+                );
+
+                if (MessageBox.Show(message, "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                {
+                    return false;
                 }
             }
 
@@ -600,6 +932,23 @@ namespace KFDtool.Gui.Dialog
             LocalKey.KeyId = keyId;
             LocalKey.AlgorithmId = algId;
             LocalKey.Key = BitConverter.ToString(key.ToArray()).Replace("-", string.Empty);
+
+            SavedState = CaptureEditorState();
+            UpdateDirtyState();
+            Saved?.Invoke(this, EventArgs.Empty);
+
+            return true;
+        }
+
+        private static bool IsWeakKeyWarning(string message)
+        {
+            return message.IndexOf("cryptographically weak", StringComparison.OrdinalIgnoreCase) >= 0 ||
+                   message.IndexOf("easily guessable", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private void Save_Button_Click(object sender, RoutedEventArgs e)
+        {
+            TrySaveChanges();
         }
     }
 }

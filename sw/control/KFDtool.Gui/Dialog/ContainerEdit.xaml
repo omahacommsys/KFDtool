@@ -33,6 +33,22 @@
                             <ListView.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal" >
+                                        <TextBlock Margin="0,0,6,0"
+                                                   FontWeight="Bold"
+                                                   Foreground="OrangeRed"
+                                                   Text="!"
+                                                   ToolTip="{Binding ConflictSummary}">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding HasConflict}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
                                         <Image Width="32" Height="16" Source="{Binding AlgoImage}" RenderOptions.BitmapScalingMode="HighQuality" />
                                         <Label Content="{Binding Name}" Margin="2 0 0 0"/>
                                     </StackPanel>

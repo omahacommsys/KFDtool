@@ -73,6 +73,9 @@ namespace KFDtool.Gui
             Properties.Settings.Default.DeviceType = "TwiKfdDevice";
             Properties.Settings.Default.KfdDeviceType = "KfdShield";
             Properties.Settings.Default.SelectedTheme = "System";
+            Properties.Settings.Default.PromptSavePendingKeyChanges = true;
+            Properties.Settings.Default.PromptDuplicateKeyConflicts = true;
+            Properties.Settings.Default.PromptWeakKeyWarnings = true;
             Properties.Settings.Default.Save();
         }
 
@@ -91,12 +94,63 @@ namespace KFDtool.Gui
         public static void LoadSettings()
         {
             SelectedDevice.TwiKfdtoolDevice.ComPort = Properties.Settings.Default.TwiComPort;
-            SelectedDevice.DliIpDevice.Hostname = Properties.Settings.Default.DliHostname;
-            SelectedDevice.DliIpDevice.Port = Properties.Settings.Default.DliPort;
-            SelectedDevice.DliIpDevice.Variant = (DliIpDevice.VariantOptions)Enum.Parse(typeof(DliIpDevice.VariantOptions), Properties.Settings.Default.DliVariant);
-            SelectedDevice.DeviceType = (BaseDevice.DeviceTypeOptions)Enum.Parse(typeof(BaseDevice.DeviceTypeOptions), Properties.Settings.Default.DeviceType);
-            SelectedDevice.KfdDeviceType = (Adapter.Device.TwiKfdDevice)Enum.Parse(typeof(Adapter.Device.TwiKfdDevice), Properties.Settings.Default.KfdDeviceType);
-            SelectedTheme = (ThemeMode)Enum.Parse(typeof(ThemeMode), Properties.Settings.Default.SelectedTheme);
+            SelectedDevice.DliIpDevice.Hostname = string.IsNullOrWhiteSpace(Properties.Settings.Default.DliHostname) ? "192.168.128.1" : Properties.Settings.Default.DliHostname;
+            SelectedDevice.DliIpDevice.Port = Properties.Settings.Default.DliPort <= 0 ? 49644 : Properties.Settings.Default.DliPort;
+            SelectedDevice.DliIpDevice.Variant = Enum.TryParse(Properties.Settings.Default.DliVariant, out DliIpDevice.VariantOptions dliVariant) ? dliVariant : DliIpDevice.VariantOptions.Motorola;
+            SelectedDevice.DeviceType = Enum.TryParse(Properties.Settings.Default.DeviceType, out BaseDevice.DeviceTypeOptions deviceType) ? deviceType : BaseDevice.DeviceTypeOptions.TwiKfdDevice;
+            SelectedDevice.KfdDeviceType = Enum.TryParse(Properties.Settings.Default.KfdDeviceType, out Adapter.Device.TwiKfdDevice kfdDeviceType) ? kfdDeviceType : Adapter.Device.TwiKfdDevice.KfdShield;
+            SelectedTheme = Enum.TryParse(Properties.Settings.Default.SelectedTheme, out ThemeMode selectedTheme) ? selectedTheme : ThemeMode.System;
+        }
+    }
+}
+
+namespace KFDtool.Gui.Properties
+{
+    internal sealed partial class Settings
+    {
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PromptSavePendingKeyChanges
+        {
+            get
+            {
+                return ((bool)(this["PromptSavePendingKeyChanges"]));
+            }
+            set
+            {
+                this["PromptSavePendingKeyChanges"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PromptDuplicateKeyConflicts
+        {
+            get
+            {
+                return ((bool)(this["PromptDuplicateKeyConflicts"]));
+            }
+            set
+            {
+                this["PromptDuplicateKeyConflicts"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool PromptWeakKeyWarnings
+        {
+            get
+            {
+                return ((bool)(this["PromptWeakKeyWarnings"]));
+            }
+            set
+            {
+                this["PromptWeakKeyWarnings"] = value;
+            }
         }
     }
 }

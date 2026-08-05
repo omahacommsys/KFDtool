@@ -1,4 +1,5 @@
-﻿using KFDtool.Container;
+using KFDtool.Container;
+using KFDtool.P25.Constant;
 using KFDtool.P25.Generator;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,17 @@ namespace KFDtool.Gui.Dialog
     public partial class ContainerEdit : Window
     {
         private string OriginalContainer;
+
+        private bool SuppressSelectionHandlers { get; set; }
+
+        private TabItem ActiveTabItem { get; set; }
+
+        private KeyItem SelectedKeyItem { get; set; }
+
+        private Container.GroupItem SelectedGroupItem { get; set; }
+
+        private bool PreferHiddenKeyMaterial { get; set; }
+
         public static RoutedCommand InsertCommand = new RoutedCommand();
         public static RoutedCommand DeleteCommand = new RoutedCommand();
 
@@ -26,56 +38,366 @@ namespace KFDtool.Gui.Dialog
             DeleteCommand.InputGestures.Add(new KeyGesture(Key.Delete));
 
             OriginalContainer = ContainerUtilities.SerializeInnerContainer(Settings.ContainerInner).OuterXml;
+            PreferHiddenKeyMaterial = true;
 
             keysListView.ItemsSource = Settings.ContainerInner.Keys;
-
             keysListView.SelectionChanged += KeysListView_SelectionChanged;
 
             groupsListView.ItemsSource = Settings.ContainerInner.Groups;
-
             groupsListView.SelectionChanged += GroupsListView_SelectionChanged;
+
+            ActiveTabItem = containerTabControl.SelectedItem as TabItem;
+
+            RefreshKeyConflictIndicators();
         }
 
         private void Tab_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.Source is TabControl)
+            if (SuppressSelectionHandlers || !(e.Source is TabControl))
             {
-                keysListView.SelectedItem = null;
-
-                groupsListView.SelectedItem = null;
+                return;
             }
+
+            TabItem requestedTab = containerTabControl.SelectedItem as TabItem;
+
+            if (requestedTab == ActiveTabItem)
+            {
+                return;
+            }
+
+            if (!TryResolvePendingKeyChanges())
+            {
+                SuppressSelectionHandlers = true;
+
+                try
+                {
+                    containerTabControl.SelectedItem = ActiveTabItem;
+                }
+                finally
+                {
+                    SuppressSelectionHandlers = false;
+                }
+
+                return;
+            }
+
+            ActiveTabItem = requestedTab;
+            ClearSelections();
         }
 
         private void KeysListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (keysListView.SelectedItem != null)
+            if (SuppressSelectionHandlers)
             {
-                ContainerEditKeyControl keyEdit = new ContainerEditKeyControl((KeyItem)keysListView.SelectedItem);
+                return;
+            }
 
-                ItemView.Content = keyEdit;
-            }
-            else
+            KeyItem requestedKey = keysListView.SelectedItem as KeyItem;
+
+            if (requestedKey == SelectedKeyItem)
             {
-                ItemView.Content = null;
+                return;
             }
+
+            if (!TryResolvePendingKeyChanges())
+            {
+                SetKeySelection(SelectedKeyItem, false);
+                return;
+            }
+
+            SetKeySelection(requestedKey, false);
         }
 
         private void GroupsListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (groupsListView.SelectedItem != null)
+            if (SuppressSelectionHandlers)
             {
-                ContainerEditGroupControl keyEdit = new ContainerEditGroupControl((Container.GroupItem)groupsListView.SelectedItem);
+                return;
+            }
 
-                ItemView.Content = keyEdit;
+            Container.GroupItem requestedGroup = groupsListView.SelectedItem as Container.GroupItem;
+
+            if (requestedGroup == SelectedGroupItem)
+            {
+                return;
+            }
+
+            if (!TryResolvePendingKeyChanges())
+            {
+                SetGroupSelection(SelectedGroupItem);
+                return;
+            }
+
+            SetGroupSelection(requestedGroup);
+        }
+
+        private void DetachCurrentKeyEditor()
+        {
+            ContainerEditKeyControl keyEdit = ItemView.Content as ContainerEditKeyControl;
+
+            if (keyEdit != null)
+            {
+                keyEdit.DirtyStateChanged -= KeyEdit_DirtyStateChanged;
+                keyEdit.HidePreferenceChanged -= KeyEdit_HidePreferenceChanged;
+                keyEdit.Saved -= KeyEdit_Saved;
+            }
+        }
+
+        private void ShowKeyEditor(KeyItem keyItem, bool focusNameOnLoad)
+        {
+            DetachCurrentKeyEditor();
+
+            if (keyItem == null)
+            {
+                ItemView.Content = null;
+                return;
+            }
+
+            ContainerEditKeyControl keyEdit = new ContainerEditKeyControl(keyItem, PreferHiddenKeyMaterial, focusNameOnLoad);
+            keyEdit.DirtyStateChanged += KeyEdit_DirtyStateChanged;
+            keyEdit.HidePreferenceChanged += KeyEdit_HidePreferenceChanged;
+            keyEdit.Saved += KeyEdit_Saved;
+
+            ItemView.Content = keyEdit;
+        }
+
+        private void ShowGroupEditor(Container.GroupItem groupItem)
+        {
+            DetachCurrentKeyEditor();
+
+            if (groupItem == null)
+            {
+                ItemView.Content = null;
+                return;
+            }
+
+            ItemView.Content = new ContainerEditGroupControl(groupItem);
+        }
+
+        private void SetKeySelection(KeyItem keyItem, bool focusNameOnLoad)
+        {
+            SuppressSelectionHandlers = true;
+
+            try
+            {
+                SelectedGroupItem = null;
+                groupsListView.SelectedItem = null;
+
+                SelectedKeyItem = keyItem;
+                keysListView.SelectedItem = keyItem;
+                ShowKeyEditor(keyItem, focusNameOnLoad);
+            }
+            finally
+            {
+                SuppressSelectionHandlers = false;
+            }
+        }
+
+        private void SetGroupSelection(Container.GroupItem groupItem)
+        {
+            SuppressSelectionHandlers = true;
+
+            try
+            {
+                SelectedKeyItem = null;
+                keysListView.SelectedItem = null;
+
+                SelectedGroupItem = groupItem;
+                groupsListView.SelectedItem = groupItem;
+                ShowGroupEditor(groupItem);
+            }
+            finally
+            {
+                SuppressSelectionHandlers = false;
+            }
+        }
+
+        private void ClearSelections()
+        {
+            SuppressSelectionHandlers = true;
+
+            try
+            {
+                SelectedKeyItem = null;
+                SelectedGroupItem = null;
+                keysListView.SelectedItem = null;
+                groupsListView.SelectedItem = null;
+                DetachCurrentKeyEditor();
+                ItemView.Content = null;
+            }
+            finally
+            {
+                SuppressSelectionHandlers = false;
+            }
+        }
+
+        private void KeyEdit_DirtyStateChanged(object sender, EventArgs e)
+        {
+            // Reserved for future UI polish if the dialog needs to surface editor dirty state.
+        }
+
+        private void KeyEdit_HidePreferenceChanged(object sender, EventArgs e)
+        {
+            ContainerEditKeyControl keyEdit = sender as ContainerEditKeyControl;
+
+            if (keyEdit != null)
+            {
+                PreferHiddenKeyMaterial = keyEdit.IsKeyMaterialHidden;
+            }
+        }
+
+        private void KeyEdit_Saved(object sender, EventArgs e)
+        {
+            ContainerEditKeyControl keyEdit = sender as ContainerEditKeyControl;
+
+            if (keyEdit != null)
+            {
+                PreferHiddenKeyMaterial = keyEdit.IsKeyMaterialHidden;
+            }
+
+            RefreshKeyConflictIndicators();
+        }
+
+        private bool TryResolvePendingKeyChanges()
+        {
+            ContainerEditKeyControl keyEdit = ItemView.Content as ContainerEditKeyControl;
+
+            if (keyEdit == null)
+            {
+                return true;
+            }
+
+            PreferHiddenKeyMaterial = keyEdit.IsKeyMaterialHidden;
+
+            if (!keyEdit.HasUnsavedChanges)
+            {
+                return true;
+            }
+
+            if (!Properties.Settings.Default.PromptSavePendingKeyChanges)
+            {
+                return true;
+            }
+
+            MessageBoxResult res = MessageBox.Show(
+                "The selected key has unsaved changes. Save before leaving?",
+                "Unsaved Key Changes",
+                MessageBoxButton.YesNoCancel,
+                MessageBoxImage.Warning
+            );
+
+            if (res == MessageBoxResult.Yes)
+            {
+                return keyEdit.TrySaveChanges();
+            }
+
+            return res != MessageBoxResult.Cancel;
+        }
+
+        private void RefreshKeyConflictIndicators()
+        {
+            KeyConflictHelper.RefreshConflictStates(Settings.ContainerInner.Keys);
+            keysListView.Items.Refresh();
+        }
+
+        private static string GenerateKeyMaterialForAlgorithm(int algorithmId)
+        {
+            List<byte> keyBytes = null;
+
+            if (algorithmId == (byte)AlgorithmId.AES256)
+            {
+                keyBytes = KeyGenerator.GenerateVarKey(32);
+            }
+            else if (algorithmId == (byte)AlgorithmId.DESOFB || algorithmId == (byte)AlgorithmId.DESXL)
+            {
+                keyBytes = KeyGenerator.GenerateSingleDesKey();
+            }
+            else if (algorithmId == (byte)AlgorithmId.ADP)
+            {
+                keyBytes = KeyGenerator.GenerateVarKey(5);
+            }
+
+            if (keyBytes == null)
+            {
+                return string.Empty;
+            }
+
+            return BitConverter.ToString(keyBytes.ToArray()).Replace("-", string.Empty);
+        }
+
+        private KeyItem CreateNewKey()
+        {
+            KeyItem key = new KeyItem();
+
+            key.Id = Settings.ContainerInner.NextKeyNumber;
+            key.Name = string.Format("Key {0}", Settings.ContainerInner.NextKeyNumber);
+            Settings.ContainerInner.NextKeyNumber++;
+
+            if (SelectedKeyItem != null)
+            {
+                key.ActiveKeyset = SelectedKeyItem.ActiveKeyset;
+                key.KeysetId = SelectedKeyItem.KeysetId;
+                key.KeyTypeAuto = SelectedKeyItem.KeyTypeAuto;
+                key.KeyTypeTek = SelectedKeyItem.KeyTypeTek;
+                key.KeyTypeKek = SelectedKeyItem.KeyTypeKek;
+                key.AlgorithmId = SelectedKeyItem.AlgorithmId;
+
+                // Keep the selected key's effective keyset, but advance the fields that
+                // are most likely to require uniqueness inside that keyset.
+                key.Sln = KeyConflictHelper.GetNextAvailableValue(
+                    Settings.ContainerInner.Keys,
+                    SelectedKeyItem.ActiveKeyset,
+                    SelectedKeyItem.KeysetId,
+                    SelectedKeyItem.Sln,
+                    existingKey => existingKey.Sln
+                );
+
+                key.KeyId = KeyConflictHelper.GetNextAvailableValue(
+                    Settings.ContainerInner.Keys,
+                    SelectedKeyItem.ActiveKeyset,
+                    SelectedKeyItem.KeysetId,
+                    SelectedKeyItem.KeyId,
+                    existingKey => existingKey.KeyId
+                );
+
+                key.Key = GenerateKeyMaterialForAlgorithm(key.AlgorithmId);
             }
             else
             {
-                ItemView.Content = null;
+                key.ActiveKeyset = true;
+                key.KeysetId = 1;
+                key.KeyTypeAuto = true;
+                key.KeyTypeTek = false;
+                key.KeyTypeKek = false;
+                key.KeyId = KeyConflictHelper.GetNextAvailableValue(
+                    Settings.ContainerInner.Keys,
+                    true,
+                    1,
+                    0,
+                    existingKey => existingKey.KeyId
+                );
+                key.AlgorithmId = 0x84;
+                key.Sln = KeyConflictHelper.GetNextAvailableValue(
+                    Settings.ContainerInner.Keys,
+                    true,
+                    1,
+                    0,
+                    existingKey => existingKey.Sln
+                );
+                key.Key = GenerateKeyMaterialForAlgorithm(key.AlgorithmId);
             }
+
+            return key;
         }
 
         void ContainerEdit_Closing(object sender, CancelEventArgs e)
         {
+            if (!TryResolvePendingKeyChanges())
+            {
+                e.Cancel = true;
+                return;
+            }
+
             string currentContainer = ContainerUtilities.SerializeInnerContainer(Settings.ContainerInner).OuterXml;
 
             if (OriginalContainer != currentContainer)
@@ -88,20 +410,16 @@ namespace KFDtool.Gui.Dialog
         {
             if (containerTabControl.SelectedItem == keysTabItem)
             {
-                KeyItem key = new KeyItem();
-                key.Id = Settings.ContainerInner.NextKeyNumber;
-                key.Name = string.Format("Key {0}", Settings.ContainerInner.NextKeyNumber);
-                Settings.ContainerInner.NextKeyNumber++;
-                key.ActiveKeyset = true;
-                key.KeysetId = 1;
-                key.Sln = 1;
-                key.KeyTypeAuto = true;
-                key.KeyTypeTek = false;
-                key.KeyTypeKek = false;
-                key.KeyId = 1;
-                key.AlgorithmId = 0x84;
-                key.Key = BitConverter.ToString(KeyGenerator.GenerateVarKey(32).ToArray()).Replace("-", string.Empty);
+                if (!TryResolvePendingKeyChanges())
+                {
+                    return;
+                }
+
+                KeyItem key = CreateNewKey();
                 Settings.ContainerInner.Keys.Add(key);
+
+                RefreshKeyConflictIndicators();
+                SetKeySelection(key, true);
             }
             else if (containerTabControl.SelectedItem == groupsTabItem)
             {
@@ -111,6 +429,8 @@ namespace KFDtool.Gui.Dialog
                 Settings.ContainerInner.NextGroupNumber++;
                 group.Keys = new List<int>();
                 Settings.ContainerInner.Groups.Add(group);
+
+                SetGroupSelection(group);
             }
         }
 
@@ -177,20 +497,36 @@ namespace KFDtool.Gui.Dialog
                 if (keysListView.SelectedItem != null)
                 {
                     int index = keysListView.SelectedIndex;
-
                     int id = Settings.ContainerInner.Keys[index].Id;
 
-                    // remove key reference from groups
-                    foreach (Container.GroupItem groupItem in Settings.ContainerInner.Groups)
+                    SuppressSelectionHandlers = true;
+
+                    try
                     {
-                        if (groupItem.Keys.Contains(id))
+                        if (SelectedKeyItem == Settings.ContainerInner.Keys[index])
                         {
-                            groupItem.Keys.Remove(id);
+                            SelectedKeyItem = null;
+                            DetachCurrentKeyEditor();
+                            ItemView.Content = null;
                         }
+
+                        foreach (Container.GroupItem groupItem in Settings.ContainerInner.Groups)
+                        {
+                            if (groupItem.Keys.Contains(id))
+                            {
+                                groupItem.Keys.Remove(id);
+                            }
+                        }
+
+                        Settings.ContainerInner.Keys.RemoveAt(index);
+                        keysListView.SelectedItem = null;
+                    }
+                    finally
+                    {
+                        SuppressSelectionHandlers = false;
                     }
 
-                    // remove key item
-                    Settings.ContainerInner.Keys.RemoveAt(index);
+                    RefreshKeyConflictIndicators();
                 }
             }
             else if (containerTabControl.SelectedItem == groupsTabItem)
@@ -198,7 +534,20 @@ namespace KFDtool.Gui.Dialog
                 if (groupsListView.SelectedItem != null)
                 {
                     int index = groupsListView.SelectedIndex;
-                    Settings.ContainerInner.Groups.RemoveAt(index);
+
+                    SuppressSelectionHandlers = true;
+
+                    try
+                    {
+                        SelectedGroupItem = null;
+                        ItemView.Content = null;
+                        Settings.ContainerInner.Groups.RemoveAt(index);
+                        groupsListView.SelectedItem = null;
+                    }
+                    finally
+                    {
+                        SuppressSelectionHandlers = false;
+                    }
                 }
             }
         }

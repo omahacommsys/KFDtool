@@ -44,6 +44,7 @@ namespace KFDtool.Gui
 
             // Load selected theme
             UpdateWindowTheme();
+            UpdatePromptMenuStates();
 
             // on load select the type from settings
             switch (Settings.SelectedDevice.DeviceType)
@@ -910,20 +911,19 @@ namespace KFDtool.Gui
                     NavigateUtilityChangeThemeSystem.IsChecked = true;
                     if (IsSystemLightTheme())
                     {
-                        //ThemesController.SetTheme(ThemeType.LightTheme);
-                        ThemesController.ClearTheme();
+                        ThemesController.SetTheme(ThemeType.LightTheme);
                         this.Style = new Style();
                     }
                     else
                     {
                         ThemesController.SetTheme(ThemeType.SoftDark);
+                        this.Style = (Style)FindResource("CustomWindowStyle");
                     }
                     break;
                 // Light theme
                 case Settings.ThemeMode.Light:
                     NavigateUtilityChangeThemeLight.IsChecked = true;
-                    //ThemesController.SetTheme(ThemeType.LightTheme);
-                    ThemesController.ClearTheme();
+                    ThemesController.SetTheme(ThemeType.LightTheme);
                     this.Style = new Style();
                     break;
                 // Dark Theme
@@ -960,6 +960,34 @@ namespace KFDtool.Gui
             Settings.SaveSettings();
             // Update
             UpdateWindowTheme();
+        }
+
+        private void UpdatePromptMenuStates()
+        {
+            NavigateUtilityPromptSaveKeyChanges.IsChecked = Properties.Settings.Default.PromptSavePendingKeyChanges;
+            NavigateUtilityPromptDuplicateKeyConflicts.IsChecked = Properties.Settings.Default.PromptDuplicateKeyConflicts;
+            NavigateUtilityPromptWeakKeys.IsChecked = Properties.Settings.Default.PromptWeakKeyWarnings;
+        }
+
+        private void NavigateUtilityPromptSaveKeyChanges_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.PromptSavePendingKeyChanges = NavigateUtilityPromptSaveKeyChanges.IsChecked;
+            Properties.Settings.Default.Save();
+            UpdatePromptMenuStates();
+        }
+
+        private void NavigateUtilityPromptDuplicateKeyConflicts_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.PromptDuplicateKeyConflicts = NavigateUtilityPromptDuplicateKeyConflicts.IsChecked;
+            Properties.Settings.Default.Save();
+            UpdatePromptMenuStates();
+        }
+
+        private void NavigateUtilityPromptWeakKeys_Click(object sender, RoutedEventArgs e)
+        {
+            Properties.Settings.Default.PromptWeakKeyWarnings = NavigateUtilityPromptWeakKeys.IsChecked;
+            Properties.Settings.Default.Save();
+            UpdatePromptMenuStates();
         }
 
         public static bool IsSystemLightTheme()

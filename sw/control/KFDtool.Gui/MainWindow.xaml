@@ -44,6 +44,11 @@
                 <MenuItem Name="UtilityMenu" Header="_Utility">
                     <MenuItem Name="NavigateUtilityFixDesKeyParity" Header="_Fix DES Key Parity" IsCheckable="True" Click="Navigate_MenuItem_Click" />
                     <MenuItem Name="NavigateUtilityAdapterSelfTest" Header="_Adapter Self Test" IsCheckable="True" Click="Navigate_MenuItem_Click" />
+                    <MenuItem Name="NavigateUtilityPrompts" Header="_Prompts">
+                        <MenuItem Name="NavigateUtilityPromptSaveKeyChanges" Header="_Prompt To Save Key Changes" Click="NavigateUtilityPromptSaveKeyChanges_Click" IsCheckable="True" />
+                        <MenuItem Name="NavigateUtilityPromptDuplicateKeyConflicts" Header="_Warn About Duplicate Key Values" Click="NavigateUtilityPromptDuplicateKeyConflicts_Click" IsCheckable="True" />
+                        <MenuItem Name="NavigateUtilityPromptWeakKeys" Header="_Warn About Weak Keys" Click="NavigateUtilityPromptWeakKeys_Click" IsCheckable="True" />
+                    </MenuItem>
                     <MenuItem Name="NavigateUtilityChangeTheme" Header="_Change Theme">
                         <MenuItem Name="NavigateUtilityChangeThemeLight" Header="_Light" Click="NavigateUtilityChangeThemeLight_Click" IsCheckable="True" />
                         <MenuItem Name="NavigateUtilityChangeThemeDark" Header="_Dark" Click="NavigateUtilityChangeThemeDark_Click" IsCheckable="True" />
