@@ -1,4 +1,5 @@
-﻿using KFDtool.Container;
+﻿using KFDEKC.Container;
+using KFDEKC.Container.FileStructure.EKC;
 using KFDtool.P25.Constant;
 using KFDtool.P25.Generator;
 using KFDtool.P25.Validator;

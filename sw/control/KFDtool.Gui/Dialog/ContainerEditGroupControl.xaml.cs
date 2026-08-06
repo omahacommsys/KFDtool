@@ -1,4 +1,6 @@
-﻿using KFDtool.Container;
+﻿using KFDEKC.Container;
+using KFDEKC.Container.FileStructure.EKC;
+using GroupItem = KFDEKC.Container.FileStructure.EKC.GroupItem;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,7 +12,7 @@ namespace KFDtool.Gui.Dialog
     /// </summary>
     public partial class ContainerEditGroupControl : UserControl
     {
-        private Container.GroupItem LocalGroup { get; set; }
+        private GroupItem LocalGroup { get; set; }
 
         private List<int> Keys;
 
@@ -18,7 +20,7 @@ namespace KFDtool.Gui.Dialog
 
         private Dictionary<int, string> Selected;
 
-        public ContainerEditGroupControl(Container.GroupItem groupItem)
+        public ContainerEditGroupControl(GroupItem groupItem)
         {
             InitializeComponent();
 
@@ -102,7 +104,7 @@ namespace KFDtool.Gui.Dialog
 
             if (txtName.Text != LocalGroup.Name)
             {
-                foreach (Container.GroupItem groupItem in Settings.ContainerInner.Groups)
+                foreach (GroupItem groupItem in Settings.ContainerInner.Groups)
                 {
                     if (txtName.Text == groupItem.Name)
                     {

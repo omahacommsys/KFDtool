@@ -1,6 +1,7 @@
 ﻿using FramePFX.Themes;
 using KFDtool.Adapter.Device;
-using KFDtool.Container;
+using KFDEKC.Container;
+using KFDEKC.Container.FileStructure.EKC;
 using KFDtool.Gui.Dialog;
 using KFDtool.P25.TransferConstructs;
 using Microsoft.Win32;

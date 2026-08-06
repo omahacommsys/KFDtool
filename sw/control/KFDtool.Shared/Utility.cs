@@ -5,8 +5,16 @@ using System.IO.Compression;
 
 namespace KFDtool.Shared
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Utility
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="hex"></param>
+        /// <returns></returns>
         public static List<byte> ByteStringToByteList(string hex)
         {
             int NumberChars = hex.Length;
@@ -18,16 +26,31 @@ namespace KFDtool.Shared
             return bytes;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static string DataFormat(byte b)
         {
             return string.Format("{0:X2}", b);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
         public static string DataFormat(List<byte> b)
         {
             return BitConverter.ToString(b.ToArray());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static byte[] Compress(byte[] data)
         {
             byte[] buffer = data;
@@ -48,21 +71,27 @@ namespace KFDtool.Shared
             return gZipBuffer;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static byte[] Decompress(byte[] data)
         {
             byte[] gZipBuffer = data;
             using (var memoryStream = new MemoryStream())
+            using (var outputStream = new MemoryStream())
             {
                 int dataLength = BitConverter.ToInt32(gZipBuffer, 0);
                 memoryStream.Write(gZipBuffer, 4, gZipBuffer.Length - 4);
 
-                var buffer = new byte[dataLength];
-
                 memoryStream.Position = 0;
                 using (var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
-                {
-                    gZipStream.Read(buffer, 0, buffer.Length);
-                }
+                    gZipStream.CopyTo(outputStream);
+
+                byte[] buffer = outputStream.ToArray();
+                if (buffer.Length != dataLength)
+                    throw new Exception("Failed to decompress GZIP stream.");
 
                 return buffer;
             }

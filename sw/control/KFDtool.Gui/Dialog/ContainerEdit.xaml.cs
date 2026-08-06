@@ -1,4 +1,6 @@
-﻿using KFDtool.Container;
+﻿using KFDEKC.Container;
+using KFDEKC.Container.FileStructure.EKC;
+using GroupItem = KFDEKC.Container.FileStructure.EKC.GroupItem;
 using KFDtool.P25.Generator;
 using System;
 using System.Collections.Generic;
@@ -64,7 +66,7 @@ namespace KFDtool.Gui.Dialog
         {
             if (groupsListView.SelectedItem != null)
             {
-                ContainerEditGroupControl keyEdit = new ContainerEditGroupControl((Container.GroupItem)groupsListView.SelectedItem);
+                ContainerEditGroupControl keyEdit = new ContainerEditGroupControl((GroupItem)groupsListView.SelectedItem);
 
                 ItemView.Content = keyEdit;
             }
@@ -105,7 +107,7 @@ namespace KFDtool.Gui.Dialog
             }
             else if (containerTabControl.SelectedItem == groupsTabItem)
             {
-                Container.GroupItem group = new Container.GroupItem();
+                GroupItem group = new GroupItem();
                 group.Id = Settings.ContainerInner.NextGroupNumber;
                 group.Name = string.Format("Group {0}", Settings.ContainerInner.NextGroupNumber);
                 Settings.ContainerInner.NextGroupNumber++;
@@ -181,7 +183,7 @@ namespace KFDtool.Gui.Dialog
                     int id = Settings.ContainerInner.Keys[index].Id;
 
                     // remove key reference from groups
-                    foreach (Container.GroupItem groupItem in Settings.ContainerInner.Groups)
+                    foreach (GroupItem groupItem in Settings.ContainerInner.Groups)
                     {
                         if (groupItem.Keys.Contains(id))
                         {

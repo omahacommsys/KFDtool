@@ -1,16 +1,18 @@
-﻿using KFDtool.Container;
+﻿using KFDEKC.Container.FileStructure.EKC;
 using KFDtool.Elite;
 using KFDtool.Gui.Dialog;
 using KFDtool.P25.TransferConstructs;
 using KFDtool.Shared;
 using Microsoft.Win32;
 using System;
-using System.IO;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Threading.Tasks;
-using System.Threading;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace KFDtool.Gui.Control
@@ -92,9 +94,11 @@ namespace KFDtool.Gui.Control
                 KeysAvailable.Remove(selected.Key);
             }
 
-            lbKeysAvailable.Items.Refresh();
+            ICollectionView keysAvailableCollection = CollectionViewSource.GetDefaultView(lbKeysAvailable.ItemsSource);
+            keysAvailableCollection.Refresh();
 
-            lbKeysSelected.Items.Refresh();
+            ICollectionView keysSelectedCollection = CollectionViewSource.GetDefaultView(lbKeysSelected.ItemsSource);
+            keysSelectedCollection.Refresh();
         }
 
         private void UpdateKeksDropdown()
@@ -113,14 +117,15 @@ namespace KFDtool.Gui.Control
                 }
             }
 
-            dropKeksAvailable.Items.Refresh();
+            ICollectionView dropKeksAvailableCollection = CollectionViewSource.GetDefaultView(dropKeksAvailable.ItemsSource);
+            dropKeksAvailableCollection.Refresh();
         }
 
         private void UpdateGroupsColumns()
         {
             GroupsAvailable.Clear();
 
-            foreach (Container.GroupItem groupItem in Settings.ContainerInner.Groups)
+            foreach (var groupItem in Settings.ContainerInner.Groups)
             {
                 GroupsAvailable.Add(groupItem.Id, groupItem.Name);
             }
@@ -137,9 +142,11 @@ namespace KFDtool.Gui.Control
                 GroupsAvailable.Remove(selected.Key);
             }
 
-            lbGroupsAvailable.Items.Refresh();
+            ICollectionView groupsAvailableCollection = CollectionViewSource.GetDefaultView(lbGroupsAvailable.ItemsSource);
+            groupsAvailableCollection.Refresh();
 
-            lbGroupsSelected.Items.Refresh();
+            ICollectionView groupsSelectedCollection = CollectionViewSource.GetDefaultView(lbGroupsSelected.ItemsSource);
+            groupsSelectedCollection.Refresh();
         }
 
         private void Keys_Add_Click(object sender, RoutedEventArgs e)
@@ -208,7 +215,7 @@ namespace KFDtool.Gui.Control
             {
                 bool found = false;
 
-                foreach (Container.GroupItem containerGroupItem in Settings.ContainerInner.Groups)
+                foreach (var containerGroupItem in Settings.ContainerInner.Groups)
                 {
                     if (groupItemId == containerGroupItem.Id)
                     {
@@ -346,7 +353,7 @@ namespace KFDtool.Gui.Control
                 {
                     bool found = false;
 
-                    foreach (Container.GroupItem containerGroupItem in Settings.ContainerInner.Groups)
+                    foreach (var containerGroupItem in Settings.ContainerInner.Groups)
                     {
                         if (groupItemId == containerGroupItem.Id)
                         {
